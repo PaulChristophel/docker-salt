@@ -5,6 +5,7 @@ A lightweight container to provide a salt-master service.
 == Goals
 
 The goal of this project is to create a small container that provides a salt-master service to manage minions. This image currently supports:
+
 * salt-ssh
 * gitfs
 * ldap authentication
