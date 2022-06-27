@@ -23,12 +23,12 @@ docker build -f Dockerfile-3.10-alpine . \
              -t oitacr.azurecr.io/pmartin47/salt:latest \
              -t oitacr.azurecr.io/pmartin47/salt:$BUILD
 
-# docker pull python:3.11-alpine
-# docker build -f Dockerfile-3.11-alpine . \
-            #  -t oitacr.azurecr.io/pmartin47/salt:3.11-latest-alpine \
-            #  -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD-alpine \
-            #  -t oitacr.azurecr.io/pmartin47/salt:3.11-latest \
-            #  -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD
+#docker pull python:3.11-rc-alpine
+#docker build -f Dockerfile-3.11-alpine . \
+#             -t oitacr.azurecr.io/pmartin47/salt:3.11-latest-alpine \
+#             -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD-alpine \
+#             -t oitacr.azurecr.io/pmartin47/salt:3.11-latest \
+#             -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD
 
 
 az acr login -n oitacr
