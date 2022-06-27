@@ -1,0 +1,11 @@
+salt==3004.1
+#Jinja2<3.1.0
+setproctitle
+python-ldap==3.4.0
+psycopg2==2.9.3
+dnspython
+python-dateutil
+CherryPy==18.6.1
+#azure-storage-blob==12.10.0
+#pygit2==1.8.0
+elasticsearch[async]
