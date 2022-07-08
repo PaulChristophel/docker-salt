@@ -1,5 +1,6 @@
 FROM python:3.9-alpine AS builder
 MAINTAINER Paul Martin
+ARG BUILD
 RUN sed -i 's#dl-cdn.alpinelinux.org#nexus.salt.gatech.edu/repository/dl-cdn.alpinelinux.org#g' /etc/apk/repositories && apk upgrade --update \
   && apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
@@ -9,6 +10,8 @@ COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
+RUN pip list --outdated >> /3.9-$BUILD-alpine.txt
+RUN curl -v -u docker-build-reports:m7ZeqBraZMTM3Sh5 --upload-file /3.9-$BUILD-alpine.txt https://nexus3.az.gatech.edu/repository/docker-build-reports/3.9-$BUILD-alpine.txt
 RUN find /usr/local/salt -name \*.pyc -delete
 
 FROM python:3.9-alpine
