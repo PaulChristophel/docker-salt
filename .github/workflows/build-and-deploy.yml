@@ -18,6 +18,7 @@ jobs:
     - name: Python 3.10
       run: |
         BUILD=${GITHUB_REF:10}
+        echo "BUILD: ${BUILD}"
         if [[ ${BUILD} != *"b"* ]]; then
                 docker build -f Dockerfile-3.10-alpine --build-arg BUILD=$BUILD . \
                              -t oitacr.azurecr.io/pmartin47/salt:3.10-latest-alpine \
@@ -38,6 +39,7 @@ jobs:
     - name: Python 3.9
       run: |
         BUILD=${GITHUB_REF:10}
+        echo "BUILD: ${BUILD}"
         if [[ ${BUILD} != *"b"* ]]; then
             docker build -f Dockerfile-3.9-alpine --build-arg BUILD=$BUILD . \
                          -t oitacr.azurecr.io/pmartin47/salt:3.9-latest-alpine \
