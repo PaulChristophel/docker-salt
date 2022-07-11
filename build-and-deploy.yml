@@ -1,0 +1,98 @@
+name: CI
+
+on:
+  push:
+    # Pattern matched against refs/tags
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: rhel-8
+    env:
+      #NEXUS_USER: ${{ secrets.NEXUS_USER }}
+      #NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+      PATH: /home/github/.local/bin:/home/github/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+    steps:
+    - uses: actions/checkout@v2
+    - name: Python 3.11
+      continue-on-error: true
+      run: |
+        BUILD=${GITHUB_REF:10}
+        echo "BUILD: ${BUILD}"
+        docker pull python:3.11-rc-alpine
+        if [[ ${BUILD} != *"b"* ]]; then
+            docker build -f Dockerfile-3.11-alpine --build-arg BUILD=$BUILD . \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.11-latest-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.11-latest \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD
+        else
+            docker build -f Dockerfile-3.11-alpine --build-arg BUILD=$BUILD . \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD
+        fi
+    - name: Python 3.10
+      run: |
+        BUILD=${GITHUB_REF:10}
+        echo "BUILD: ${BUILD}"
+        docker pull python:3.10-alpine
+        if [[ ${BUILD} != *"b"* ]]; then
+                docker build -f Dockerfile-3.10-alpine --build-arg BUILD=$BUILD . \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-latest-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:latest-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:$BUILD-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-latest \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD \
+                             -t oitacr.azurecr.io/pmartin47/salt:latest \
+                             -t oitacr.azurecr.io/pmartin47/salt:$BUILD
+        else
+                docker build -f Dockerfile-3.10-alpine --build-arg BUILD=$BUILD . \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:$BUILD-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD \
+                             -t oitacr.azurecr.io/pmartin47/salt:$BUILD
+        fi
+    - name: Python 3.9
+      run: |
+        BUILD=${GITHUB_REF:10}
+        echo "BUILD: ${BUILD}"
+        docker pull python:3.9-alpine
+        if [[ ${BUILD} != *"b"* ]]; then
+            docker build -f Dockerfile-3.9-alpine --build-arg BUILD=$BUILD . \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-latest-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-latest \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD
+        else
+            docker build -f Dockerfile-3.9-alpine --build-arg BUILD=$BUILD . \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD
+        fi
+    - name: Push to OIT Azure Container Registry (oitacr)
+      run: |
+        az acr login -n oitacr
+        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/$BUILD/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        if [[ ${BUILD} != *"b"* ]]; then
+                docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+                docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/3.9-latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+                docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/3.10-latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        fi
+    - name: Docker System Prune
+      run: |
+        docker system prune --force --all
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - First Change
+          - Second Change
+        draft: false
+        prerelease: false
