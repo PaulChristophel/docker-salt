@@ -1,6 +1,10 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    # Pattern matched against refs/tags
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -11,19 +15,49 @@ jobs:
       PATH: /home/github/.local/bin:/home/github/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
     steps:
     - uses: actions/checkout@v2
-    - name: Python3.10
+    - name: Python 3.10
       run: |
-        BUILD=${GITHUB_SHA:0:7}
-        docker build -f Dockerfile-3.10-alpine --build-arg BUILD=$BUILD . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:$BUILD-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD \
-                     -t oitacr.azurecr.io/pmartin47/salt:$BUILD
-    - name: Python3.9
+        BUILD=${GITHUB_REF:10}
+        if [[ ${BUILD} != *"b"* ]]; then
+                docker build -f Dockerfile-3.10-alpine --build-arg BUILD=$BUILD . \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-latest-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:latest-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:$BUILD-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-latest \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD \
+                             -t oitacr.azurecr.io/pmartin47/salt:latest \
+                             -t oitacr.azurecr.io/pmartin47/salt:$BUILD
+        else
+                docker build -f Dockerfile-3.10-alpine --build-arg BUILD=$BUILD . \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:$BUILD-alpine \
+                             -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD \
+                             -t oitacr.azurecr.io/pmartin47/salt:$BUILD
+        fi
+    - name: Python 3.9
       run: |
-        BUILD=${GITHUB_SHA:0:7}
-        docker build -f Dockerfile-3.9-alpine --build-arg BUILD=$BUILD . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:$BUILD-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD \
-                     -t oitacr.azurecr.io/pmartin47/salt:$BUILD
+        BUILD=${GITHUB_REF:10}
+        if [[ ${BUILD} != *"b"* ]]; then
+            docker build -f Dockerfile-3.9-alpine --build-arg BUILD=$BUILD . \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-latest-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-latest \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD
+        else
+            docker build -f Dockerfile-3.9-alpine --build-arg BUILD=$BUILD . \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine \
+                         -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD
+        fi
+    - name: Push to OIT Azure Container Registry (oitacr)
+      run: |
+        az acr login -n oitacr
+        docker images | awk "/$BUILD/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        if [[ ${BUILD} != *"b"* ]]; then
+                docker images | awk "/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+                docker images | awk "/pmartin47\/salt/&&/3.9-latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+                docker images | awk "/pmartin47\/salt/&&/3.10-latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        fi
+    - name: Docker System Prune
+      run: |
+        docker system prune --force --all

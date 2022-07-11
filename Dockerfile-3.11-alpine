@@ -14,8 +14,7 @@ RUN pip install --no-deps -r /requirements.txt
 # https://github.com/saltstack/salt/blob/master/requirements/static/pkg/py3.10/linux.txt#L72
 #RUN pip install --upgrade pyzmq==21.0.2 || true
 #RUN pip install --upgrade pyzmq==22.3.0 || true
-RUN pip list --outdated >> /3.11-$BUILD-alpine.txt
-RUN curl -v -u docker-build-reports:m7ZeqBraZMTM3Sh5 --upload-file /3.11-$BUILD-alpine.txt https://nexus3.az.gatech.edu/repository/docker-build-reports/3.11-$BUILD-alpine.txt
+RUN pip list && pip list --outdated
 RUN find /usr/local/salt -name \*.pyc -delete
 
 FROM python:3.11-rc-alpine
