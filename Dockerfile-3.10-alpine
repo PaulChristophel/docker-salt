@@ -12,7 +12,8 @@ COPY requirements.txt /
 RUN pip install -r /requirements.txt
 # This is currently broken for unknown reasons
 # https://github.com/saltstack/salt/blob/master/requirements/static/pkg/py3.10/linux.txt#L72
-RUN pip install --upgrade pyzmq==21.0.2 || true
+#RUN pip install --upgrade pyzmq==21.0.2 || true
+RUN pip install --upgrade pyzmq==22.3.0 || true
 RUN pip list --outdated >> /3.10-$BUILD-alpine.txt
 RUN curl -v -u docker-build-reports:m7ZeqBraZMTM3Sh5 --upload-file /3.10-$BUILD-alpine.txt https://nexus3.az.gatech.edu/repository/docker-build-reports/3.10-$BUILD-alpine.txt
 RUN find /usr/local/salt -name \*.pyc -delete
@@ -28,4 +29,6 @@ RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
 WORKDIR /opt/salt
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v salt:salt {} \;
+ENTRYPOINT ["salt-master"]
+CMD ["-l", "info"]
 
