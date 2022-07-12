@@ -16,44 +16,37 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Get Build Version
-      run: echo "BUILD=${GITHUB_REF:10}" >> $GITHUB_ENV
+      run: |
+        echo "BUILD=${GITHUB_REF:10}" >> $GITHUB_ENV
+        echo "BUILD: ${BUILD}"
     - name: Python 3.11
       continue-on-error: true
       run: |
-        echo "BUILD: ${BUILD}"
         docker pull python:3.11-rc-alpine
-        docker build -f Dockerfile-3.11-alpine --build-arg BUILD=$BUILD . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD-alpine
-        #docker save oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD-alpine -o 3.9-$BUILD-alpine.tar
-        #gzip 3.11-$BUILD-alpine.tar
-      with:
-        BUILD: ${{ env.BUILD }}
+        docker build -f Dockerfile-3.11-alpine --build-arg BUILD=${{ env.BUILD }} . \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.BUILD }}-alpine
+        #docker save oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.BUILD }}-alpine -o 3.9-${{ env.BUILD }}-alpine.tar
+        #gzip 3.11-${{ env.BUILD }}-alpine.tar
     - name: Python 3.10
       run: |
         BUILD=${GITHUB_REF:10}
-        echo "BUILD: ${BUILD}"
         docker pull python:3.10-alpine
-        docker build -f Dockerfile-3.10-alpine --build-arg BUILD=$BUILD . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD-alpine
-        #docker save oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine -o 3.9-$BUILD-alpine.tar
-        #gzip 3.9-$BUILD-alpine.tar
-      with:
-        BUILD: ${{ env.BUILD }}
+        docker build -f Dockerfile-3.10-alpine --build-arg BUILD=${{ env.BUILD }} . \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.10-${{ env.BUILD }}-alpine
+        #docker save oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.BUILD }}-alpine -o 3.9-${{ env.BUILD }}-alpine.tar
+        #gzip 3.9-${{ env.BUILD }}-alpine.tar
     - name: Python 3.9
       run: |
         BUILD=${GITHUB_REF:10}
-        echo "BUILD: ${BUILD}"
         docker pull python:3.9-alpine
-        docker build -f Dockerfile-3.9-alpine --build-arg BUILD=$BUILD . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine
-        #docker save oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine -o 3.9-$BUILD-alpine.tar
-        #gzip 3.9-$BUILD-alpine.tar
-      with:
-        BUILD: ${{ env.BUILD }}
+        docker build -f Dockerfile-3.9-alpine --build-arg BUILD=${{ env.BUILD }} . \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.BUILD }}-alpine
+        #docker save oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.BUILD }}-alpine -o 3.9-${{ env.BUILD }}-alpine.tar
+        #gzip 3.9-${{ env.BUILD }}-alpine.tar
     - name: Push to OIT Azure Container Registry (oitacr)
       run: |
         az acr login -n oitacr
-        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/$BUILD/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
@@ -84,8 +77,8 @@ jobs:
     #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #  with:
     #    upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-    #    asset_path: ./3.11-$BUILD-alpine.tar.gz
-    #    asset_name: 3.11-$BUILD-alpine.tar.gz
+    #    asset_path: ./3.11-${{ env.BUILD }}-alpine.tar.gz
+    #    asset_name: 3.11-${{ env.BUILD }}-alpine.tar.gz
     #    asset_content_type: application/#gzip
     #- name: Upload Python 3.10 Container
     #  id: upload-release-asset-10
@@ -94,8 +87,8 @@ jobs:
     #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #  with:
     #    upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #    asset_path: ./3.10-$BUILD-alpine.tar.gz
-    #    asset_name: 3.10-$BUILD-alpine.tar.gz
+    #    asset_path: ./3.10-${{ env.BUILD }}-alpine.tar.gz
+    #    asset_name: 3.10-${{ env.BUILD }}-alpine.tar.gz
     #    asset_content_type: application/#gzip
     #- name: Upload Python 3.9 Container
     #  id: upload-release-asset-9
@@ -104,9 +97,9 @@ jobs:
     #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #  with:
     #    upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #    asset_path: ./3.9-$BUILD-alpine.tar.gz
-    #    asset_name: 3.9-$BUILD-alpine.tar.gz
+    #    asset_path: ./3.9-${{ env.BUILD }}-alpine.tar.gz
+    #    asset_name: 3.9-${{ env.BUILD }}-alpine.tar.gz
     #    asset_content_type: application/#gzip
     #- name: Clean Assets
     #  run: |
-    #    rm -f ./3.9-$BUILD-alpine.tar.gz ./3.10-$BUILD-alpine.tar.gz ./3.11-$BUILD-alpine.tar.gz
+    #    rm -f ./3.9-${{ env.BUILD }}-alpine.tar.gz ./3.10-${{ env.BUILD }}-alpine.tar.gz ./3.11-${{ env.BUILD }}-alpine.tar.gz
