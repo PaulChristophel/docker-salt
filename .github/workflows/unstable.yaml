@@ -14,6 +14,8 @@ jobs:
   build:
     runs-on: rhel-8
     env:
+      OITACR_USERNAME: ${{ secrets.OITACR_USERNAME }}
+      OITACR_PASSWORD: ${{ secrets.OITACR_PASSWORD }}
       PATH: /home/github/.local/bin:/home/github/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
     steps:
     - uses: actions/checkout@v2
