@@ -17,8 +17,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Get Build Version
       run: |
-        echo "BUILD=${GITHUB_REF:10}" >> $GITHUB_ENV
-        echo "BUILD: ${BUILD}"
+        echo "BUILD=${GITHUB_REF:10}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       continue-on-error: true
       run: |
