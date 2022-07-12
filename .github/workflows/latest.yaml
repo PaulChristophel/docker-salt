@@ -18,6 +18,7 @@ jobs:
     - name: Get Build Version
       run: |
         echo "BUILD=${GITHUB_REF:10}" | tee -a $GITHUB_ENV
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       continue-on-error: true
       run: |
@@ -28,7 +29,8 @@ jobs:
                      -t oitacr.azurecr.io/pmartin47/salt:3.11-latest-alpine \
                      -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.BUILD }}-alpine \
                      -t oitacr.azurecr.io/pmartin47/salt:3.11-latest \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.BUILD }}
+                     -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.BUILD }} \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-alpine
     - name: Python 3.10
       run: |
         BUILD=${GITHUB_REF:10}
@@ -42,7 +44,8 @@ jobs:
                      -t oitacr.azurecr.io/pmartin47/salt:3.10-latest \
                      -t oitacr.azurecr.io/pmartin47/salt:3.10-${{ env.BUILD }} \
                      -t oitacr.azurecr.io/pmartin47/salt:latest \
-                     -t oitacr.azurecr.io/pmartin47/salt:${{ env.BUILD }}
+                     -t oitacr.azurecr.io/pmartin47/salt:${{ env.BUILD }} \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.10-${{ env.SHORT_SHA }}-alpine
     - name: Python 3.9
       run: |
         BUILD=${GITHUB_REF:10}
@@ -52,7 +55,8 @@ jobs:
                      -t oitacr.azurecr.io/pmartin47/salt:3.9-latest-alpine \
                      -t oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.BUILD }}-alpine \
                      -t oitacr.azurecr.io/pmartin47/salt:3.9-latest \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.BUILD }}
+                     -t oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.BUILD }} \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.SHORT_SHA }}-alpine
     - name: Push to OIT Azure Container Registry (oitacr)
       run: |
         az acr login -n oitacr
