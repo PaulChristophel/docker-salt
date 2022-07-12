@@ -79,4 +79,4 @@ jobs:
           docker pull oitacr.azurecr.io/pmartin47/salt:3.10-${{ env.BUILD }}-alpine
           docker pull oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.BUILD }}-alpine
         draft: false
-        prerelease: true
+        prerelease: false
