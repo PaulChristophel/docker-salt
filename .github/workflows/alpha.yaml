@@ -46,7 +46,7 @@ jobs:
         #gzip 3.9-${{ env.BUILD }}-alpine.tar
     - name: Push to OIT Azure Container Registry (oitacr)
       run: |
-        az acr login -n oitacr
+        docker login oitacr.azurecr.io --username $OITACR_USERNAME --password $OITACR_PASSWORD
         docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
