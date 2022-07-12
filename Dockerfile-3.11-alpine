@@ -6,6 +6,7 @@ RUN sed -i 's#dl-cdn.alpinelinux.org#nexus.salt.gatech.edu/repository/dl-cdn.alp
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 RUN python3 -m venv /usr/local/salt
+COPY pip.conf /etc/
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY requirements-3.11.txt /requirements.txt

@@ -75,8 +75,6 @@ jobs:
         tag_name: ${{ github.ref_name }}
         release_name: ${{ github.ref_name }}
         body: |+
-          WARNING: This is a beta release. It may not work as expected.
-
           CHANGELOG:
           ${{ github.event.head_commit.message }}
 
