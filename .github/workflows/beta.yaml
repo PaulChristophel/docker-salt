@@ -57,8 +57,6 @@ jobs:
       with:
         tag_name: ${{ github.ref_name }}
         release_name: ${{ github.ref_name }}
-        body: |
-           WARNING This is a beta release. It should function correctly, but it may not work as intended.
-          ${{ github.event.head_commit.message }}
+        body: ${{ github.event.head_commit.message }}
         draft: false
         prerelease: false
