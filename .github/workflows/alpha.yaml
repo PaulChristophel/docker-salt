@@ -64,7 +64,7 @@ jobs:
         draft: false
         prerelease: true
     - name: Upload Python 3.11 Container
-      id: upload-release-asset 
+      id: upload-release-asset-11
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -74,7 +74,7 @@ jobs:
         asset_name: 3.11-$BUILD-alpine.tar.gz
         asset_content_type: application/gzip
     - name: Upload Python 3.10 Container
-      id: upload-release-asset   
+      id: upload-release-asset-10
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -84,7 +84,7 @@ jobs:
         asset_name: 3.10-$BUILD-alpine.tar.gz
         asset_content_type: application/gzip
     - name: Upload Python 3.9 Container
-      id: upload-release-asset   
+      id: upload-release-asset-9
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
