@@ -46,11 +46,6 @@ jobs:
       run: |
         az acr login -n oitacr
         docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/$BUILD/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
-        if [[ ${BUILD} != *"b"* ]]; then
-                docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
-                docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/3.9-latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
-                docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/3.10-latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
-        fi
     - name: Docker System Prune
       run: |
         docker system prune --force --all
@@ -62,6 +57,8 @@ jobs:
       with:
         tag_name: ${{ github.ref_name }}
         release_name: ${{ github.ref_name }}
-        body: ${{ github.event.head_commit.message }}
+        body: |
+           **WARNING** This is a beta release. It should function correctly, but it may not work as intended.
+          ${{ github.event.head_commit.message }}
         draft: false
         prerelease: false

@@ -1,10 +1,10 @@
-name: Latest Release
+name: Alpha Release
 
 on:
   push:
     # Pattern matched against refs/tags
     tags:
-      - '!*b*'
+      - '[0-9]+.[0-9]+-[0-9]+a[0-9]+'
 
 jobs:
   build:
@@ -22,41 +22,25 @@ jobs:
         echo "BUILD: ${BUILD}"
         docker pull python:3.11-rc-alpine
         docker build -f Dockerfile-3.11-alpine --build-arg BUILD=$BUILD . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.11-latest-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.11-latest \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD
+                     -t oitacr.azurecr.io/pmartin47/salt:3.11-$BUILD-alpine
     - name: Python 3.10
       run: |
         BUILD=${GITHUB_REF:10}
         echo "BUILD: ${BUILD}"
         docker pull python:3.10-alpine
         docker build -f Dockerfile-3.10-alpine --build-arg BUILD=$BUILD . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.10-latest-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:latest-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:$BUILD-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.10-latest \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD \
-                     -t oitacr.azurecr.io/pmartin47/salt:latest \
-                     -t oitacr.azurecr.io/pmartin47/salt:$BUILD
+                     -t oitacr.azurecr.io/pmartin47/salt:3.10-$BUILD-alpine
     - name: Python 3.9
       run: |
         BUILD=${GITHUB_REF:10}
         echo "BUILD: ${BUILD}"
         docker pull python:3.9-alpine
         docker build -f Dockerfile-3.9-alpine --build-arg BUILD=$BUILD . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-latest-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-latest \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD
+                     -t oitacr.azurecr.io/pmartin47/salt:3.9-$BUILD-alpine
     - name: Push to OIT Azure Container Registry (oitacr)
       run: |
         az acr login -n oitacr
         docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/$BUILD/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
-        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
-        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/3.9-latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
-        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/3.10-latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
@@ -68,6 +52,9 @@ jobs:
       with:
         tag_name: ${{ github.ref_name }}
         release_name: ${{ github.ref_name }}
-        body: ${{ github.event.head_commit.message }}
+        body: |
+          **WARNING** This is an alpha release. It may not function correctly.
+
+          ${{ github.event.head_commit.message }}
         draft: false
         prerelease: false
