@@ -1,3 +1,4 @@
+/salt
 certifi==2022.6.15
 charset-normalizer==2.1.0
 cheroot==8.6.0
@@ -8,7 +9,7 @@ distro==1.7.0
 dnspython==2.2.1
 idna==3.3
 immutables==0.18
-jaraco.classes==3.2.1
+jaraco.classes==3.2.2
 jaraco.collections==3.5.1
 jaraco.context==4.1.1
 jaraco.functools==3.5.0
@@ -30,7 +31,6 @@ pytz==2022.1
 PyYAML==6.0
 pyzmq==23.2.0
 requests==2.28.1
-salt==3004.2
 setproctitle==1.2.3
 setuptools==63.1.0
 six==1.16.0
