@@ -10,10 +10,10 @@ dnspython==2.2.1
 idna==3.3
 immutables==0.18
 jaraco.classes==3.2.2
-jaraco.collections==3.5.1
-jaraco.context==4.1.1
-jaraco.functools==3.5.0
-jaraco.text==3.8.0
+jaraco.collections==3.5.2
+jaraco.context==4.1.2
+jaraco.functools==3.5.1
+jaraco.text==3.8.1
 Jinja2==3.1.2
 MarkupSafe==2.1.1
 more-itertools==8.13.0
@@ -34,7 +34,7 @@ requests==2.28.1
 setproctitle==1.2.3
 setuptools==63.1.0
 six==1.16.0
-tempora==5.0.1
+tempora==5.0.2
 #timelib==0.2.5
 urllib3==1.26.10
 wheel==0.37.1
