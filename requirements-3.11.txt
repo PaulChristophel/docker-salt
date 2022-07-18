@@ -2,7 +2,7 @@
 certifi==2022.6.15
 charset-normalizer==2.1.0
 cheroot==8.6.0
-CherryPy==18.7.0
+CherryPy==18.8.0
 Cython==0.29.30
 contextvars==2.4
 distro==1.7.0
