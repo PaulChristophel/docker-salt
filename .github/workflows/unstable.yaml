@@ -35,11 +35,6 @@ jobs:
         docker pull python:3.10-alpine
         docker build -f Dockerfile-3.10-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
                      -t oitacr.azurecr.io/pmartin47/salt:3.10-${{ env.SHORT_SHA }}-alpine
-    - name: Python 3.9
-      run: |
-        docker pull python:3.9-alpine
-        docker build -f Dockerfile-3.9-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.9-${{ env.SHORT_SHA }}-alpine
     - name: Push to OIT Azure Container Registry (oitacr)
       run: |
         docker login oitacr.azurecr.io --username $OITACR_USERNAME --password $OITACR_PASSWORD
