@@ -13,7 +13,7 @@ jaraco.classes==3.2.2
 jaraco.collections==3.5.2
 jaraco.context==4.1.2
 jaraco.functools==3.5.1
-jaraco.text==3.8.1
+jaraco.text==3.9.0
 Jinja2==3.1.2
 MarkupSafe==2.1.1
 more-itertools==8.14.0
@@ -26,7 +26,7 @@ pyasn1-modules==0.2.8
 pycryptodomex==3.15.0
 python-dateutil==2.8.2
 python-ldap==3.4.2
-pytz==2022.2
+pytz==2022.2.1
 PyYAML==6.0
 pyzmq==23.2.1
 requests==2.28.1
