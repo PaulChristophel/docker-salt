@@ -2,8 +2,9 @@ FROM python:3.9-alpine AS builder
 MAINTAINER Paul Martin
 ARG BUILD
 RUN sed -i 's#dl-cdn.alpinelinux.org#nexus.salt.gatech.edu/repository/dl-cdn.alpinelinux.org#g' /etc/apk/repositories && apk upgrade --update \
-  && apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo
+  && apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
+RUN wget -qO- "https://nexus.salt.gatech.edu/repository/github.com/sharkdp/bat/releases/download/v0.21.0/bat-v0.21.0-i686-unknown-linux-musl.tar.gz" | tar xvz -C /tmp && find /tmp -name bat -executable -exec mv {} /usr/local/bin \; -quit
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 RUN python3 -m venv /usr/local/salt
 COPY pip.conf /etc/
@@ -17,6 +18,7 @@ RUN find /usr/local/salt -name \*.pyc -delete
 
 FROM python:3.9-alpine
 COPY --from=builder /usr/local/salt /usr/local/salt
+COPY --from=builder /usr/local/bin/bat /usr/local/bin/bat
 ARG USER_ID=1000
 RUN addgroup salt && adduser -u ${USER_ID} -s /bin/sh -h /opt/salt salt -SD -G salt
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && chown -R salt:salt /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt
