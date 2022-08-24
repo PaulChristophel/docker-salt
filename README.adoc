@@ -1,3 +1,9 @@
+https://it.github.gatech.edu/epi/docker-salt/actions/workflows/latest.yaml[image:https://it.github.gatech.edu/epi/docker-salt/actions/workflows/latest.yaml/badge.svg[Latest
+Release]]
+
+https://it.github.gatech.edu/epi/docker-salt/actions/workflows/unstable.yaml[image:https://it.github.gatech.edu/epi/docker-salt/actions/workflows/unstable.yaml/badge.svg[Unstable
+Release]]
+
 == docker-salt
 
 A lightweight container to provide a salt-master service.
