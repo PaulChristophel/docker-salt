@@ -7,4 +7,5 @@ python-dateutil
 python-ldap==3.4.2
 setproctitle
 timelib
+netaddr
 
