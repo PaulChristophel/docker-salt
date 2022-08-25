@@ -12,10 +12,6 @@ COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
-# This is currently broken for unknown reasons
-# https://github.com/saltstack/salt/blob/master/requirements/static/pkg/py3.10/linux.txt#L72
-#RUN pip install --upgrade pyzmq==21.0.2 || true
-RUN pip install --upgrade pyzmq==22.3.0 || true
 RUN pip list && pip list --outdated
 RUN find /usr/local/salt -name \*.pyc -delete
 
