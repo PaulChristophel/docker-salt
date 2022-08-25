@@ -12,6 +12,7 @@ COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
+RUN pip install --upgrade pyzmq==23.2.1 || true
 RUN pip list && pip list --outdated
 RUN find /usr/local/salt -name \*.pyc -delete
 
