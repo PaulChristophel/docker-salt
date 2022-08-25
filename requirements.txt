@@ -1,4 +1,4 @@
-salt==3004.2
+salt==3005
 
 CherryPy==18.8.0
 dnspython
