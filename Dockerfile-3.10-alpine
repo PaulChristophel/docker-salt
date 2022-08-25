@@ -28,6 +28,7 @@ RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
 WORKDIR /opt/salt
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v salt:salt {} \;
+USER 1000:1000
 ENTRYPOINT ["salt-master"]
 CMD ["-l", "info"]
 
