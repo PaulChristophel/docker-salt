@@ -23,6 +23,16 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
         echo "ipython" | tee -a requirements.txt
         echo "ipython" | tee -a requirements-3.11.txt
+        echo "isalt" | tee -a requirements.txt
+        echo "isalt" | tee -a requirements-3.11.txt
+    - name: Python 3.11
+      continue-on-error: true
+      run: |
+        docker pull python:3.11-rc-alpine
+        docker build -f Dockerfile-3.11-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.BUILD }}-alpine \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.BUILD }} \
+                     -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-alpine
     - name: Python 3.10
       run: |
         docker pull python:3.10-alpine
