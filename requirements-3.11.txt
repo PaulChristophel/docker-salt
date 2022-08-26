@@ -1,4 +1,5 @@
-/salt-master
+#/salt-master
+salt==3005
 certifi==2022.6.15
 charset-normalizer==2.1.1
 cheroot==8.6.0
