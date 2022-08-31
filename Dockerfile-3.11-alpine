@@ -13,6 +13,7 @@ RUN pip install -r /prerequisites.txt
 COPY requirements-3.11.txt /requirements.txt
 RUN pip install --no-deps -r /requirements.txt
 RUN pip list && pip list --outdated
+COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
 RUN find /usr/local/salt -name \*.pyc -delete
 
 FROM python:3.11-rc-alpine
