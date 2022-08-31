@@ -14,6 +14,7 @@ COPY requirements.txt /
 RUN pip install -r /requirements.txt
 RUN pip install --upgrade pyzmq==23.2.1 || true
 RUN pip list && pip list --outdated
+COPY nacl.py /usr/local/salt/lib/python3.10/site-packages/salt/utils/
 RUN find /usr/local/salt -name \*.pyc -delete
 
 FROM python:3.10-alpine
