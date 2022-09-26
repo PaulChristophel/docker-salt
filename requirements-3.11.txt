@@ -1,6 +1,6 @@
 #/salt-master
 salt==3005
-certifi== 2022.9.14
+certifi== 2022.9.24
 charset-normalizer==2.1.1
 cheroot==8.6.0
 CherryPy==18.8.0
