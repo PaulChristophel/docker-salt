@@ -9,6 +9,8 @@ contextvars==2.4
 distro==1.7.0
 dnspython==2.2.1
 idna==3.4
+ipython
+isalt
 immutables==0.19
 jaraco.classes==3.2.3
 jaraco.collections==3.5.2

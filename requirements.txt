@@ -9,3 +9,5 @@ setproctitle
 timelib
 netaddr
 libnacl
+ipython
+isalt
