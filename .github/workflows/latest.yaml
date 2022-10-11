@@ -50,6 +50,7 @@ jobs:
       run: |
         docker login oitacr.azurecr.io --username $OITACR_USERNAME --password $OITACR_PASSWORD
         docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
