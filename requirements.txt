@@ -11,3 +11,4 @@ netaddr
 libnacl
 ipython
 isalt
+python-gnupg
