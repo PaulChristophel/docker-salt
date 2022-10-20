@@ -16,7 +16,7 @@ jaraco.classes==3.2.3
 jaraco.collections==3.5.2
 jaraco.context==4.1.2
 jaraco.functools==3.5.2
-jaraco.text==3.9.1
+jaraco.text==3.10.0
 Jinja2==3.1.2
 libnacl
 MarkupSafe==2.1.1
