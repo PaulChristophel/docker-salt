@@ -4,7 +4,6 @@ ARG BUILD
 RUN apk upgrade --update \
   && apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
-RUN wget -qO- "https://github.com/sharkdp/bat/releases/download/v0.22.1/bat-v0.22.1-x86_64-unknown-linux-musl.tar.gz" | tar xvz -C /tmp && find /tmp -name bat -executable -exec mv {} /usr/local/bin \; -quit
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
