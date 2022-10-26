@@ -35,6 +35,36 @@ jobs:
     - name: Docker System Prune
       run: |
         docker system prune --force --all
+  build-python3-11-isalt:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get Build Version
+      run: |
+        echo "BUILD=${GITHUB_REF:10}" | tee -a $GITHUB_ENV
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+        echo "ipython" | tee -a requirements-3.11.txt
+        echo "isalt" | tee -a requirements-3.11.txt
+    - name: Python 3.11
+      continue-on-error: true
+      run: |
+        docker pull python:3.11-rc-alpine
+        docker build -f Dockerfile-3.11-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
+                     -t pcm0/salt:3.11-isalt-latest-alpine \
+                     -t pcm0/salt:3.11-isalt-${{ env.BUILD }}-alpine \
+                     -t pcm0/salt:3.11-isalt-latest \
+                     -t pcm0/salt:3.11-isalt-${{ env.BUILD }} \
+                     -t pcm0/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine
+    - name: Push to Docker Hub
+      run: |
+        docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+    - name: Docker System Prune
+      run: |
+        docker system prune --force --all
   build-python3-10:
     runs-on: ubuntu-latest
     env:
@@ -86,3 +116,39 @@ jobs:
           docker pull pcm0/salt:3.10-${{ env.BUILD }}-alpine
         draft: false
         prerelease: false
+  build-python3-10-isalt:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get Build Version
+      run: |
+        echo "BUILD=${GITHUB_REF:10}" | tee -a $GITHUB_ENV
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+        echo "ipython" | tee -a requirements-3.11.txt
+        echo "isalt" | tee -a requirements-3.11.txt
+    - name: Python 3.10
+      run: |
+        BUILD=${GITHUB_REF:10}
+        echo "BUILD: ${BUILD}"
+        docker pull python:3.10-alpine
+        docker build -f Dockerfile-3.10-alpine --build-arg BUILD=${{ env.BUILD }} . \
+                     -t pcm0/salt:3.10-isalt-latest-alpine \
+                     -t pcm0/salt:3.10-isalt-${{ env.BUILD }}-alpine \
+                     -t pcm0/salt:isalt-latest-alpine \
+                     -t pcm0/salt:isalt-${{ env.BUILD }}-alpine \
+                     -t pcm0/salt:3.10-isalt-latest \
+                     -t pcm0/salt:3.10-isalt-${{ env.BUILD }} \
+                     -t pcm0/salt:isalt-latest \
+                     -t pcm0/salt:isalt-${{ env.BUILD }} \
+                     -t pcm0/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine
+    - name: Push to Docker Hub
+      run: |
+        docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/pcm0\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+    - name: Docker System Prune
+      run: |
+        docker system prune --force --all
