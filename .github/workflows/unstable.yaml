@@ -12,10 +12,10 @@ on:
 
 jobs:
   build:
-    runs-on: rhel-8
+    runs-on: ubuntu-latest
     env:
-      OITACR_USERNAME: ${{ secrets.OITACR_USERNAME }}
-      OITACR_PASSWORD: ${{ secrets.OITACR_PASSWORD }}
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       PATH: /home/github/.local/bin:/home/github/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
     steps:
     - uses: actions/checkout@v2
@@ -25,18 +25,18 @@ jobs:
     - name: Python 3.11
       continue-on-error: true
       run: |
-        docker pull python:3.11-rc-alpine
+        docker pull python:3.11-alpine
         docker build -f Dockerfile-3.11-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine
     - name: Python 3.10
       run: |
         docker pull python:3.10-alpine
         docker build -f Dockerfile-3.10-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t oitacr.azurecr.io/pmartin47/salt:3.10-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.10-${{ env.SHORT_SHA }}-alpine
     - name: Push to OIT Azure Container Registry (oitacr)
       run: |
-        docker login oitacr.azurecr.io --username $OITACR_USERNAME --password $OITACR_PASSWORD
-        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        docker images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
