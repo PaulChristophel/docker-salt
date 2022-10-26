@@ -140,7 +140,7 @@ jobs:
       run: |
         docker system prune --force --all
     - name: Create a Release
-    - uses: ncipollo/release-action@v1
+      uses: ncipollo/release-action@v1
       with:
         #artifacts: "release.tar.gz,foo/*.txt"
         #bodyFile: "body.md"
