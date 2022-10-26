@@ -42,7 +42,7 @@ jobs:
         docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
         docker logout
         docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
 
     - name: Docker System Prune
       run: |
@@ -84,7 +84,7 @@ jobs:
         docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
         docker logout
         docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
 
     - name: Docker System Prune
       run: |
@@ -120,11 +120,11 @@ jobs:
                      -t pcm0/salt:3.10-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.10-latest-alpine \
                      -t $ACR_URL/pmartin47/salt:3.10-${{ env.BUILD }}-alpine \
-                     -t $ACR_URL/pmartin47/salt-latest-alpine \
-                     -t $ACR_URL/pmartin47/salt-${{ env.BUILD }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:latest-alpine \
+                     -t $ACR_URL/pmartin47/salt:${{ env.BUILD }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.10-latest \
                      -t $ACR_URL/pmartin47/salt:3.10-${{ env.BUILD }} \
-                     -t $ACR_URL/pmartin47/salt-latest \
+                     -t $ACR_URL/pmartin47/salt:latest \
                      -t $ACR_URL/pmartin47/salt:${{ env.BUILD }} \
                      -t $ACR_URL/pmartin47/salt:3.10-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
@@ -134,19 +134,18 @@ jobs:
         docker images | awk "/pcm0\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
         docker logout
         docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
         docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+    - name: Create a Release
+    - uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ github.ref_name }}
-        release_name: ${{ github.ref_name }}
+        #artifacts: "release.tar.gz,foo/*.txt"
+        #bodyFile: "body.md"
+        token: ${{ secrets.RELEASE_TOKEN }}
+        name:  ${{ github.ref_name }} 
         body: |+
           CHANGELOG:
           ${{ github.event.head_commit.message }}
@@ -157,8 +156,6 @@ jobs:
           Or to specify a build:
           docker pull pcm0/salt:3.11-${{ env.BUILD }}-alpine
           docker pull pcm0/salt:3.10-${{ env.BUILD }}-alpine
-        draft: false
-        prerelease: false
   build-python3-10-isalt:
     runs-on: ubuntu-latest
     env:
@@ -206,7 +203,7 @@ jobs:
         docker images | awk "/pcm0\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
         docker logout
         docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
         docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
