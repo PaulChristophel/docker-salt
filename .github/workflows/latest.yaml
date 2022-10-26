@@ -7,14 +7,11 @@ on:
       - '[0-9]+.[0-9]+-[0-9]+'
 
 jobs:
-  build:
-    runs-on: rhel-8
+  build-python3-11:
+    runs-on: ubuntu-latest
     env:
-      #NEXUS_USER: ${{ secrets.NEXUS_USER }}
-      #NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-      OITACR_USERNAME: ${{ secrets.OITACR_USERNAME }}
-      OITACR_PASSWORD: ${{ secrets.OITACR_PASSWORD }}
-      PATH: /home/github/.local/bin:/home/github/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
     steps:
     - uses: actions/checkout@v2
     - name: Get Build Version
@@ -31,6 +28,24 @@ jobs:
                      -t pcm0/salt:3.11-latest \
                      -t pcm0/salt:3.11-${{ env.BUILD }} \
                      -t pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine
+    - name: Push to Docker Hub
+      run: |
+        docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+    - name: Docker System Prune
+      run: |
+        docker system prune --force --all
+  build-python3-10:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Get Build Version
+      run: |
+        echo "BUILD=${GITHUB_REF:10}" | tee -a $GITHUB_ENV
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.10
       run: |
         BUILD=${GITHUB_REF:10}
@@ -46,11 +61,11 @@ jobs:
                      -t pcm0/salt:latest \
                      -t pcm0/salt:${{ env.BUILD }} \
                      -t pcm0/salt:3.10-${{ env.SHORT_SHA }}-alpine
-    - name: Push to OIT Azure Container Registry (oitacr)
+    - name: Push to Docker Hub
       run: |
-        docker login oitacr.azurecr.io --username $OITACR_USERNAME --password $OITACR_PASSWORD
-        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
-        docker images | awk "/oitacr.azurecr.io\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/pcm0\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
@@ -67,6 +82,7 @@ jobs:
           ${{ github.event.head_commit.message }}
 
           To download this release:
+          docker pull pcm0/salt:3.11-${{ env.BUILD }}-alpine
           docker pull pcm0/salt:3.10-${{ env.BUILD }}-alpine
         draft: false
         prerelease: false
