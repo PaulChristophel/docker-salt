@@ -12,6 +12,9 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
@@ -27,11 +30,20 @@ jobs:
                      -t pcm0/salt:3.11-${{ env.BUILD }}-alpine \
                      -t pcm0/salt:3.11-latest \
                      -t pcm0/salt:3.11-${{ env.BUILD }} \
-                     -t pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-latest-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-${{ env.BUILD }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-latest \
+                     -t $ACR_URL/pmartin47/salt:3.11-${{ env.BUILD }} \
+                     -t $ACR_URL/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker logout
+        docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+
     - name: Docker System Prune
       run: |
         docker system prune --force --all
@@ -40,6 +52,9 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
@@ -57,11 +72,20 @@ jobs:
                      -t pcm0/salt:3.11-isalt-${{ env.BUILD }}-alpine \
                      -t pcm0/salt:3.11-isalt-latest \
                      -t pcm0/salt:3.11-isalt-${{ env.BUILD }} \
-                     -t pcm0/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-isalt-latest-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-isalt-${{ env.BUILD }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-isalt-latest \
+                     -t $ACR_URL/pmartin47/salt:3.11-isalt-${{ env.BUILD }} \
+                     -t $ACR_URL/pmartin47/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker logout
+        docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+
     - name: Docker System Prune
       run: |
         docker system prune --force --all
@@ -70,6 +94,9 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
@@ -90,12 +117,25 @@ jobs:
                      -t pcm0/salt:3.10-${{ env.BUILD }} \
                      -t pcm0/salt:latest \
                      -t pcm0/salt:${{ env.BUILD }} \
-                     -t pcm0/salt:3.10-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.10-${{ env.SHORT_SHA }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.10-latest-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.10-${{ env.BUILD }}-alpine \
+                     -t $ACR_URL/pmartin47/salt-latest-alpine \
+                     -t $ACR_URL/pmartin47/salt-${{ env.BUILD }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.10-latest \
+                     -t $ACR_URL/pmartin47/salt:3.10-${{ env.BUILD }} \
+                     -t $ACR_URL/pmartin47/salt-latest \
+                     -t $ACR_URL/pmartin47/salt:${{ env.BUILD }} \
+                     -t $ACR_URL/pmartin47/salt:3.10-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
         docker images | awk "/pcm0\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker logout
+        docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
@@ -124,6 +164,9 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
@@ -146,12 +189,25 @@ jobs:
                      -t pcm0/salt:3.10-isalt-${{ env.BUILD }} \
                      -t pcm0/salt:isalt-latest \
                      -t pcm0/salt:isalt-${{ env.BUILD }} \
-                     -t pcm0/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.10-isalt-latest-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.10-isalt-${{ env.BUILD }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:isalt-latest-alpine \
+                     -t $ACR_URL/pmartin47/salt:isalt-${{ env.BUILD }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.10-isalt-latest \
+                     -t $ACR_URL/pmartin47/salt:3.10-isalt-${{ env.BUILD }} \
+                     -t $ACR_URL/pmartin47/salt:isalt-latest \
+                     -t $ACR_URL/pmartin47/salt:isalt-${{ env.BUILD }} \
+                     -t $ACR_URL/pmartin47/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         docker images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
         docker images | awk "/pcm0\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker logout
+        docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all

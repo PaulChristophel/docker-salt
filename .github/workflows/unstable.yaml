@@ -11,11 +11,15 @@ on:
       - '![0-9]+.[0-9]+-[0-9]+'
 
 jobs:
+
   build-python3-11:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
@@ -26,19 +30,27 @@ jobs:
       run: |
         docker pull python:3.11-alpine
         docker build -f Dockerfile-3.11-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         docker images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker logout
+        docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
+
   build-python3-11-isalt:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
@@ -51,19 +63,27 @@ jobs:
       run: |
         docker pull python:3.11-alpine
         docker build -f Dockerfile-3.11-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t pcm0/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         docker images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker logout
+        docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
+
   build-python3-10:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
@@ -75,19 +95,27 @@ jobs:
       run: |
         docker pull python:3.10-alpine
         docker build -f Dockerfile-3.10-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t pcm0/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.10-${{ env.SHORT_SHA }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.10-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         docker images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker logout
+        docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
+
   build-python3-10-isalt:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
     - name: Get Build Version
@@ -97,11 +125,15 @@ jobs:
       run: |
         docker pull python:3.10-alpine
         docker build -f Dockerfile-3.10-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t pcm0/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine
+                     -t pcm0/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         docker images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
+        docker logout
+        docker login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        docker images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} docker push {}
     - name: Docker System Prune
       run: |
         docker system prune --force --all
