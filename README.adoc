@@ -1,7 +1,7 @@
-https://it.github.gatech.edu/epi/docker-salt/actions/workflows/latest.yaml[image:https://it.github.gatech.edu/epi/docker-salt/actions/workflows/latest.yaml/badge.svg[Latest
+https://github.com/PaulChristophel/docker-salt/actions/workflows/latest.yaml[image:https://github.com/PaulChristophel/docker-salt/actions/workflows/latest.yaml/badge.svg[Latest
 Release]]
 
-https://it.github.gatech.edu/epi/docker-salt/actions/workflows/unstable.yaml[image:https://it.github.gatech.edu/epi/docker-salt/actions/workflows/unstable.yaml/badge.svg[Unstable
+https://github.com/PaulChristophel/docker-salt/actions/workflows/unstable.yaml[image:https://github.com/PaulChristophel/docker-salt/actions/workflows/unstable.yaml/badge.svg[Unstable
 Release]]
 
 == docker-salt
