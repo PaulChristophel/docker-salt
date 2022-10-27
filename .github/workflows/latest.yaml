@@ -38,7 +38,7 @@ jobs:
                      -t $ACR_URL/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
-        podman login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         podman images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
@@ -97,7 +97,7 @@ jobs:
                      -t $ACR_URL/pmartin47/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
-        podman login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         podman images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
@@ -146,7 +146,7 @@ jobs:
                      -t $ACR_URL/pmartin47/salt:3.10-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
-        podman login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         podman images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman images | awk "/pcm0\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
@@ -215,7 +215,7 @@ jobs:
                      -t $ACR_URL/pmartin47/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
-        podman login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
         podman images | awk "/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman images | awk "/pcm0\/salt/&&/latest/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
