@@ -15,7 +15,7 @@ jobs:
   build-python3-11:
     runs-on: ubuntu-latest
     env:
-      DOCKER_USERNAME: pcm0
+      DOCKER_USERNAME: docker.io/pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       ACR_URL: ${{ secrets.ACR_URL }}
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
@@ -30,12 +30,12 @@ jobs:
       run: |
         podman pull python:3.11-alpine
         podman build -f Dockerfile-3.11-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine \
+                     -t docker.io/pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
@@ -46,7 +46,7 @@ jobs:
   build-python3-11-isalt:
     runs-on: ubuntu-latest
     env:
-      DOCKER_USERNAME: pcm0
+      DOCKER_USERNAME: docker.io/pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       ACR_URL: ${{ secrets.ACR_URL }}
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
@@ -80,12 +80,12 @@ jobs:
       run: |
         podman pull python:3.11-alpine
         podman build -f Dockerfile-3.11-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t pcm0/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine \
+                     -t docker.io/pcm0/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-isalt-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
@@ -96,7 +96,7 @@ jobs:
   build-python3-10:
     runs-on: ubuntu-latest
     env:
-      DOCKER_USERNAME: pcm0
+      DOCKER_USERNAME: docker.io/pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       ACR_URL: ${{ secrets.ACR_URL }}
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
@@ -112,12 +112,12 @@ jobs:
       run: |
         podman pull python:3.10-alpine
         podman build -f Dockerfile-3.10-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t pcm0/salt:3.10-${{ env.SHORT_SHA }}-alpine \
+                     -t docker.io/pcm0/salt:3.10-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.10-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
@@ -128,7 +128,7 @@ jobs:
   build-python3-10-isalt:
     runs-on: ubuntu-latest
     env:
-      DOCKER_USERNAME: pcm0
+      DOCKER_USERNAME: docker.io/pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       ACR_URL: ${{ secrets.ACR_URL }}
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
@@ -142,12 +142,12 @@ jobs:
       run: |
         podman pull python:3.10-alpine
         podman build -f Dockerfile-3.10-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
-                     -t pcm0/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine \
+                     -t docker.io/pcm0/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.10-isalt-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
