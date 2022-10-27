@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS
 RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
-COPY requirements.txt /
+COPY requirements.txt /requirements.txt
 RUN pip install -r /requirements.txt
 RUN pip install --upgrade pyzmq==23.2.1 || true
 RUN pip list && pip list --outdated
