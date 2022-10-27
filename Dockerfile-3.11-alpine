@@ -9,7 +9,7 @@ RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY requirements.txt /requirements.txt
-RUN pip install -r /requirements.txt
+RUN sed -i 's/timelib//' /requirements.txt; pip install -r /requirements.txt
 RUN pip install --upgrade pyzmq==23.2.1 || true
 RUN pip list && pip list --outdated
 COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
