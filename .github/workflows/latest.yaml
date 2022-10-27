@@ -170,8 +170,8 @@ jobs:
       run: |
         echo "BUILD=${GITHUB_REF:10}" | tee -a $GITHUB_ENV
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-        echo "ipython" | tee -a requirements-3.11.txt
-        echo "isalt" | tee -a requirements-3.11.txt
+        echo "ipython" | tee -a requirements.txt
+        echo "isalt" | tee -a requirements.txt
     - name: Python 3.10
       run: |
         BUILD=${GITHUB_REF:10}
