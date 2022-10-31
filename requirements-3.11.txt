@@ -11,7 +11,7 @@ dnspython==2.2.1
 idna==3.4
 immutables==0.19
 jaraco.classes==3.2.3
-jaraco.collections==3.6.0
+jaraco.collections==3.7.0
 jaraco.context==4.1.2
 jaraco.functools==3.5.2
 jaraco.text==3.10.0
