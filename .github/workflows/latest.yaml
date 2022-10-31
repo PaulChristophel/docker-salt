@@ -63,10 +63,10 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
         echo "ipython" | tee -a requirements-3.11.txt
         echo "isalt" | tee -a requirements-3.11.txt
-        echo "asttokens==2.0.8" | tee -a requirements-3.11.txt
+        echo "asttokens==2.1.0" | tee -a requirements-3.11.txt
         echo "backcall==0.2.0" | tee -a requirements-3.11.txt
         echo "decorator==5.1.1" | tee -a requirements-3.11.txt
-        echo "executing==1.1.1" | tee -a requirements-3.11.txt
+        echo "executing==1.2.0" | tee -a requirements-3.11.txt
         echo "jedi==0.18.1" | tee -a requirements-3.11.txt
         echo "matplotlib-inline==0.1.6" | tee -a requirements-3.11.txt
         echo "parso==0.8.3" | tee -a requirements-3.11.txt
@@ -77,7 +77,7 @@ jobs:
         echo "pure-eval==0.2.2" | tee -a requirements-3.11.txt
         echo "pygments==2.13.0" | tee -a requirements-3.11.txt
         echo "six==1.16.0" | tee -a requirements-3.11.txt
-        echo "stack-data==0.5.1" | tee -a requirements-3.11.txt
+        echo "stack-data==0.6.0" | tee -a requirements-3.11.txt
         echo "traitlets==5.5.0" | tee -a requirements-3.11.txt
         echo "wcwidth==0.2.5" | tee -a requirements-3.11.txt
     - name: Python 3.11
