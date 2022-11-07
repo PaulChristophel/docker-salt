@@ -1,7 +1,7 @@
 #/salt-master
 salt==3005.1
 certifi== 2022.9.24
-charset-normalizer==3.0.0
+charset-normalizer==2.1.1
 cheroot==8.6.0
 CherryPy==18.8.0
 Cython==0.29.32
@@ -11,7 +11,7 @@ dnspython==2.2.1
 idna==3.4
 immutables==0.19
 jaraco.classes==3.2.3
-jaraco.collections==3.7.0
+jaraco.collections==3.8.0
 jaraco.context==4.1.2
 jaraco.functools==3.5.2
 jaraco.text==3.10.0
