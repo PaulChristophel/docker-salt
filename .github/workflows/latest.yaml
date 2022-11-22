@@ -67,12 +67,12 @@ jobs:
         echo "backcall==0.2.0" | tee -a requirements-3.11.txt
         echo "decorator==5.1.1" | tee -a requirements-3.11.txt
         echo "executing==1.2.0" | tee -a requirements-3.11.txt
-        echo "jedi==0.18.1" | tee -a requirements-3.11.txt
+        echo "jedi==0.18.2" | tee -a requirements-3.11.txt
         echo "matplotlib-inline==0.1.6" | tee -a requirements-3.11.txt
         echo "parso==0.8.3" | tee -a requirements-3.11.txt
         echo "pexpect==4.8.0" | tee -a requirements-3.11.txt
         echo "pickleshare==0.7.5" | tee -a requirements-3.11.txt
-        echo "prompt-toolkit==3.0.32" | tee -a requirements-3.11.txt
+        echo "prompt-toolkit==3.0.33" | tee -a requirements-3.11.txt
         echo "ptyprocess==0.7.0" | tee -a requirements-3.11.txt
         echo "pure-eval==0.2.2" | tee -a requirements-3.11.txt
         echo "pygments==2.13.0" | tee -a requirements-3.11.txt
