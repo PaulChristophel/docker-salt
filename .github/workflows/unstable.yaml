@@ -73,7 +73,7 @@ jobs:
         echo "pygments==2.13.0" | tee -a requirements-3.11.txt
         echo "six==1.16.0" | tee -a requirements-3.11.txt
         echo "stack-data==0.6.2" | tee -a requirements-3.11.txt
-        echo "traitlets==5.7.0" | tee -a requirements-3.11.txt
+        echo "traitlets==5.7.1" | tee -a requirements-3.11.txt
         echo "wcwidth==0.2.5" | tee -a requirements-3.11.txt
     - name: Python 3.11
       continue-on-error: true
