@@ -2,7 +2,7 @@
 salt==3005.1
 autocommand==2.2.2
 certifi==2022.12.7
-charset-normalizer==2.1.1
+charset-normalizer==3.0.1
 cheroot==9.0.0
 CherryPy==18.8.0
 Cython==0.29.33
@@ -34,7 +34,7 @@ python-ldap==3.4.3
 pytz==2022.7
 PyYAML==6.0
 pyzmq==23.2.1
-requests==2.28.1
+requests==2.28.2
 setproctitle==1.3.2
 six==1.16.0
 tempora==5.2.0
