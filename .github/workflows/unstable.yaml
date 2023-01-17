@@ -74,7 +74,7 @@ jobs:
         echo "six==1.16.0" | tee -a requirements-3.11.txt
         echo "stack-data==0.6.2" | tee -a requirements-3.11.txt
         echo "traitlets==5.8.1" | tee -a requirements-3.11.txt
-        echo "wcwidth==0.2.5" | tee -a requirements-3.11.txt
+        echo "wcwidth==0.2.6" | tee -a requirements-3.11.txt
     - name: Python 3.11
       continue-on-error: true
       run: |
