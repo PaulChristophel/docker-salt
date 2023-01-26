@@ -10,3 +10,4 @@ timelib
 netaddr
 libnacl
 python-gnupg
+python-logstash
