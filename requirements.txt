@@ -1,5 +1,6 @@
 salt==3005.1
 
+setuptools==66.1.1
 CherryPy==18.8.0
 dnspython
 psycopg2==2.9.5
