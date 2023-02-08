@@ -76,4 +76,7 @@ def start(host, port=5959, tag="salt/engine/logstash", proto="udp"):
             event = event_bus.get_event(full=True)
             if event:
                 event['log_fmt_jid'] = '[JID: %(jid)s]'
-                logstash_logger.info(tag, extra=event)
+                if 'tag' in event:
+                    logstash_logger.info(event['tag'], extra=event)
+                else:
+                    logstash_logger.info(tag, extra=event)
