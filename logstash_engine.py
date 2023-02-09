@@ -59,7 +59,13 @@ def event_bus_context(opts):
     return event_bus
 
 
-def start(host, port=5959, tag="salt/engine/logstash", proto="udp"):
+def start(
+    host,
+    port=5959,
+    tag="salt/engine/logstash",
+    proto="udp",
+    logger_name="python-logstash-logger",
+):
     """
     Listen to salt events and forward them to logstash
     """
@@ -75,13 +81,13 @@ def start(host, port=5959, tag="salt/engine/logstash", proto="udp"):
         from random import choice  # pylint: disable=import-outside-toplevel
 
         handlers = [logstash_handler(_, port, version=1) for _ in host]
-        logstash_loggers = [logging.getLogger("python-logstash-logger") for _ in host]
+        logstash_loggers = [logging.getLogger(logger_name) for _ in host]
         _ = [_.setLevel(logging.INFO) for _ in logstash_loggers]
         for handler, logger_ in zip(handlers, logstash_loggers):
             logger_.addHandler(handler)
         logstash_logger = None
     else:
-        logstash_logger = logging.getLogger("python-logstash-logger")
+        logstash_logger = logging.getLogger(logger_name)
         logstash_logger.setLevel(logging.INFO)
         handler = logstash_handler(host, port, version=1)
         logstash_logger.addHandler(handler)
