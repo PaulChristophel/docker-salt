@@ -42,6 +42,9 @@ def __virtual__():
 
 
 def event_bus_context(opts):
+    """
+    Get the event bus context so we can read events.
+    """
     if opts.get("id").endswith("_master"):
         event_bus = salt.utils.event.get_master_event(
             opts, opts["sock_dir"], listen=True
@@ -60,23 +63,35 @@ def start(host, port=5959, tag="salt/engine/logstash", proto="udp"):
     """
     Listen to salt events and forward them to logstash
     """
-
     if proto == "tcp":
-        logstashHandler = logstash.TCPLogstashHandler
+        logstash_handler = logstash.TCPLogstashHandler
     elif proto == "udp":
-        logstashHandler = logstash.UDPLogstashHandler
+        logstash_handler = logstash.UDPLogstashHandler
 
-    logstash_logger = logging.getLogger("python-logstash-logger")
-    logstash_logger.setLevel(logging.INFO)
-    logstash_logger.addHandler(logstashHandler(host, port, version=1))
+    logging.setLoggerClass(logging.Logger)
+    logging.setLogRecordFactory(logging.LogRecord)
+
+    if isinstance(host, list):
+        from random import choice  # pylint: disable=import-outside-toplevel
+
+        handlers = [logstash_handler(_, port, version=1) for _ in host]
+        logstash_loggers = [logging.getLogger("python-logstash-logger") for _ in host]
+        _ = [_.setLevel(logging.INFO) for _ in logstash_loggers]
+        for handler, logger_ in zip(handlers, logstash_loggers):
+            logger_.addHandler(handler)
+        logstash_logger = None
+    else:
+        logstash_logger = logging.getLogger("python-logstash-logger")
+        logstash_logger.setLevel(logging.INFO)
+        handler = logstash_handler(host, port, version=1)
+        logstash_logger.addHandler(handler)
 
     with event_bus_context(__opts__) as event_bus:
         log.debug("Logstash engine started")
-        while True:
-            event = event_bus.get_event(full=True)
-            if event:
-                event['log_fmt_jid'] = '[JID: %(jid)s]'
-                if 'tag' in event:
-                    logstash_logger.info(event['tag'], extra=event)
+        for event in event_bus.iter_events(full=True, auto_reconnect=True):
+            if event and "data" in event and "tag" in event:
+                tag, data = event["tag"], event["data"]
+                if logstash_logger is None:
+                    choice(logstash_loggers).info(tag, extra=event)
                 else:
-                    logstash_logger.info(tag, extra=event)
+                    logstash_logger.info(tag, extra=data)
