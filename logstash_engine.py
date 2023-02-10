@@ -65,39 +65,29 @@ def start(
     tag="salt/engine/logstash",
     proto="udp",
     logger_name="python-logstash-logger",
-):
+):  # pylint: disable=too-many-locals
     """
     Listen to salt events and forward them to logstash
     """
-    if proto == "tcp":
-        logstash_handler = logstash.TCPLogstashHandler
-    elif proto == "udp":
-        logstash_handler = logstash.UDPLogstashHandler
 
     logging.setLoggerClass(logging.Logger)
     logging.setLogRecordFactory(logging.LogRecord)
 
     if isinstance(host, list):
         from random import choice  # pylint: disable=import-outside-toplevel
-
-        handlers = [logstash_handler(_, port, version=1) for _ in host]
-        logstash_loggers = [logging.getLogger(logger_name) for _ in host]
-        _ = [_.setLevel(logging.INFO) for _ in logstash_loggers]
-        for handler, logger_ in zip(handlers, logstash_loggers):
-            logger_.addHandler(handler)
-        logstash_logger = None
-    else:
-        logstash_logger = logging.getLogger(logger_name)
-        logstash_logger.setLevel(logging.INFO)
-        handler = logstash_handler(host, port, version=1)
-        logstash_logger.addHandler(handler)
+        host = choice(host)
+    if proto == "tcp":
+        logstash_handler = logstash.TCPLogstashHandler
+    elif proto == "udp":
+        logstash_handler = logstash.UDPLogstashHandler
+    logstash_logger = logging.getLogger(logger_name)
+    logstash_logger.setLevel(logging.INFO)
+    handler = logstash_handler(host, port, version=1)
+    logstash_logger.addHandler(handler)
 
     with event_bus_context(__opts__) as event_bus:
         log.debug("Logstash engine started")
         for event in event_bus.iter_events(full=True, auto_reconnect=True):
             if event and "data" in event and "tag" in event:
                 tag, data = event["tag"], event["data"]
-                if logstash_logger is None:
-                    choice(logstash_loggers).info(tag, extra=event)
-                else:
-                    logstash_logger.info(tag, extra=data)
+                logstash_logger.info(tag, extra=data)
