@@ -96,7 +96,7 @@ def validate(data):
 
     matches = skip_list.intersection(data)
     for mat in matches:
-        if mat in ('password', 'auth_token'):
+        if mat in ("password", "auth_token"):
             _ = data.pop(mat)
             continue
         data[mat + "_"] = data.pop(mat)
