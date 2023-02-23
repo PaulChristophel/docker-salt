@@ -40,5 +40,5 @@ six==1.16.0
 tempora==5.2.1
 #timelib==0.2.5
 urllib3==1.26.14
-zc.lockfile==2.0
+zc.lockfile==3.0
 python-logstash==0.4.8
