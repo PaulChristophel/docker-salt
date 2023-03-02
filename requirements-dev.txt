@@ -1,4 +1,5 @@
-/salt-master
+#/salt-master
+salt==3006rc1
 autocommand==2.2.2
 certifi==2022.12.7
 charset-normalizer==3.0.1
