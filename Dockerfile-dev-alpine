@@ -9,7 +9,7 @@ RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY requirements-dev.txt /requirements.txt
-RUN git clone --depth 1 https://github.com/saltstack/salt.git /salt-master
+RUN git clone --depth 1 --branch v3006.0rc1 https://github.com/saltstack/salt.git /salt-master
 RUN pip install --no-deps -r /requirements.txt
 RUN pip list && pip list --outdated
 COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
