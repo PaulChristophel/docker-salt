@@ -3,7 +3,7 @@ salt==3006rc1
 autocommand==2.2.2
 certifi==2022.12.7
 cffi
-charset-normalizer==3.0.1
+charset-normalizer==3.1.0
 cheroot==9.0.0
 CherryPy==18.8.0
 contextvars==2.4

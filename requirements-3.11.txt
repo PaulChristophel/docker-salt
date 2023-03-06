@@ -2,7 +2,7 @@
 salt==3005.1
 autocommand==2.2.2
 certifi==2022.12.7
-charset-normalizer==3.0.1
+charset-normalizer==3.1.0
 cheroot==9.0.0
 CherryPy==18.8.0
 Cython==0.29.33
