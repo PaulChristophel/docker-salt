@@ -2,7 +2,7 @@ salt==3005.1
 
 CherryPy==18.8.0
 dnspython
-psycopg2==2.9.5
+psycopg2==2.9.6
 python-dateutil
 python-ldap==3.4.3
 setproctitle
