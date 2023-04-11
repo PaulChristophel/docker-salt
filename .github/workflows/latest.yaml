@@ -75,7 +75,7 @@ jobs:
         echo "prompt-toolkit==3.0.38" | tee -a requirements-3.11.txt
         echo "ptyprocess==0.7.0" | tee -a requirements-3.11.txt
         echo "pure-eval==0.2.2" | tee -a requirements-3.11.txt
-        echo "pygments==2.14.0" | tee -a requirements-3.11.txt
+        echo "pygments==2.15.0" | tee -a requirements-3.11.txt
         echo "six==1.16.0" | tee -a requirements-3.11.txt
         echo "stack-data==0.6.2" | tee -a requirements-3.11.txt
         echo "traitlets==5.9.0" | tee -a requirements-3.11.txt
