@@ -50,3 +50,5 @@ zc.lockfile==3.0.post1
 python-logstash==0.4.8
 typing-extensions
 zipp
+ldap3
+gssapi

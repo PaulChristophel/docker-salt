@@ -11,3 +11,5 @@ netaddr
 libnacl
 python-gnupg
 python-logstash
+ldap3
+gssapi
