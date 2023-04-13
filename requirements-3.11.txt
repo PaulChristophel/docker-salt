@@ -42,3 +42,5 @@ tempora==5.2.2
 urllib3==1.26.15
 zc.lockfile==3.0.post1
 python-logstash==0.4.8
+ldap3
+gssapi
