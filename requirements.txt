@@ -1,4 +1,5 @@
-salt==3006.0
+#salt==3006.0
+https://github.com/saltstack/salt/releases/download/v3006.0/salt-3006.0.tar.gz
 
 CherryPy==18.8.0
 dnspython
