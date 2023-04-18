@@ -1,5 +1,4 @@
-#/salt-master
-salt==3006rc3
+/salt-master
 autocommand==2.2.2
 certifi==2022.12.7
 cffi
