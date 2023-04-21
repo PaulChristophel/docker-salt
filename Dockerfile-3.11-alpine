@@ -2,13 +2,14 @@ FROM python:3.11-alpine AS builder
 MAINTAINER Paul Martin
 ARG BUILD
 RUN apk upgrade --update \
-  && apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar build-base krb5 krb5-libs krb5-dev
+  && apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5 krb5-libs krb5-dev
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY requirements-3.11.txt /requirements.txt
+RUN git clone --depth 1 --branch 3006.x https://github.com/saltstack/salt.git /salt-master
 RUN pip install --no-deps -r /requirements.txt
 RUN pip install -r <(pip freeze)
 RUN pip list && pip list --outdated
