@@ -1,0 +1,34 @@
+FROM python:3.11-alpine AS builder
+MAINTAINER Paul Martin
+ARG BUILD
+RUN apk upgrade --update \
+  && apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5 krb5-libs krb5-dev
+RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
+ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
+RUN python3 -m venv /usr/local/salt
+COPY prerequisites.txt /
+RUN pip install -r /prerequisites.txt
+COPY requirements-3006-isalt.txt /requirements.txt
+#RUN git clone --depth 1 --branch 3006.x https://github.com/saltstack/salt.git /salt-master
+RUN pip install -r /requirements.txt
+#RUN pip install -r <(pip freeze)
+RUN pip list && pip list --outdated
+COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
+COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
+RUN find /usr/local/salt -name \*.pyc -delete
+
+FROM python:3.11-alpine
+COPY --from=builder /usr/local/salt /usr/local/salt
+ARG USER_ID=1000
+RUN addgroup salt && adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt salt -SD -G salt
+RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && chown -R salt:salt /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt
+RUN apk upgrade --update --no-cache \
+  && apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto1.1 libssl1.1 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs
+RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
+WORKDIR /opt/salt
+ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
+RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v salt:salt {} \;
+USER 1000:1000
+ENTRYPOINT ["salt-master"]
+CMD ["-l", "info"]
+

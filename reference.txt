@@ -1,0 +1,15 @@
+salt==3006.0
+
+CherryPy
+dnspython
+gssapi
+ldap3
+libnacl
+netaddr
+psycopg2
+python-dateutil
+python-gnupg
+python-ldap
+python-logstash
+setproctitle
+timelib
