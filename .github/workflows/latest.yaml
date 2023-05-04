@@ -1,4 +1,5 @@
 name: Latest Release
+run-name: "Latest Release (branch: ${{ github.ref_name }})"
 
 on:
   push:
