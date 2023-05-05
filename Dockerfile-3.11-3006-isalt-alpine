@@ -24,7 +24,7 @@ RUN addgroup salt && adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt salt -S
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && chown -R salt:salt /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt
 RUN apk upgrade --update --no-cache \
   && apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto1.1 libssl1.1 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs \
-  && apk del --purge apk-tools && rm -rf /var/cache/apk /etc/apk /lib/apk /usr/share/apk
+  && apk del --purge apk-tools alpine-keys && rm -rf /var/cache/apk /etc/apk /lib/apk /usr/share/apk
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
 WORKDIR /opt/salt
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
