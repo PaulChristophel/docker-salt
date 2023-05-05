@@ -26,7 +26,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Dockerfile-3.11-3006-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
+        podman build -f Dockerfile-3.11-3006-alpine --build-arg REQUIREMENTS=requirements-3006.txt . \
                      -t docker.io/pcm0/salt:3.11-latest-alpine \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-alpine \
                      -t docker.io/pcm0/salt:3.11-latest \
@@ -66,7 +66,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Dockerfile-3.11-3006-isalt-alpine --build-arg BUILD=${{ env.SHORT_SHA }} . \
+        podman build -f Dockerfile-3.11-3006-isalt-alpine --build-arg REQUIREMENTS=requirements-3006-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-isalt-latest-alpine \
                      -t docker.io/pcm0/salt:3.11-isalt-${{ env.BUILD }}-alpine \
                      -t docker.io/pcm0/salt:3.11-isalt-latest \
