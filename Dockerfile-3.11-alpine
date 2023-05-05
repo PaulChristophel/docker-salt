@@ -9,7 +9,6 @@ RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY $REQUIREMENTS /requirements.txt
-#RUN git clone --depth 1 --branch 3006.x https://github.com/saltstack/salt.git /salt-master
 RUN pip install -r /requirements.txt
 #RUN pip install -r <(pip freeze)
 RUN pip list && pip list --outdated
