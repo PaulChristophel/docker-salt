@@ -23,12 +23,13 @@ ARG USER_ID=1000
 RUN addgroup salt && adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt salt -SD -G salt
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && chown -R salt:salt /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt
 RUN apk upgrade --update --no-cache \
-  && apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto1.1 libssl1.1 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs
+  && apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto1.1 libssl1.1 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs \
+  && apk cache clean && apk del apk-tools
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
 WORKDIR /opt/salt
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v salt:salt {} \;
+RUN apk cache clean && apk del apk-tools
 USER 1000:1000
 ENTRYPOINT ["salt-master"]
 CMD ["-l", "info"]
-
