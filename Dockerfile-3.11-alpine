@@ -2,8 +2,8 @@ FROM python:3.11-alpine AS builder
 MAINTAINER Paul Martin
 ARG REQUIREMENTS
 ARG FLAGS
-RUN apk upgrade --update \
-  && apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5 krb5-libs krb5-dev
+RUN apk upgrade --update
+RUN apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5 krb5-libs krb5-dev
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 RUN python3 -m venv /usr/local/salt
@@ -12,7 +12,8 @@ RUN pip install -r /prerequisites.txt
 COPY $REQUIREMENTS /requirements.txt
 RUN pip install $FLAGS -r /requirements.txt
 #RUN pip install -r <(pip freeze)
-RUN pip list && pip list --outdated
+RUN pip list
+RUN pip list --outdated
 COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
 RUN find /usr/local/salt -name \*.pyc -delete
