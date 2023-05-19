@@ -1,7 +1,8 @@
 FROM python:3.12-rc-alpine AS builder
 MAINTAINER Paul Martin
-ARG REQUIREMENTS
+ARG REQUIREMENTS=requirements-3006-isalt.txt
 ARG FLAGS
+ARG USER_ID=1000
 RUN apk upgrade --update
 RUN apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5 krb5-libs krb5-dev
 RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
@@ -17,19 +18,29 @@ RUN pip list --outdated
 COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
 RUN find /usr/local/salt -name \*.pyc -delete
+RUN addgroup salt -g ${USER_ID} -S
+RUN adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt -SD -G salt salt
+RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v salt:salt {} \;
+RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master
+RUN chown -R salt:salt /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt
 
-FROM python:3.12-rc-alpine
+FROM python:3.12-rc-alpine as salt
+COPY --from=builder /usr/lib/libldap_r.so /usr/lib/libldap_r.so
+COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/group /etc/group
+COPY --from=builder /etc/shadow /etc/shadow
+COPY --from=builder /opt/salt /opt/salt
 COPY --from=builder /usr/local/salt /usr/local/salt
-ARG USER_ID=1000
-RUN addgroup salt && adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt salt -SD -G salt
-RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && chown -R salt:salt /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt
+COPY --from=builder /srv /srv
+COPY --from=builder /etc/salt /etc/salt
+COPY --from=builder /var/log/salt /var/log/salt
+COPY --from=builder /var/cache/salt /var/cache/salt
+COPY --from=builder /var/run/salt /var/run/salt
 RUN apk upgrade --update --no-cache \
-  && apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto1.1 libssl1.1 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs \
-  && apk del --purge apk-tools alpine-keys && rm -rf /var/cache/apk /etc/apk /lib/apk /usr/share/apk
-RUN echo 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
+  && apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto1.1 libssl1.1 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs
+#  && apk del --purge apk-tools alpine-keys && rm -rf /var/cache/apk /etc/apk /lib/apk /usr/share/apk
 WORKDIR /opt/salt
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
-RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v salt:salt {} \;
-USER 1000:1000
+USER ${USER_ID}:${USER_ID}
 ENTRYPOINT ["salt-master"]
 CMD ["-l", "info"]
