@@ -25,7 +25,7 @@ RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER
 FROM python:3.11-alpine as salt
 #COPY --from=builder /usr/lib/libldap_r.so /usr/lib/libldap_r.so
 COPY --from=builder /usr/local/salt /usr/local/salt
-RUN addgroup -g ${USER_ID} -S salt salt && \
+RUN addgroup -g ${USER_ID} salt && \
     adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt -SD -G salt salt
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && \
     chown -R ${USER_ID}:${USER_ID} /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt
