@@ -17,12 +17,11 @@ RUN pip install $FLAGS -r /requirements.txt
 #RUN pip install -r <(pip freeze)
 COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
-#RUN find /usr/local/salt -name \*.pyc -delete
-RUN sh -c 'python /usr/local/salt/lib/python3.11/site-packages/salt/utils/nacl.py || true'
-RUN sh -c 'python /usr/local/salt/lib/python3.11/site-packages/salt/engines/logstash_engine.py || true'
+RUN find /usr/local/salt -name \*.pyc -delete
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
 FROM python:3.11-alpine as salt
+ARG USER_ID=1000
 #COPY --from=builder /usr/lib/libldap_r.so /usr/lib/libldap_r.so
 COPY --from=builder /usr/local/salt /usr/local/salt
 RUN addgroup -g ${USER_ID} salt && \
