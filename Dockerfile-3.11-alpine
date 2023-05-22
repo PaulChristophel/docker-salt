@@ -8,7 +8,6 @@ ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS
 
 RUN apk upgrade --update && \
     apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5 krb5-libs krb5-dev
-#RUN printf 'INPUT ( libldap.so )' > /usr/lib/libldap_r.so
 RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
@@ -22,7 +21,6 @@ RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER
 
 FROM python:3.11-alpine as salt
 ARG USER_ID=1000
-#COPY --from=builder /usr/lib/libldap_r.so /usr/lib/libldap_r.so
 COPY --from=builder /usr/local/salt /usr/local/salt
 RUN addgroup -g ${USER_ID} salt && \
     adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt -SD -G salt salt
