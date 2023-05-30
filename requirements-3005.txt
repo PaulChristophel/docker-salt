@@ -14,7 +14,7 @@ immutables==0.19
 inflect==6.0.4
 jaraco.collections==4.1.0
 jaraco.context==4.3.0
-jaraco.functools==3.6.0
+jaraco.functools==3.7.0
 jaraco.text==3.11.1
 Jinja2==3.1.2
 jmespath==1.0.1
