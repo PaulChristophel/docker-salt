@@ -4,7 +4,7 @@ charset-normalizer==3.2.0
 cheroot==10.0.0
 CherryPy==18.8.0
 contextvars==2.4
-Cython==0.29.34
+Cython==0.29.36
 decorator==5.1.1
 distro==1.8.0
 dnspython==2.3.0
