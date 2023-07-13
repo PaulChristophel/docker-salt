@@ -97,7 +97,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Dockerfile-3.11-alpine --build-arg REQUIREMENTS=requirements-master.txt . \
+        podman build -f Dockerfile-3.11-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt . \
                      -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-alpine
@@ -131,7 +131,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Dockerfile-3.11-alpine --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
+        podman build -f Dockerfile-3.11-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-isalt-alpine
@@ -164,7 +164,7 @@ jobs:
     - name: Python 3.11
       run: |
         podman pull python:3.11-alpine
-        podman build -f Dockerfile-3.11-alpine --build-arg REQUIREMENTS=requirements-3006.txt . \
+        podman build -f Dockerfile-3.11-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt . \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
@@ -194,7 +194,7 @@ jobs:
     - name: Python 3.11
       run: |
         podman pull python:3.11-alpine
-        podman build -f Dockerfile-3.11-alpine --build-arg REQUIREMENTS=requirements-3006-isalt.txt . \
+        podman build -f Dockerfile-3.11-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-alpine
     - name: Push to Docker Hub
