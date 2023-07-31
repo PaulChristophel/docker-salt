@@ -8,7 +8,7 @@ CherryPy==18.8.0
 contextvars==2.4
 decorator==5.1.1
 distro==1.8.0
-dnspython==2.4.0
+dnspython==2.4.1
 executing==1.2.0
 gssapi==1.8.2
 idna==3.4
@@ -20,7 +20,7 @@ jaraco.collections==4.3.0
 jaraco.context==4.3.0
 jaraco.functools==3.8.0
 jaraco.text==3.11.1
-jedi==0.18.2
+jedi==0.19.0
 Jinja2==3.1.2
 jmespath==1.0.1
 ldap3==2.9.1
