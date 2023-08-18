@@ -13,7 +13,7 @@ dnspython==2.4.2
 executing==1.2.0
 gssapi==1.8.2
 idna==3.4
-immutables==0.19
+immutables==0.20
 inflect==7.0.0
 ipython==8.14.0
 isalt==2021.2.2
@@ -66,8 +66,8 @@ wcwidth==0.2.6
 zc.lockfile==3.0.post1
 
 # Ansible deps
-ansible==8.2.0
-ansible-core==2.15.2
+ansible==8.3.0
+ansible-core==2.15.3
 argcomplete==3.1.1
 cffi==1.15.1
 cryptography==41.0.3
