@@ -73,7 +73,7 @@ ansible==8.4.0
 ansible-core==2.15.4
 argcomplete==3.1.2
 cffi==1.15.1
-cryptography==41.0.3
+cryptography==41.0.4
 #Jinja2==3.1.2
 #MarkupSafe==2.1.3
 #packaging==23.1
