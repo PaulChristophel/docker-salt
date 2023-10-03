@@ -63,7 +63,7 @@ timelib==0.3.0
 tornado==6.3.3
 traitlets==5.10.1
 typing_extensions==4.8.0
-urllib3==1.26.16
+urllib3==1.26.17
 wcwidth==0.2.7
 zc.lockfile==3.0.post1
 
