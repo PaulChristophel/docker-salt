@@ -28,8 +28,8 @@ jobs:
     - name: Python 3.12 Dev
       continue-on-error: true
       run: |
-        podman pull python:3.12-rc-alpine
-        podman build -f Dockerfile-3.12-rc-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt . \
+        podman pull python:3.12-alpine
+        podman build -f Dockerfile-3.12-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt . \
                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-alpine
@@ -62,8 +62,8 @@ jobs:
     - name: Python 3.12 Dev isalt
       continue-on-error: true
       run: |
-        podman pull python:3.12-rc-alpine
-        podman build -f Dockerfile-3.12-rc-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
+        podman pull python:3.12-alpine
+        podman build -f Dockerfile-3.12-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-alpine

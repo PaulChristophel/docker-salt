@@ -1,4 +1,4 @@
-FROM python:3.12-rc-alpine AS builder
+FROM python:3.12-alpine AS builder
 MAINTAINER Paul Martin
 
 ARG REQUIREMENTS=requirements-3006-isalt.txt
@@ -19,7 +19,7 @@ COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engine
 RUN find /usr/local/salt -name \*.pyc -delete
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
-FROM python:3.12-rc-alpine as salt
+FROM python:3.12-alpine as salt
 ARG USER_ID=1000
 COPY --from=builder /usr/local/salt /usr/local/salt
 RUN addgroup -g ${USER_ID} salt && \
