@@ -175,7 +175,7 @@ jobs:
           podman pull docker.io/pcm0/salt
 
           Or to specify a build:
-          podman pull docker.io/pcm0/salt:3.10-${{ env.BUILD }}-alpine
+          podman pull docker.io/pcm0/salt:3.11-${{ env.BUILD }}-alpine
     - name: Docker System Prune
       run: |
         podman system prune --force --all
