@@ -33,7 +33,7 @@ psycopg2==2.9.9
 pyasn1==0.5.0
 pyasn1-modules==0.3.0
 pycryptodomex==3.19.0
-pydantic==1.10.12
+pydantic==2.4.2
 python-dateutil==2.8.2
 python-gnupg==0.5.1
 python-ldap==3.4.3
@@ -48,7 +48,7 @@ tempora==5.5.0
 timelib==0.3.0
 tornado==6.3.3
 typing_extensions==4.8.0
-urllib3==1.26.17
+urllib3==2.0.6
 zc.lockfile==3.0.post1
 
 # Ansible deps
