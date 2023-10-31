@@ -66,7 +66,7 @@ jobs:
         podman build -f Dockerfile-3.12-alpine --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine \
-                     -t $ACR_URL/pmartin47/salt:3.12-dev-alpine
+                     -t $ACR_URL/pmartin47/salt:3.12-dev-isalt-alpine
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
