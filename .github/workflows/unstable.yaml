@@ -148,7 +148,7 @@ jobs:
       run: |
         podman system prune --force --all
 
-  build-python3-11-dev-3006.x:
+  build-python3-11-dev-3006x:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -182,7 +182,7 @@ jobs:
       run: | 
         podman system prune --force --all
 
-  build-python3-11-dev-isalt-3006.x:
+  build-python3-11-dev-isalt-3006x:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -216,7 +216,7 @@ jobs:
       run: | 
         podman system prune --force --all
 
-  build-python3-12-dev-3006.x:
+  build-python3-12-dev-3006x:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -250,7 +250,7 @@ jobs:
       run: |
         podman system prune --force --all
         
-  build-python3-12-dev-isalt-3006.x:
+  build-python3-12-dev-isalt-3006x:
     runs-on: ubuntu-latest
     env:                      
       DOCKER_USERNAME: pcm0           
