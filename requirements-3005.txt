@@ -9,7 +9,7 @@ decorator==5.1.1
 distro==1.8.0
 dnspython==2.4.2
 gssapi==1.8.3
-idna==3.4
+idna==3.6
 immutables==0.20
 inflect==7.0.0
 jaraco.collections==4.3.0
