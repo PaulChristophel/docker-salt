@@ -59,7 +59,7 @@ six==1.16.0
 stack-data==0.6.3
 tempora==5.5.0
 timelib==0.3.0
-tornado==6.3.3
+tornado==6.4
 traitlets==5.14.0
 typing_extensions==4.8.0
 urllib3==2.1.0
@@ -68,7 +68,7 @@ zc.lockfile==3.0.post1
 
 # Ansible deps
 ansible==9.0.1
-ansible-core==2.16.0
+ansible-core==2.16.1
 argcomplete==3.1.6
 cffi==1.16.0
 cryptography==41.0.7
