@@ -52,7 +52,7 @@ python-ldap==3.4.4
 python-logstash==0.4.8
 pytz==2023.3.post1
 PyYAML==6.0.1
-pyzmq==25.1.1
+pyzmq==25.1.2
 requests==2.31.0
 salt==3006.4
 setproctitle==1.3.3
@@ -68,7 +68,7 @@ wcwidth==0.2.12
 zc.lockfile==3.0.post1
 
 # Ansible deps
-ansible==9.0.1
+ansible==9.1.0
 ansible-core==2.16.1
 argcomplete==3.1.6
 cffi==1.16.0
