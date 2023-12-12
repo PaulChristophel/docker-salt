@@ -38,7 +38,7 @@ parso==0.8.3
 pexpect==4.9.0
 pickleshare==0.7.5
 portend==3.2.0
-prompt-toolkit==3.0.41
+prompt-toolkit==3.0.42
 psutil==5.9.6
 psycopg2==2.9.9
 ptyprocess==0.7.0
