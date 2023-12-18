@@ -166,7 +166,7 @@ jobs:
         #artifacts: "release.tar.gz,foo/*.txt"
         #bodyFile: "body.md"
         token: ${{ secrets.RELEASE_TOKEN }}
-        name:  ${{ github.ref_name }} 
+        name:  ${{ github.ref_name }}
         body: |+
           CHANGELOG:
           ${{ github.event.head_commit.message }}
