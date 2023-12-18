@@ -4,6 +4,8 @@ run-name: "Unstable Release (branch: ${{ github.ref_name }})"
 on:
   push:
     # Pattern matched against refs/tags
+    schedule:
+      - cron: "0 10 * * *"
     branches:
       - master
     tags:
