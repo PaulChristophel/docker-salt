@@ -149,140 +149,140 @@ jobs:
         podman system prune --force --all
 
   build-python3-11-dev-3006x:
-          runs-on: ubuntu-latest
-          env:
-            DOCKER_USERNAME: pcm0
-            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            ACR_URL: ${{ secrets.ACR_URL }}
-            ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-            ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
-          steps:
-          - uses: actions/checkout@v3
-          - name: Get Build Version
-            run: |
-              echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-          - name: Python 3.11 Dev
-            continue-on-error: true
-            run: |
-              podman pull python:3.11-alpine
-              podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt . \
-                           -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
-                           -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
-                           -t $ACR_URL/pmartin47/salt:3.11-dev-alpine-3006.x
-          - name: Push to Docker Hub
-            run: |
-              podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-              podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman logout
-              podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-              podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          - name: Docker System Prune
-            run: |
-              podman system prune --force --all
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Build Version
+      run: |
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+    - name: Python 3.11 Dev
+      continue-on-error: true
+      run: |
+        podman pull python:3.11-alpine
+        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt . \
+                      -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
+                      -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
+                      -t $ACR_URL/pmartin47/salt:3.11-dev-alpine-3006.x
+    - name: Push to Docker Hub
+      run: |
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman logout
+        podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+    - name: Docker System Prune
+      run: |
+        podman system prune --force --all
 
-        build-python3-11-dev-isalt-3006x:
-          runs-on: ubuntu-latest
-          env:
-            DOCKER_USERNAME: pcm0
-            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            ACR_URL: ${{ secrets.ACR_URL }}
-            ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-            ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
-          steps:
-          - uses: actions/checkout@v3
-          - name: Get Build Version
-            run: |
-              echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-          - name: Python 3.11 Dev isalt
-            continue-on-error: true
-            run: |
-              podman pull python:3.11-alpine
-              podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt . \
-                           -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
-                           -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
-                           -t $ACR_URL/pmartin47/salt:3.11-dev-isalt-alpine-3006.x
-          - name: Push to Docker Hub
-            run: |
-              podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-              podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman logout
-              podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-              podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          - name: Docker System Prune
-            run: |
-              podman system prune --force --all
+  build-python3-11-dev-isalt-3006x:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Build Version
+      run: |
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+    - name: Python 3.11 Dev isalt
+      continue-on-error: true
+      run: |
+        podman pull python:3.11-alpine
+        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt . \
+                      -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
+                      -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
+                      -t $ACR_URL/pmartin47/salt:3.11-dev-isalt-alpine-3006.x
+    - name: Push to Docker Hub
+      run: |
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman logout
+        podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+    - name: Docker System Prune
+      run: |
+        podman system prune --force --all
 
-        build-python3-12-dev-3006x:
-          runs-on: ubuntu-latest
-          env:
-            DOCKER_USERNAME: pcm0
-            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            ACR_URL: ${{ secrets.ACR_URL }}
-            ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-            ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
-          steps:
-          - uses: actions/checkout@v3
-          - name: Get Build Version
-            run: |
-              echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-          - name: Python 3.12 Dev
-            continue-on-error: true
-            run: |
-              podman pull python:3.12-alpine
-              podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt . \
-                           -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
-                           -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
-                           -t $ACR_URL/pmartin47/salt:3.12-dev-alpine-3006.x
-          - name: Push to Docker Hub
-            run: |
-              podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-              podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman logout
-              podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-              podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          - name: Docker System Prune
-            run: |
-              podman system prune --force --all
+  build-python3-12-dev-3006x:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Build Version
+      run: |
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+    - name: Python 3.12 Dev
+      continue-on-error: true
+      run: |
+        podman pull python:3.12-alpine
+        podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt . \
+                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
+                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
+                      -t $ACR_URL/pmartin47/salt:3.12-dev-alpine-3006.x
+    - name: Push to Docker Hub
+      run: |
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman logout
+        podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+    - name: Docker System Prune
+      run: |
+        podman system prune --force --all
 
-        build-python3-12-dev-isalt-3006x:
-          runs-on: ubuntu-latest
-          env:
-            DOCKER_USERNAME: pcm0
-            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-            ACR_URL: ${{ secrets.ACR_URL }}
-            ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-            ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
-          steps:
-          - uses: actions/checkout@v3
-          - name: Get Build Version
-            run: |
-              echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-          - name: Python 3.12 Dev isalt
-            continue-on-error: true
-            run: |
-              podman pull python:3.12-alpine
-              podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt . \
-                           -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
-                           -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
-                           -t $ACR_URL/pmartin47/salt:3.12-dev-isalt-alpine-3006.x
-          - name: Push to Docker Hub
-            run: |
-              podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-              podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman logout
-              podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-              podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-              podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          - name: Docker System Prune
-            run: |
-              podman system prune --force --all
+  build-python3-12-dev-isalt-3006x:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Build Version
+      run: |
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+    - name: Python 3.12 Dev isalt
+      continue-on-error: true
+      run: |
+        podman pull python:3.12-alpine
+        podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt . \
+                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
+                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
+                      -t $ACR_URL/pmartin47/salt:3.12-dev-isalt-alpine-3006.x
+    - name: Push to Docker Hub
+      run: |
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman logout
+        podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+    - name: Docker System Prune
+      run: |
+        podman system prune --force --all
 
   build-python3-11-dev-3007x:
     runs-on: ubuntu-latest
