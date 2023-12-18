@@ -11,7 +11,7 @@ decorator==5.1.1
 distro==1.8.0
 dnspython==2.4.2
 executing==2.0.1
-git+https://github.com/saltstack/salt.git
+git+https://github.com/saltstack/salt.git@3007.x
 gssapi==1.8.3
 idna==3.6
 immutables==0.20
