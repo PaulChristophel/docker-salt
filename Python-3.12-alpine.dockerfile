@@ -13,7 +13,7 @@ COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY $REQUIREMENTS /requirements.txt
 RUN pip install $FLAGS -r /requirements.txt
-RUN pip install backports.ssl_match_hostname==3.7.0.1
+#RUN pip install backports.ssl_match_hostname==3.7.0.1
 #RUN pip install -r <(pip freeze)
 COPY nacl.py /usr/local/salt/lib/python3.12/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.12/site-packages/salt/engines/
