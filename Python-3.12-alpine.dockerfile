@@ -17,7 +17,7 @@ RUN pip install $FLAGS -r /requirements.txt
 #RUN pip install -r <(pip freeze)
 COPY nacl.py /usr/local/salt/lib/python3.12/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.12/site-packages/salt/engines/
-RUN find /usr/local/salt -name \*.pyc -delete && rm /usr/local/salt/lib/python3.11/site-packages/salt/returners/django_return.py
+RUN find /usr/local/salt -name \*.pyc -delete && rm -f /usr/local/salt/lib/python3.11/site-packages/salt/returners/django_return.py
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
 FROM python:3.12-alpine as salt
