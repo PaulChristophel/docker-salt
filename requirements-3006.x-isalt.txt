@@ -9,7 +9,7 @@ Cython==3.0.7
 contextvars==2.4
 decorator==5.1.1
 distro==1.9.0
-dnspython==2.4.2
+dnspython==2.5.0
 executing==2.0.1
 git+https://github.com/saltstack/salt.git@3006.x
 gssapi==1.8.3
@@ -39,7 +39,7 @@ pexpect==4.9.0
 pickleshare==0.7.5
 portend==3.2.0
 prompt-toolkit==3.0.43
-psutil==5.9.7
+psutil==5.9.8
 psycopg2==2.9.9
 ptyprocess==0.7.0
 pure-eval==0.2.2
