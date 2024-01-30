@@ -44,13 +44,13 @@ pure-eval==0.2.2
 pyasn1==0.5.1
 pyasn1-modules==0.3.0
 pycryptodomex==3.20.0
-pydantic==2.5.3
+pydantic==2.6.0
 Pygments==2.17.2
 python-dateutil==2.8.2
 python-gnupg==0.5.2
 python-ldap==3.4.4
 python-logstash==0.4.8
-pytz==2023.3.post1
+pytz==2023.4
 PyYAML==6.0.1
 pyzmq==25.1.2
 requests==2.31.0
@@ -63,16 +63,16 @@ timelib==0.3.0
 tornado==6.4
 traitlets==5.14.1
 typing_extensions==4.9.0
-urllib3==2.1.0
+urllib3==2.2.0
 wcwidth==0.2.13
 zc.lockfile==3.0.post1
 
 # Ansible deps
-ansible==9.1.0
-ansible-core==2.16.2
+ansible==9.2.0
+ansible-core==2.16.3
 argcomplete==3.2.2
 cffi==1.16.0
-cryptography==42.0.1
+cryptography==42.0.2
 #Jinja2==3.1.3
 #MarkupSafe==2.1.4
 #packaging==23.2
