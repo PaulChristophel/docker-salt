@@ -16,7 +16,7 @@ gssapi==1.8.3
 idna==3.6
 immutables==0.20
 inflect==7.0.0
-ipython==8.20.0
+ipython==8.21.0
 isalt==2021.2.2
 jaraco.collections==5.0.0
 jaraco.context==4.3.0
