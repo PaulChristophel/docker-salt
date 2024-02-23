@@ -23,7 +23,7 @@ looseversion==1.3.0
 MarkupSafe==2.1.5
 more-itertools==10.2.0
 msgpack==1.0.7
-netaddr==1.0.0
+netaddr==1.2.1
 packaging==23.2
 portend==3.2.0
 psutil==5.9.8
@@ -31,7 +31,7 @@ psycopg2==2.9.9
 pyasn1==0.5.1
 pyasn1-modules==0.3.0
 pycryptodomex==3.20.0
-pydantic==2.6.1
+pydantic==2.6.2
 python-dateutil==2.8.2
 python-gnupg==0.5.2
 python-ldap==3.4.4
@@ -40,7 +40,7 @@ pytz==2024.1
 PyYAML==6.0.1
 pyzmq==25.1.2
 requests==2.31.0
-salt==3006.5
+salt==3006.7
 setproctitle==1.3.3
 six==1.16.0
 tempora==5.5.1
