@@ -1,4 +1,4 @@
-FROM python:3.12-alpine AS builder
+FROM python:3.10-alpine AS builder
 MAINTAINER Paul Martin
 
 ARG REQUIREMENTS=requirements-3006-isalt.txt
@@ -13,12 +13,12 @@ COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY $REQUIREMENTS /requirements.txt
 RUN pip install $FLAGS -r /requirements.txt
-COPY nacl.py /usr/local/salt/lib/python3.12/site-packages/salt/utils/
-COPY logstash_engine.py /usr/local/salt/lib/python3.12/site-packages/salt/engines/
+COPY nacl.py /usr/local/salt/lib/python3.10/site-packages/salt/utils/
+COPY logstash_engine.py /usr/local/salt/lib/python3.10/site-packages/salt/engines/
 RUN find /usr/local/salt -name \*.pyc -delete && rm -f /usr/local/salt/lib/python3.11/site-packages/salt/returners/django_return.py
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
-FROM python:3.12-alpine as salt
+FROM python:3.10-alpine as salt
 ARG USER_ID=1000
 COPY --from=builder /usr/local/salt /usr/local/salt
 RUN addgroup -g ${USER_ID} salt && \

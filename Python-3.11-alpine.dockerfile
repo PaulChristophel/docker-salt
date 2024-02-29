@@ -13,7 +13,6 @@ COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY $REQUIREMENTS /requirements.txt
 RUN pip install $FLAGS -r /requirements.txt
-#RUN pip install -r <(pip freeze)
 COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
 RUN find /usr/local/salt -name \*.pyc -delete && rm -f /usr/local/salt/lib/python3.11/site-packages/salt/returners/django_return.py
