@@ -33,6 +33,7 @@ jobs:
         podman pull python:3.12-alpine
         podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt . \
                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine \
+                     -t docker.io/pcm0/salt:3.12-dev-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-alpine
     - name: Push to Docker Hub
@@ -67,6 +68,7 @@ jobs:
         podman pull python:3.12-alpine
         podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine \
+                     -t docker.io/pcm0/salt:3.12-dev-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-isalt-alpine
     - name: Push to Docker Hub
@@ -101,6 +103,7 @@ jobs:
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt . \
                      -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine \
+                     -t docker.io/pcm0/salt:3.11-dev-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-alpine
     - name: Push to Docker Hub
@@ -135,6 +138,7 @@ jobs:
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine \
+                     -t docker.io/pcm0/salt:3.11-dev-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-isalt-alpine
     - name: Push to Docker Hub
@@ -169,6 +173,7 @@ jobs:
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt . \
                       -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
+                      -t docker.io/pcm0/salt:3.11-dev-alpine-3006.x \
                       -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
                       -t $ACR_URL/pmartin47/salt:3.11-dev-alpine-3006.x
     - name: Push to Docker Hub
@@ -203,6 +208,7 @@ jobs:
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt . \
                       -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
+                      -t docker.io/pcm0/salt:3.11-dev-isalt-alpine-3006.x \
                       -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
                       -t $ACR_URL/pmartin47/salt:3.11-dev-isalt-alpine-3006.x
     - name: Push to Docker Hub
@@ -237,6 +243,7 @@ jobs:
         podman pull python:3.12-alpine
         podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt . \
                       -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
+                      -t docker.io/pcm0/salt:3.12-dev-alpine-3006.x \
                       -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine-3006.x \
                       -t $ACR_URL/pmartin47/salt:3.12-dev-alpine-3006.x
     - name: Push to Docker Hub
@@ -271,6 +278,7 @@ jobs:
         podman pull python:3.12-alpine
         podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt . \
                       -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
+                      -t docker.io/pcm0/salt:3.12-dev-isalt-alpine-3006.x \
                       -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine-3006.x \
                       -t $ACR_URL/pmartin47/salt:3.12-dev-isalt-alpine-3006.x
     - name: Push to Docker Hub
@@ -305,6 +313,7 @@ jobs:
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt . \
                      -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine-3007.x \
+                     -t docker.io/pcm0/salt:3.11-dev-alpine-3007.x \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-alpine-3007.x \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-alpine-3007.x
     - name: Push to Docker Hub
@@ -339,6 +348,7 @@ jobs:
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine-3007.x \
+                     -t docker.io/pcm0/salt:3.11-dev-isalt-alpine-3007.x \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-${{ env.SHORT_SHA }}-isalt-alpine-3007.x \
                      -t $ACR_URL/pmartin47/salt:3.11-dev-isalt-alpine-3007.x
     - name: Push to Docker Hub
@@ -373,6 +383,7 @@ jobs:
         podman pull python:3.12-alpine
         podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt . \
                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine-3007.x \
+                     -t docker.io/pcm0/salt:3.12-dev-alpine-3007.x \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-alpine-3007.x \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-alpine-3007.x
     - name: Push to Docker Hub
@@ -407,6 +418,7 @@ jobs:
         podman pull python:3.12-alpine
         podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt . \
                      -t docker.io/pcm0/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine-3007.x \
+                     -t docker.io/pcm0/salt:3.12-dev-isalt-alpine-3007.x \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-${{ env.SHORT_SHA }}-isalt-alpine-3007.x \
                      -t $ACR_URL/pmartin47/salt:3.12-dev-isalt-alpine-3007.x
     - name: Push to Docker Hub
