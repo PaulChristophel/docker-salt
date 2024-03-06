@@ -8,7 +8,8 @@ on:
       - '[0-9]+.[0-9]+-[0-9]+'
 
 jobs:
-  build-python3-12-3006:
+
+  build-python3-12-3007:
     runs-on: ubuntu-22.04
     env:
       DOCKER_USERNAME: pcm0
@@ -26,7 +27,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.12-alpine
-        podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt . \
+        podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt . \
                      -t docker.io/pcm0/salt:3.12-latest-alpine \
                      -t docker.io/pcm0/salt:3.12-${{ env.BUILD }}-alpine \
                      -t docker.io/pcm0/salt:3.12-latest \
@@ -48,7 +49,7 @@ jobs:
     - name: Docker System Prune
       run: |
         podman system prune --force --all
-  build-python3-12-3006-isalt:
+  build-python3-12-3007-isalt:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -66,7 +67,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.12-alpine
-        podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt . \
+        podman build -f Python-3.12-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt . \
                      -t docker.io/pcm0/salt:3.12-latest-isalt-alpine \
                      -t docker.io/pcm0/salt:3.12-${{ env.BUILD }}-isalt-alpine \
                      -t docker.io/pcm0/salt:3.12-latest-isalt \
@@ -84,7 +85,7 @@ jobs:
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-  build-python3-11-3006:
+  build-python3-11-3007:
     runs-on: ubuntu-22.04
     env:
       DOCKER_USERNAME: pcm0
@@ -102,7 +103,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt . \
+        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt . \
                      -t docker.io/pcm0/salt:3.11-latest-alpine \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-alpine \
                      -t docker.io/pcm0/salt:3.11-latest \
@@ -124,7 +125,7 @@ jobs:
     - name: Docker System Prune
       run: |
         podman system prune --force --all
-  build-python3-11-3006-isalt:
+  build-python3-11-3007-isalt:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -142,7 +143,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt . \
+        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-latest-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-latest-isalt \
