@@ -53,7 +53,7 @@ zc.lockfile==3.0.post1
 # Ansible deps
 ansible==9.3.0
 ansible-core==2.16.4
-argcomplete==3.2.2
+argcomplete==3.2.3
 cffi==1.16.0
 cryptography==42.0.5
 #Jinja2==3.1.3
