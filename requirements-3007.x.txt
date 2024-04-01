@@ -12,7 +12,7 @@ git+https://github.com/saltstack/salt.git@3007.x
 gssapi==1.8.3
 idna==3.6
 immutables==0.20
-inflect==7.0.0
+inflect==7.2.0
 jaraco.collections==5.0.0
 jaraco.context==4.3.0
 jaraco.functools==4.0.0
@@ -61,7 +61,7 @@ cryptography==42.0.5
 #MarkupSafe==2.1.5
 #packaging==24.0
 #pip==23.3
-pycparser==2.21
+pycparser==2.22
 #PyYAML==6.0.1
 resolvelib==1.0.1
 #setuptools==68.0.0
