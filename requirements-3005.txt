@@ -26,6 +26,7 @@ msgpack==1.0.8
 netaddr==1.2.1
 portend==3.2.0
 psutil==5.9.8
+psycopg==3.1.18
 psycopg2==2.9.9
 pyasn1==0.6.0
 pyasn1-modules==0.4.0
