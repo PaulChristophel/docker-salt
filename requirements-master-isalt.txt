@@ -40,8 +40,8 @@ pickleshare==0.7.5
 portend==3.2.0
 prompt-toolkit==3.0.43
 psutil==5.9.8
-psycopg==3.1.18
-psycopg-c==3.1.18
+psycopg[c]==3.1.18
+
 psycopg2==2.9.9
 ptyprocess==0.7.0
 pure-eval==0.2.2
