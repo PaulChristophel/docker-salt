@@ -7,7 +7,7 @@ ARG USER_ID=1000
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 
 RUN apk upgrade --update && \
-    apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5 krb5-libs krb5-dev postgresql-dev
+    apk add --update --no-cache alpine-sdk musl-dev libzmq zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5 krb5-libs krb5-dev postgresql-dev python3-dev
 RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
