@@ -1,3 +1,4 @@
+aiohttp==3.9.3
 autocommand==2.2.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
@@ -12,6 +13,7 @@ git+https://github.com/saltstack/salt.git@3006.x
 gssapi==1.8.3
 idna==3.6
 immutables==0.20
+importlib-metadata==7.1.0
 inflect==7.2.0
 jaraco.collections==5.0.0
 jaraco.context==5.1.0

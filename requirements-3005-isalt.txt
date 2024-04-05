@@ -1,3 +1,4 @@
+aiohttp==3.9.3
 asttokens==2.4.1
 autocommand==2.2.2
 backcall==0.2.0
@@ -14,6 +15,7 @@ executing==2.0.1
 gssapi==1.8.3
 idna==3.6
 immutables==0.20
+importlib-metadata==7.1.0
 inflect==7.2.0
 ipython==8.23.0
 isalt==2021.2.2
