@@ -6,7 +6,7 @@ certifi==2024.2.2
 charset-normalizer==3.3.2
 cheroot==10.0.0
 CherryPy==18.9.0
-Cython==3.0.9
+Cython==3.0.10
 contextvars==2.4
 decorator==5.1.1
 distro==1.9.0
@@ -21,7 +21,7 @@ inflect==7.2.0
 ipython==8.23.0
 isalt==2021.2.2
 jaraco.collections==5.0.0
-jaraco.context==5.1.0
+jaraco.context==5.3.0
 jaraco.functools==4.0.0
 jaraco.text==3.12.0
 jedi==0.19.1
