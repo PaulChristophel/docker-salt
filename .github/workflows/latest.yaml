@@ -259,10 +259,10 @@ jobs:
                      -t $ACR_URL/pmartin47/salt:3.11-3006-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.7isalt \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-isalt \
-                     -t $ACR_URL/pmartin47/salt:3.12-3006.7-${{ env.SHORT_SHA }}-isalt-alpine \
-                     -t $ACR_URL/pmartin47/salt:3.12-3006.7-${{ env.SHORT_SHA }}-isalt \
-                     -t $ACR_URL/pmartin47/salt:3.12-3006-${{ env.SHORT_SHA }}-isalt-alpine \
-                     -t $ACR_URL/pmartin47/salt:3.12-3006-${{ env.SHORT_SHA }}-isalt
+                     -t $ACR_URL/pmartin47/salt:3.11-3006.7-${{ env.SHORT_SHA }}-isalt-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-3006.7-${{ env.SHORT_SHA }}-isalt \
+                     -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-alpine \
+                     -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
