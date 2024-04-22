@@ -2,7 +2,7 @@ aiohttp==3.9.5
 autocommand==2.2.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
-cheroot==10.0.0
+cheroot==10.0.1
 CherryPy==18.9.0
 Cython==3.0.10
 contextvars==2.4

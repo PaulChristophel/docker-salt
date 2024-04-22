@@ -254,23 +254,3 @@ jobs:
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-    - name: Create a Release
-      uses: ncipollo/release-action@v1
-      with:
-        #artifacts: "release.tar.gz,foo/*.txt"
-        #bodyFile: "body.md"
-        token: ${{ secrets.RELEASE_TOKEN }}
-        name:  3006.7-${{ github.sha }}
-        body: |+
-          CHANGELOG:
-          ${{ github.event.head_commit.message }}
-
-          To download this release:
-          podman pull docker.io/pcm0/salt
-
-          Or to specify a build:
-          podman pull docker.io/pcm0/salt:3.11-3006.7-alpine
-          podman pull docker.io/pcm0/salt:3.11-3006-alpine
-    - name: Docker System Prune
-      run: |
-        podman system prune --force --all
