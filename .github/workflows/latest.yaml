@@ -107,11 +107,13 @@ jobs:
                      -t docker.io/pcm0/salt:3.11-latest-alpine \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-alpine \
                      -t docker.io/pcm0/salt:3.11-latest \
+                     -t docker.io/pcm0/salt:latest \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }} \
                      -t docker.io/pcm0/salt:3.11-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-latest-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-${{ env.BUILD }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-latest \
+                     -t $ACR_URL/pmartin47/salt:latest \
                      -t $ACR_URL/pmartin47/salt:3.11-${{ env.BUILD }} \
                      -t $ACR_URL/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-alpine
     - name: Push to Docker Hub
@@ -147,11 +149,13 @@ jobs:
                      -t docker.io/pcm0/salt:3.11-latest-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-latest-isalt \
+                     -t docker.io/pcm0/salt:latest-isalt \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-isalt \
                      -t docker.io/pcm0/salt:3.11-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-latest-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-${{ env.BUILD }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-latest-isalt \
+                     -t $ACR_URL/pmartin47/salt:latest-isalt \
                      -t $ACR_URL/pmartin47/salt:3.11-${{ env.BUILD }}-isalt \
                      -t $ACR_URL/pmartin47/salt:3.11-${{ env.SHORT_SHA }}-isalt-alpine
     - name: Push to Docker Hub
@@ -204,6 +208,7 @@ jobs:
                      -t docker.io/pcm0/salt:3.11-3006-alpine \
                      -t docker.io/pcm0/salt:3.11-3006.7 \
                      -t docker.io/pcm0/salt:3.11-3006 \
+                     -t docker.io/pcm0/salt:3006 \
                      -t docker.io/pcm0/salt:3.11-3006.7-${{ env.SHORT_SHA }} \
                      -t docker.io/pcm0/salt:3.11-3006.7-${{ env.SHORT_SHA }}-alpine \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-alpine \
@@ -212,6 +217,7 @@ jobs:
                      -t $ACR_URL/pmartin47/salt:3.11-3006-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.7 \
                      -t $ACR_URL/pmartin47/salt:3.11-3006 \
+                     -t $ACR_URL/pmartin47/salt:3.3006 \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.7-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.7-${{ env.SHORT_SHA }} \
@@ -251,14 +257,16 @@ jobs:
                      -t docker.io/pcm0/salt:3.11-3006-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-3006.7-isalt \
                      -t docker.io/pcm0/salt:3.11-3006-isalt \
+                     -t docker.io/pcm0/salt:3006-isalt \
                      -t docker.io/pcm0/salt:3.11-3006.7-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-3006.7-${{ env.SHORT_SHA }}-isalt \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.7-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-isalt-alpine \
-                     -t $ACR_URL/pmartin47/salt:3.11-3006.7isalt \
+                     -t $ACR_URL/pmartin47/salt:3.11-3006.7-isalt \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-isalt \
+                     -t $ACR_URL/pmartin47/salt:3006-isalt \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.7-${{ env.SHORT_SHA }}-isalt-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.7-${{ env.SHORT_SHA }}-isalt \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-alpine \
