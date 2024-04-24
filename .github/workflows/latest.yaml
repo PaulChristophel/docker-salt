@@ -123,6 +123,26 @@ jobs:
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman save docker.io/pcm0/salt:latest -o latest.tar.gz
+    - name: Create a Release
+      uses: ncipollo/release-action@v1
+      with:
+        artifacts: "latest.tar.gz"
+        #bodyFile: "body.md"
+        token: ${{ secrets.RELEASE_TOKEN }}
+        name:  ${{ github.ref_name }}
+        body: |+
+          CHANGELOG:
+          ${{ github.event.head_commit.message }}
+
+          To download this release:
+          podman pull docker.io/pcm0/salt
+
+          Or to specify a build:
+          podman pull docker.io/pcm0/salt:3.11-${{ env.BUILD }}-alpine
+    - name: Docker System Prune
+      run: |
+        podman system prune --force --all
 
     - name: Docker System Prune
       run: |
@@ -165,25 +185,6 @@ jobs:
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-    - name: Create a Release
-      uses: ncipollo/release-action@v1
-      with:
-        #artifacts: "release.tar.gz,foo/*.txt"
-        #bodyFile: "body.md"
-        token: ${{ secrets.RELEASE_TOKEN }}
-        name:  ${{ github.ref_name }}
-        body: |+
-          CHANGELOG:
-          ${{ github.event.head_commit.message }}
-
-          To download this release:
-          podman pull docker.io/pcm0/salt
-
-          Or to specify a build:
-          podman pull docker.io/pcm0/salt:3.11-${{ env.BUILD }}-alpine
-    - name: Docker System Prune
-      run: |
-        podman system prune --force --all
 
   build-python3-11-3006:
     runs-on: ubuntu-22.04
