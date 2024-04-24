@@ -41,10 +41,10 @@ jobs:
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 
     - name: Docker System Prune
       run: |
@@ -81,7 +81,7 @@ jobs:
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
@@ -119,10 +119,10 @@ jobs:
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman save docker.io/pcm0/salt:latest -o latest.tar.gz
     - name: Create a Release
       uses: ncipollo/release-action@v1
@@ -181,7 +181,7 @@ jobs:
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
@@ -226,10 +226,10 @@ jobs:
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 
     - name: Docker System Prune
       run: |
@@ -275,7 +275,7 @@ jobs:
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
-        podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.BUILD }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman logout
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
