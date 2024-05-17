@@ -92,4 +92,4 @@ attrs==23.2.0
 frozenlist==1.4.1
 multidict==6.0.5
 yarl==1.9.4
-zipp==3.18.1
+zipp==3.18.2
