@@ -18,7 +18,7 @@ idna==3.7
 immutables==0.20
 importlib-metadata==7.1.0
 inflect==7.3.0
-ipython==8.25.0
+ipython==8.26.0
 isalt==2021.2.2
 jaraco.collections==5.0.1
 jaraco.context==5.1.0
