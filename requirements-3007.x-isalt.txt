@@ -2,7 +2,7 @@ aiohttp==3.9.5
 asttokens==2.4.1
 autocommand==2.2.2
 backcall==0.2.0
-certifi==2024.6.2
+certifi==2024.7.4
 charset-normalizer==3.3.2
 cheroot==10.0.1
 CherryPy==18.10.0
@@ -17,7 +17,7 @@ gssapi==1.8.3
 idna==3.7
 immutables==0.20
 importlib-metadata==7.1.0
-inflect==7.3.0
+inflect==7.3.1
 ipython==8.26.0
 isalt==2021.2.2
 jaraco.collections==5.0.1
@@ -50,7 +50,7 @@ pure-eval==0.2.2
 pyasn1==0.6.0
 pyasn1-modules==0.4.0
 pycryptodomex==3.20.0
-pydantic==2.8.0
+pydantic==2.8.2
 Pygments==2.18.0
 python-dateutil==2.9.0.post0
 python-gnupg==0.5.2
