@@ -1,2 +1,2 @@
-pip==24.1.2.2
+pip==24.1.2
 setuptools==70.3.0; python_version >= '3.11'
