@@ -15,7 +15,7 @@ executing==2.0.1
 gssapi==1.8.3
 idna==3.7
 immutables==0.20
-importlib-metadata==7.1.0
+importlib-metadata==8.0.0
 inflect==7.3.1
 ipython==8.26.0
 isalt==2021.2.2
@@ -41,7 +41,7 @@ pickleshare==0.7.5
 portend==3.2.0
 prompt-toolkit==3.0.47
 psutil==6.0.0
-psycopg[c]==3.1.19
+psycopg[c]==3.2.1
 
 psycopg2==2.9.9
 ptyprocess==0.7.0
