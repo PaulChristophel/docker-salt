@@ -12,7 +12,7 @@ dnspython==2.6.1
 gssapi==1.8.3
 idna==3.7
 immutables==0.20
-importlib-metadata==8.0.0
+importlib-metadata==8.2.0
 inflect==7.3.1
 jaraco.collections==5.0.1
 jaraco.context==5.1.0
