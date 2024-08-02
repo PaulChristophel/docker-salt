@@ -1,4 +1,4 @@
-aiohttp==3.9.5
+aiohttp==3.10.0
 asttokens==2.4.1
 autocommand==2.2.2
 backcall==0.2.0
@@ -22,7 +22,7 @@ ipython==8.26.0
 isalt==2021.2.2
 jaraco.collections==5.0.1
 jaraco.context==5.1.0
-jaraco.functools==4.0.1
+jaraco.functools==4.0.2
 jaraco.text==3.14.0
 jedi==0.19.1
 Jinja2==3.1.4
