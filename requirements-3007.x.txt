@@ -18,7 +18,7 @@ inflect==7.3.1
 jaraco.collections==5.0.1
 jaraco.context==5.1.0
 jaraco.functools==4.0.2
-jaraco.text==3.14.0
+jaraco.text==4.0.0
 Jinja2==3.1.4
 jmespath==1.0.1
 ldap3==2.9.1
