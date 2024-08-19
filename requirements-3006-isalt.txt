@@ -15,7 +15,7 @@ executing==2.0.1
 gssapi==1.8.3
 idna==3.7
 immutables==0.20
-importlib-metadata==8.2.0
+importlib-metadata==8.3.0
 inflect==7.3.1
 ipython==8.26.0
 isalt==2021.2.2
