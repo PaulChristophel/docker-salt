@@ -15,7 +15,7 @@ immutables==0.20
 importlib-metadata==8.4.0
 inflect==7.3.1
 jaraco.collections==5.1.0
-jaraco.context==5.1.0
+jaraco.context==6.0.1
 jaraco.functools==4.0.2
 jaraco.text==4.0.0
 Jinja2==3.1.4
@@ -76,3 +76,4 @@ frozenlist==1.4.1
 multidict==6.0.5
 yarl==1.9.4
 zipp==3.20.1
+backports.tarfile==1.2.0; python_version <= '3.11'
