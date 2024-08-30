@@ -2,7 +2,7 @@ aiohttp==3.10.5
 asttokens==2.4.1
 autocommand==2.2.2
 backcall==0.2.0
-certifi==2024.7.4
+certifi==2024.8.30
 charset-normalizer==3.3.2
 cheroot==10.0.1
 CherryPy==18.10.0
@@ -17,7 +17,7 @@ idna==3.8
 immutables==0.20
 importlib-metadata==8.4.0
 inflect==7.3.1
-ipython==8.26.0
+ipython==8.27.0
 isalt==2021.2.2
 jaraco.collections==5.1.0
 jaraco.context==6.0.1
