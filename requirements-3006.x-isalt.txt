@@ -14,7 +14,7 @@ dnspython==2.6.1
 executing==2.1.0
 git+https://github.com/saltstack/salt.git@3006.x
 gssapi==1.8.3
-idna==3.8
+idna==3.10
 immutables==0.20
 importlib-metadata==8.5.0
 inflect==7.4.0
@@ -92,5 +92,5 @@ attrs==24.2.0
 frozenlist==1.4.1
 multidict==6.1.0
 yarl==1.11.1
-zipp==3.20.1
+zipp==3.20.2
 backports.tarfile==1.2.0; python_version <= '3.11'
