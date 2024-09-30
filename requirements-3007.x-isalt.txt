@@ -40,7 +40,7 @@ parso==0.8.4
 pexpect==4.9.0
 pickleshare==0.7.5
 portend==3.2.0
-prompt-toolkit==3.0.47
+prompt_toolkit==3.0.48
 psutil==6.0.0
 psycopg[c]==3.2.3
 
