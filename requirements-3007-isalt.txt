@@ -3,21 +3,21 @@ asttokens==2.4.1
 autocommand==2.2.2
 backcall==0.2.0
 certifi==2024.8.30
-charset-normalizer==3.3.2
+charset-normalizer==3.4.0
 cheroot==10.0.1
 CherryPy==18.10.0
 Cython==3.0.11
 contextvars==2.4
 decorator==5.1.1
 distro==1.9.0
-dnspython==2.6.1
+dnspython==2.7.0
 executing==2.1.0
 gssapi==1.8.3
 idna==3.10
-immutables==0.20
+immutables==0.21
 importlib-metadata==8.5.0
 inflect==7.4.0
-ipython==8.27.0
+ipython==8.28.0
 isalt==2021.2.2
 jaraco.collections==5.1.0
 jaraco.context==6.0.1
@@ -29,7 +29,7 @@ jmespath==1.0.1
 ldap3==2.9.1
 pynacl==1.5.0
 looseversion==1.3.0
-MarkupSafe==2.1.5
+MarkupSafe==3.0.1
 matplotlib-inline==0.1.7
 more-itertools==10.5.0
 msgpack==1.1.0
@@ -48,7 +48,7 @@ ptyprocess==0.7.0
 pure-eval==0.2.3
 pyasn1==0.6.1
 pyasn1-modules==0.4.1
-pycryptodomex==3.20.0
+pycryptodomex==3.21.0
 pydantic==2.9.2
 Pygments==2.18.0
 python-dateutil==2.9.0.post0
@@ -73,13 +73,13 @@ wcwidth==0.2.13
 zc.lockfile==3.0.post1
 
 # Ansible deps
-ansible==10.4.0
-ansible-core==2.17.4
-argcomplete==3.5.0
+ansible==10.5.0
+ansible-core==2.17.5
+argcomplete==3.5.1
 cffi==1.17.1
 cryptography==43.0.1
 #Jinja2==3.1.4
-#MarkupSafe==2.1.5
+#MarkupSafe==3.0.1
 #packaging==24.1
 #pip==23.3
 pycparser==2.22
