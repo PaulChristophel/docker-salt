@@ -18,6 +18,7 @@ COPY $REQUIREMENTS /requirements.txt
 RUN pip install $FLAGS -r /requirements.txt
 COPY nacl.py /usr/local/salt/lib/python3.13/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.13/site-packages/salt/engines/
+RUN rm -fv /usr/local/salt/lib/python3.12/site-packages/salt/modules/vsphere.py
 RUN find /usr/local/salt -name \*.pyc -delete && rm -f /usr/local/salt/lib/python3.13/site-packages/salt/returners/django_return.py
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
