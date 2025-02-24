@@ -1,4 +1,4 @@
-aiohttp==3.11.12
+aiohttp==3.11.13
 autocommand==2.2.2
 certifi==2025.1.31
 charset-normalizer==3.4.1
@@ -6,7 +6,7 @@ cheroot==10.0.1
 CherryPy==18.10.0
 Cython==3.0.12
 contextvars==2.4
-decorator==5.1.1
+decorator==5.2.1
 distro==1.9.0
 dnspython==2.7.0
 gssapi==1.9.0
@@ -46,7 +46,7 @@ PyYAML==6.0.2
 pyzmq==26.2.1
 requests==2.32.3
 salt==3007.1
-setproctitle==1.3.4
+setproctitle==1.3.5
 six==1.17.0
 tempora==5.8.0
 timelib==0.3.0
