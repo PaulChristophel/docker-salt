@@ -17,14 +17,14 @@ gssapi==1.9.0
 idna==3.10
 immutables==0.21
 inflect==7.5.0
-ipython==8.32.0
+ipython==9.0.1
 isalt==2021.2.2
 jaraco.collections==5.1.0
 jaraco.context==6.0.1
 jaraco.functools==4.1.0
 jaraco.text==4.0.0
 jedi==0.19.2
-Jinja2==3.1.5
+Jinja2==3.1.6
 jmespath==1.0.1
 ldap3==2.9.1
 pynacl==1.5.0
@@ -72,12 +72,12 @@ wcwidth==0.2.13
 zc.lockfile==3.0.post1
 
 # Ansible deps
-ansible==11.2.0
-ansible-core==2.18.2
-argcomplete==3.5.3
+ansible==11.3.0
+ansible-core==2.18.3
+argcomplete==3.6.0
 cffi==1.17.1
-cryptography==44.0.1
-#Jinja2==3.1.5
+cryptography==44.0.2
+#Jinja2==3.1.6
 #MarkupSafe==3.0.2
 #packaging==24.2
 #pip==23.3

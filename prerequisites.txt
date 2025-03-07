@@ -1,2 +1,2 @@
 pip==25.0.1
-setuptools==75.8.0; python_version >= '3.11'
+setuptools==75.8.2; python_version >= '3.11'
