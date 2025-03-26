@@ -56,7 +56,7 @@ python-dateutil==2.9.0.post0
 python-gnupg==0.5.4
 python-ldap==3.4.4
 python-logstash==0.4.8
-pytz==2025.1
+pytz==2025.2
 PyYAML==6.0.2
 pyzmq==26.3.0
 requests==2.32.3
@@ -67,15 +67,15 @@ tempora==5.8.0
 timelib==0.3.0
 tornado==6.4.2
 traitlets==5.14.3
-typing_extensions==4.12.2
+typing_extensions==4.13.0
 urllib3==2.3.0
 wcwidth==0.2.13
 zc.lockfile==3.0.post1
 
 # Ansible deps
-ansible==11.3.0
-ansible-core==2.18.3
-argcomplete==3.6.0
+ansible==11.4.0
+ansible-core==2.18.4
+argcomplete==3.6.1
 cffi==1.17.1
 cryptography==44.0.2
 #Jinja2==3.1.6
