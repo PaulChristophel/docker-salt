@@ -40,14 +40,14 @@ pexpect==4.9.0
 pickleshare==0.7.5
 portend==3.2.0
 prompt_toolkit==3.0.50
-psutil==6.1.0
-psycopg[c]==3.2.3
+psutil==7.0.0
+psycopg[c]==3.2.6
 
 psycopg2==2.9.10
 ptyprocess==0.7.0
 pure-eval==0.2.3
 pyasn1==0.6.1
-pyasn1-modules==0.4.1
+pyasn1-modules==0.4.2
 pycryptodomex==3.22.0
 pydantic==2.11.2
 Pygments==2.19.1
