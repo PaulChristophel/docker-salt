@@ -29,7 +29,8 @@ COPY --from=builder /usr/local/salt /usr/local/salt
 RUN addgroup -g ${USER_ID} salt && \
     adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt -SD -G salt salt
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && \
-    chown -R ${USER_ID}:${USER_ID} /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt
+    chown -R ${USER_ID}:${USER_ID} /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt && \
+    ln -s /usr/lib/libpq.so.5 /usr/lib/libpq.so
 WORKDIR /opt/salt
 USER ${USER_ID}:${USER_ID}
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" MIMIC_SALT_INSTALL=1 VIRTUAL_ENV=/usr/local/salt
