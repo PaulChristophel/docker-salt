@@ -3,7 +3,7 @@ asttokens==3.0.0
 autocommand==2.2.2
 backcall==0.2.0
 certifi==2025.4.26
-charset-normalizer==3.4.1
+charset-normalizer==3.4.2
 cheroot==10.0.1
 CherryPy==18.10.0
 Cython==3.0.12
@@ -42,7 +42,7 @@ pickleshare==0.7.5
 portend==3.2.0
 prompt_toolkit==3.0.51
 psutil==7.0.0
-psycopg[c]==3.2.6
+psycopg[c]==3.2.7
 
 psycopg2==2.9.10
 ptyprocess==0.7.0
@@ -78,7 +78,7 @@ ansible==11.5.0
 ansible-core==2.18.5
 argcomplete==3.6.2
 cffi==1.17.1
-cryptography==44.0.2
+cryptography==44.0.3
 #Jinja2==3.1.6
 #MarkupSafe==3.0.2
 #packaging==25.0
