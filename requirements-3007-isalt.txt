@@ -1,4 +1,4 @@
-aiohttp==3.11.18
+aiohttp==3.12.4
 asttokens==3.0.0
 autocommand==2.2.2
 backcall==0.2.0
@@ -50,7 +50,7 @@ pure-eval==0.2.3
 pyasn1==0.6.1
 pyasn1-modules==0.4.2
 pycryptodomex==3.23.0
-pydantic==2.11.4
+pydantic==2.11.5
 Pygments==2.19.1
 python-dateutil==2.9.0.post0
 python-gnupg==0.5.4
@@ -66,7 +66,7 @@ six==1.17.0
 stack-data==0.6.3
 tempora==5.8.0
 timelib==0.3.0
-tornado==6.5
+tornado==6.5.1
 traitlets==5.14.3
 typing_extensions==4.13.2
 urllib3==2.4.0
@@ -74,11 +74,11 @@ wcwidth==0.2.13
 zc.lockfile==3.0.post1
 
 # Ansible deps
-ansible==11.5.0
+ansible==11.6.0
 ansible-core==2.18.6
 argcomplete==3.6.2
 cffi==1.17.1
-cryptography==45.0.2
+cryptography==45.0.3
 #Jinja2==3.1.6
 #MarkupSafe==3.0.2
 #packaging==25.0
@@ -93,5 +93,5 @@ attrs==25.3.0
 frozenlist==1.6.0
 multidict==6.4.4
 yarl==1.20.0
-zipp==3.21.0
+zipp==3.22.0
 backports.tarfile==1.2.0; python_version <= '3.11'
