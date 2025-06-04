@@ -1,4 +1,4 @@
-aiohttp==3.12.6
+aiohttp==3.12.9
 autocommand==2.2.2
 certifi==2025.4.26
 charset-normalizer==3.4.2
