@@ -53,7 +53,7 @@ tempora==5.8.0
 timelib==0.3.0
 tornado==6.5.1
 typing_extensions==4.14.0
-urllib3==2.4.0
+urllib3==2.5.0
 zc.lockfile==3.0.post1
 
 # Ansible deps
