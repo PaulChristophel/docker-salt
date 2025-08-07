@@ -22,10 +22,17 @@ COPY logstash_engine.py /usr/local/salt/lib/python3.12/site-packages/salt/engine
 RUN find /usr/local/salt -name \*.pyc -delete && rm -f /usr/local/salt/lib/python3.11/site-packages/salt/returners/django_return.py
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
+FROM golang:alpine AS yescrypt-builder
+RUN apk add --no-cache git
+WORKDIR /build
+COPY ./yescrypt-cli ./
+RUN go mod download && CGO_ENABLED=0 go build -ldflags="-w -s" -o yescrypt-cli main.go
+
 FROM base as salt
 MAINTAINER Paul Martin
 ARG USER_ID=1000
 COPY --from=builder /usr/local/salt /usr/local/salt
+COPY --from=yescrypt-builder /build/yescrypt-cli /usr/local/bin/yescrypt-cli
 RUN addgroup -g ${USER_ID} salt && \
     adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt -SD -G salt salt
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && \
