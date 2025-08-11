@@ -3,7 +3,7 @@ asttokens==3.0.0
 autocommand==2.2.2
 backcall==0.2.0
 certifi==2025.8.3
-charset-normalizer==3.4.2
+charset-normalizer==3.4.3
 cheroot==10.0.1
 CherryPy==18.10.0
 Cython==3.1.2
@@ -65,7 +65,7 @@ six==1.17.0
 stack-data==0.6.3
 tempora==5.8.1
 timelib==0.3.0
-tornado==6.5.1
+tornado==6.5.2
 traitlets==5.14.3
 typing_extensions==4.14.1
 urllib3==2.5.0
@@ -90,7 +90,7 @@ resolvelib==1.2.0
 aiosignal==1.4.0
 attrs==25.3.0
 frozenlist==1.7.0
-multidict==6.6.3
+multidict==6.6.4
 yarl==1.20.1
 zipp==3.23.0
 backports.tarfile==1.2.0; python_version <= '3.11'
