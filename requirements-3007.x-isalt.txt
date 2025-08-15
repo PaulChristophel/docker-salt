@@ -100,7 +100,7 @@ aiohappyeyeballs==2.6.1
 annotated-types==0.7.0
 ipython-pygments-lexers==1.1.1
 propcache==0.3.2
-pydantic-core==2.39.0
+pydantic_core==2.39.0
 pygments==2.19.2
 typeguard==4.4.4
 typing-extensions==4.14.1
