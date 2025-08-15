@@ -25,7 +25,7 @@ FROM golang:alpine AS yescrypt-builder
 RUN apk add --no-cache git
 WORKDIR /build
 COPY ./yescrypt-cli ./
-RUN go mod download && CGO_ENABLED=0 go build -ldflags="-w -s" -o yescrypt-cli main.go
+RUN go mod download && CGO_ENABLED=0 go build -trimpath -ldflags="-w -s" -o yescrypt-cli .
 
 FROM base as salt
 MAINTAINER Paul Martin
