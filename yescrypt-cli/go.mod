@@ -1,6 +1,6 @@
 module github.com/PaulChristophel/yescrypt-cli
 
-go 1.24.6
+go 1.25.0
 
 require (
 	github.com/openwall/yescrypt-go v1.0.0
