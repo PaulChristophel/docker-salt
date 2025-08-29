@@ -17,7 +17,7 @@ idna==3.10
 immutables==0.21
 importlib_metadata==8.7.0
 inflect==7.5.0
-ipython==9.4.0
+ipython==9.5.0
 isalt==2021.2.2
 jaraco.collections==5.2.1
 jaraco.context==6.0.1
@@ -60,7 +60,7 @@ pytz==2025.2
 PyYAML==6.0.2
 pyzmq==27.0.2
 requests==2.32.5
-salt==3006.14
+salt==3006.15
 setproctitle==1.3.6
 six==1.17.0
 stack-data==0.6.3
