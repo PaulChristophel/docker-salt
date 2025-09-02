@@ -86,5 +86,5 @@ propcache==0.3.2
 pydantic_core==2.39.0
 pygments==2.19.2
 typeguard==4.4.4
-typing-extensions==4.14.1
+typing-extensions==4.15.0
 typing-inspection==0.4.1
