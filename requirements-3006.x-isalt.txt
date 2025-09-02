@@ -11,7 +11,7 @@ contextvars==2.4
 decorator==5.2.1
 distro==1.9.0
 dnspython==2.7.0
-executing==2.2.0
+executing==2.2.1
 git+https://github.com/saltstack/salt.git@3006.x
 gssapi==1.9.0
 idna==3.10
@@ -78,7 +78,7 @@ ansible==11.9.0
 ansible-core==2.19.1
 argcomplete==3.6.2
 cffi==1.17.1
-cryptography==45.0.6
+cryptography==45.0.7
 #Jinja2==3.1.6
 #MarkupSafe==3.0.2
 #packaging==25.0
