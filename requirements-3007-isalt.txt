@@ -12,7 +12,7 @@ decorator==5.2.1
 distro==1.9.0
 dnspython==2.8.0
 executing==2.2.1
-gssapi==1.9.0
+gssapi==1.10.0
 idna==3.10
 immutables==0.21
 importlib_metadata==8.7.0
@@ -42,7 +42,7 @@ pickleshare==0.7.5
 portend==3.2.1
 prompt_toolkit==3.0.52
 psutil==7.0.0
-psycopg[c]==3.2.9
+psycopg[c]==3.2.10
 
 psycopg2==2.9.10
 ptyprocess==0.7.0
