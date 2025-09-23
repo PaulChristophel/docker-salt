@@ -4,7 +4,7 @@ autocommand==2.2.2
 backcall==0.2.0
 certifi==2025.8.3
 charset-normalizer==3.4.3
-cheroot==10.0.1
+cheroot==11.0.0
 CherryPy==18.10.0
 Cython==3.1.4
 contextvars==2.4
@@ -70,7 +70,7 @@ tornado==6.5.2
 traitlets==5.14.3
 typing_extensions==4.15.0
 urllib3==2.5.0
-wcwidth==0.2.13
+wcwidth==0.2.14
 zc.lockfile==4.0
 
 # Ansible deps
