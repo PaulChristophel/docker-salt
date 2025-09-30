@@ -1,16 +1,33 @@
-# restcherry_patch.py — replace ApiApplication.get_conf to merge user CP config
-import io, re, inspect
+# restcherry_patch.py — robust in-place replacement of ApiApplication.get_conf()
+import io, inspect, ast, sys
 import salt.netapi.rest_cherrypy.app as appmod
 
 app_path = inspect.getfile(appmod)
 src = io.open(app_path, "r", encoding="utf-8").read()
 
-# idempotent
+# Idempotency: if our marker is present, skip
 if "BEGIN: user-configurable CherryPy merges" in src:
     print("Already patched:", app_path)
-    raise SystemExit(0)
+    sys.exit(0)
 
-new_fn = r'''
+# Parse and locate def get_conf(self): reliably using AST (no fragile regex)
+tree = ast.parse(src)
+
+target = None
+for node in ast.walk(tree):
+    if isinstance(node, ast.FunctionDef) and node.name == "get_conf":
+        # Ensure it's a method with first arg named 'self'
+        if getattr(node, 'args', None) and node.args.args and node.args.args[0].arg == 'self':
+            target = node
+            break
+
+if not target or not hasattr(target, "lineno") or not hasattr(target, "end_lineno"):
+    raise SystemExit(f"Could not locate get_conf() with end positions in {app_path}")
+
+start = target.lineno - 1  # 0-based index for slicing
+end = target.end_lineno    # slice end is exclusive
+
+new_fn = '''
 def get_conf(self):
     """
     Combine the CherryPy configuration with the rest_cherrypy config values
@@ -37,14 +54,18 @@ def get_conf(self):
     }
 
     # --- BEGIN: user-configurable CherryPy merges ---
+    # Allow extra CherryPy *global* keys via: rest_cherrypy: global: {...}
     user_global = self.apiopts.get("global", {})
     if isinstance(user_global, dict):
         conf["global"].update(user_global)
 
+    # Allow extra root ("/") tool/path keys via: rest_cherrypy: root: {...}
     user_root = self.apiopts.get("root", {})
     if isinstance(user_root, dict):
         conf["/"].update(user_root)
 
+    # Convenience: map any top-level rest_cherrypy keys starting with "tools."
+    # onto the root ("/") section.
     for k, v in self.apiopts.items():
         if isinstance(k, str) and k.startswith("tools."):
             conf["/"][k] = v
@@ -71,14 +92,10 @@ def get_conf(self):
             "tools.staticdir.dir": self.apiopts["static"],
         }
 
-    cherrypy.config.update(conf["global"])
+    cherrypy.config.update(conf["global"])  # apply global settings
     return conf
 '''.lstrip("\n")
 
-# replace the existing get_conf(...) block
-pattern = re.compile(r'\ndef\s+get_conf\s*\(\s*self\s*\)\s*:\s*.*?\n\s*return\s+conf\s*\n', re.DOTALL)
-new_src, n = pattern.subn("\n"+new_fn+"\n", src)
-if n != 1:
-    raise SystemExit(f"get_conf() replacement failed; matched {n} blocks in {app_path}")
+new_src = src[:start] + new_fn + src[end:]
 io.open(app_path, "w", encoding="utf-8").write(new_src)
-print("Patched:", app_path)
+print(f"Patched {app_path} (lines {start+1}-{end})")
