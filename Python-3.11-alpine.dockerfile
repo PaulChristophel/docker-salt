@@ -18,7 +18,6 @@ COPY $REQUIREMENTS /requirements.txt
 RUN pip install $FLAGS -r /requirements.txt
 COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
-COPY rest_cherrypy-app.patch /tmp/rest_cherrypy-app.patch
 # Apply the patch to the installed Salt package inside the venv
 # (build-base pulls in 'patch' on Alpine; if not, add 'apk add patch')
 RUN apk add --no-cache patch
