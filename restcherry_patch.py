@@ -1,31 +1,29 @@
-# restcherry_patch.py — robust in-place replacement of ApiApplication.get_conf()
-import io
+# restcherry_patch.py — robust, indent-aware replacement of ApiApplication.get_conf()
 import sys
 import ast
 from pathlib import Path
 import importlib.util
 
-# Locate installed 'salt' package dir without importing it
+# Locate installed 'salt' package dir without importing its submodules
 spec = importlib.util.find_spec("salt")
 if spec is None or not spec.submodule_search_locations:
     sys.exit("ERROR: could not locate 'salt' package (is it installed in this image?)")
 
-salt_dir = Path(list(spec.submodule_search_locations)[0])  # .../site-packages/salt
+salt_dir = Path(list(spec.submodule_search_locations)[0])
 app_path = salt_dir / "netapi" / "rest_cherrypy" / "app.py"
 
 src = app_path.read_text(encoding="utf-8")
 
-# Idempotency: if already patched, bail
+# Idempotent: skip if our marker already present
 if "BEGIN: user-configurable CherryPy merges" in src:
     print("Already patched:", app_path)
     sys.exit(0)
 
-# Parse and locate def get_conf(self): using AST (no fragile regex)
+# Parse and find def get_conf(self):
 tree = ast.parse(src)
 target = None
 for node in ast.walk(tree):
     if isinstance(node, ast.FunctionDef) and node.name == "get_conf":
-        # must be a method with 'self' as first arg
         if node.args.args and node.args.args[0].arg == "self":
             target = node
             break
@@ -33,9 +31,15 @@ for node in ast.walk(tree):
 if not target or not hasattr(target, "lineno") or not hasattr(target, "end_lineno"):
     sys.exit(f"ERROR: could not locate get_conf() in {app_path}")
 
-start = target.lineno - 1  # 0-based slice start
-end = target.end_lineno    # exclusive slice end
+lines = src.splitlines(keepends=True)
+start = target.lineno - 1           # 0-based start line index
+end = target.end_lineno             # exclusive end index
 
+# Determine the existing indentation for this method (spaces/tabs preserved)
+orig_line = lines[start]
+leading_ws = orig_line[: len(orig_line) - len(orig_line.lstrip())]
+
+# New function body (no leading indentation here; we'll add it)
 new_fn = '''
 def get_conf(self):
     """
@@ -105,6 +109,13 @@ def get_conf(self):
     return conf
 '''.lstrip("\n")
 
-new_src = src[:start] + new_fn + src[end:]
+# Re-indent the whole replacement to match original method indentation
+indented_new_fn = "".join(
+    (leading_ws + ln if ln.strip() else ln)  # keep blank lines blank
+    for ln in new_fn.splitlines(keepends=True)
+)
+
+# Splice and write back
+new_src = "".join(lines[:start]) + indented_new_fn + "".join(lines[end:])
 app_path.write_text(new_src, encoding="utf-8")
-print(f"Patched {app_path} (lines {start+1}-{end})")
+print(f"Patched {app_path} (lines {start+1}-{end}), indent='{leading_ws.replace(chr(9),'\\t')}'")
