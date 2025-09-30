@@ -1,35 +1,40 @@
-# restcherry_patch.py — patch get_conf in app.py without importing salt
-import io, os
+# restcherry_patch.py — robust in-place replacement of ApiApplication.get_conf()
+import io
+import sys
+import ast
 from pathlib import Path
-import pkgutil
+import importlib.util
 
-import salt  # just to locate site-packages
+# Locate installed 'salt' package dir without importing it
+spec = importlib.util.find_spec("salt")
+if spec is None or not spec.submodule_search_locations:
+    sys.exit("ERROR: could not locate 'salt' package (is it installed in this image?)")
 
-site = Path(salt.__file__).resolve().parent  # .../site-packages/salt
-app_path = site / "netapi" / "rest_cherrypy" / "app.py"
+salt_dir = Path(list(spec.submodule_search_locations)[0])  # .../site-packages/salt
+app_path = salt_dir / "netapi" / "rest_cherrypy" / "app.py"
+
 src = app_path.read_text(encoding="utf-8")
 
-# Idempotency: if our marker is present, skip
+# Idempotency: if already patched, bail
 if "BEGIN: user-configurable CherryPy merges" in src:
     print("Already patched:", app_path)
     sys.exit(0)
 
-# Parse and locate def get_conf(self): reliably using AST (no fragile regex)
+# Parse and locate def get_conf(self): using AST (no fragile regex)
 tree = ast.parse(src)
-
 target = None
 for node in ast.walk(tree):
     if isinstance(node, ast.FunctionDef) and node.name == "get_conf":
-        # Ensure it's a method with first arg named 'self'
-        if getattr(node, 'args', None) and node.args.args and node.args.args[0].arg == 'self':
+        # must be a method with 'self' as first arg
+        if node.args.args and node.args.args[0].arg == "self":
             target = node
             break
 
 if not target or not hasattr(target, "lineno") or not hasattr(target, "end_lineno"):
-    raise SystemExit(f"Could not locate get_conf() with end positions in {app_path}")
+    sys.exit(f"ERROR: could not locate get_conf() in {app_path}")
 
-start = target.lineno - 1  # 0-based index for slicing
-end = target.end_lineno    # slice end is exclusive
+start = target.lineno - 1  # 0-based slice start
+end = target.end_lineno    # exclusive slice end
 
 new_fn = '''
 def get_conf(self):
@@ -96,10 +101,10 @@ def get_conf(self):
             "tools.staticdir.dir": self.apiopts["static"],
         }
 
-    cherrypy.config.update(conf["global"])  # apply global settings
+    cherrypy.config.update(conf["global"])
     return conf
 '''.lstrip("\n")
 
 new_src = src[:start] + new_fn + src[end:]
-io.open(app_path, "w", encoding="utf-8").write(new_src)
+app_path.write_text(new_src, encoding="utf-8")
 print(f"Patched {app_path} (lines {start+1}-{end})")
