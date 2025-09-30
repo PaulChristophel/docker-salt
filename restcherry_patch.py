@@ -67,18 +67,14 @@ def get_conf(self):
     }
 
     # --- BEGIN: user-configurable CherryPy merges ---
-    # Allow extra CherryPy *global* keys via: rest_cherrypy: global: {...}
     user_global = self.apiopts.get("global", {})
     if isinstance(user_global, dict):
         conf["global"].update(user_global)
 
-    # Allow extra root ("/") tool/path keys via: rest_cherrypy: root: {...}
     user_root = self.apiopts.get("root", {})
     if isinstance(user_root, dict):
         conf["/"].update(user_root)
 
-    # Convenience: map any top-level rest_cherrypy keys starting with "tools."
-    # onto the root ("/") section.
     for k, v in self.apiopts.items():
         if isinstance(k, str) and k.startswith("tools."):
             conf["/"][k] = v
@@ -111,11 +107,12 @@ def get_conf(self):
 
 # Re-indent the whole replacement to match original method indentation
 indented_new_fn = "".join(
-    (leading_ws + ln if ln.strip() else ln)  # keep blank lines blank
+    (leading_ws + ln if ln.strip() else ln)
     for ln in new_fn.splitlines(keepends=True)
 )
 
 # Splice and write back
 new_src = "".join(lines[:start]) + indented_new_fn + "".join(lines[end:])
 app_path.write_text(new_src, encoding="utf-8")
-print(f"Patched {app_path} (lines {start+1}-{end}), indent='{leading_ws.replace(chr(9),'\\t')}'")
+
+print(f"Patched {app_path} (lines {start+1}-{end}) with indent of length {len(leading_ws)}")
