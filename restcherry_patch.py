@@ -1,9 +1,13 @@
-# restcherry_patch.py — robust in-place replacement of ApiApplication.get_conf()
-import io, inspect, ast, sys
-import salt.netapi.rest_cherrypy.app as appmod
+# restcherry_patch.py — patch get_conf in app.py without importing salt
+import io, os
+from pathlib import Path
+import pkgutil
 
-app_path = inspect.getfile(appmod)
-src = io.open(app_path, "r", encoding="utf-8").read()
+import salt  # just to locate site-packages
+
+site = Path(salt.__file__).resolve().parent  # .../site-packages/salt
+app_path = site / "netapi" / "rest_cherrypy" / "app.py"
+src = app_path.read_text(encoding="utf-8")
 
 # Idempotency: if our marker is present, skip
 if "BEGIN: user-configurable CherryPy merges" in src:
