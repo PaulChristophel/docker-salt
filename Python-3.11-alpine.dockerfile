@@ -18,55 +18,100 @@ COPY $REQUIREMENTS /requirements.txt
 RUN pip install $FLAGS -r /requirements.txt
 COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
 COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
-# Apply the patch to the installed Salt package inside the venv
-# (build-base pulls in 'patch' on Alpine; if not, add 'apk add patch')
-RUN apk add --no-cache patch
 RUN python3 - <<'PY'
-import io, os, inspect, re
+import io, re, inspect
 import salt.netapi.rest_cherrypy.app as appmod
 
 app_path = inspect.getfile(appmod)
 src = io.open(app_path, "r", encoding="utf-8").read()
 
-# If we've already patched, bail out (idempotent)
+# bail out if already patched (idempotent)
 if "BEGIN: user-configurable CherryPy merges" in src:
     print("Already patched:", app_path)
 else:
-    insert_after = '\n        if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:'
-    idx = src.find(insert_after)
-    if idx < 0:
-        raise SystemExit("Could not find version_cmp anchor in %s" % app_path)
+    new_fn = r'''
+def get_conf(self):
+    """
+    Combine the CherryPy configuration with the rest_cherrypy config values
+    pulled from the master config and return the CherryPy configuration
+    """
+    conf = {
+        "global": {
+            "server.socket_host": self.apiopts.get("host", "0.0.0.0"),
+            "server.socket_port": self.apiopts.get("port", 8000),
+            "server.thread_pool": self.apiopts.get("thread_pool", 100),
+            "server.socket_queue_size": self.apiopts.get("queue_size", 30),
+            "max_request_body_size": self.apiopts.get("max_request_body_size", 1048576),
+            "debug": self.apiopts.get("debug", False),
+            "log.access_file": self.apiopts.get("log_access_file", ""),
+            "log.error_file": self.apiopts.get("log_error_file", ""),
+        },
+        "/": {
+            "request.dispatch": cherrypy.dispatch.MethodDispatcher(),
+            "tools.trailing_slash.on": True,
+            "tools.gzip.on": True,
+            "tools.html_override.on": True,
+            "tools.cors_tool.on": True,
+        },
+    }
 
-    block = '''
-        # --- BEGIN: user-configurable CherryPy merges ---
-        # Allow users to inject additional CherryPy *global* settings via:
-        # rest_cherrypy:
-        #   global:
-        #     tools.sessions.on: True
-        #     tools.sessions.storage_class: cherrypy.lib.sessions.FileSession
-        #     tools.sessions.storage_path: /var/cache/salt/api/sessions
-        user_global = self.apiopts.get("global", {})
-        if isinstance(user_global, dict):
-            conf["global"].update(user_global)
+    # --- BEGIN: user-configurable CherryPy merges ---
+    # Allow extra CherryPy *global* keys via:
+    # rest_cherrypy:
+    #   global:
+    #     tools.sessions.on: True
+    #     tools.sessions.storage_class: cherrypy.lib.sessions.FileSession
+    #     tools.sessions.storage_path: /var/cache/salt/api/sessions
+    user_global = self.apiopts.get("global", {})
+    if isinstance(user_global, dict):
+        conf["global"].update(user_global)
 
-        # Allow users to inject per-root ("/") tool settings via:
-        # rest_cherrypy:
-        #   root:
-        #     tools.sessions.on: True
-        #     tools.sessions.storage_class: cherrypy.lib.sessions.FileSession
-        user_root = self.apiopts.get("root", {})
-        if isinstance(user_root, dict):
-            conf["/"].update(user_root)
+    # Allow extra root ("/") tool/path keys via:
+    # rest_cherrypy:
+    #   root:
+    #     tools.sessions.on: True
+    #     tools.sessions.storage_class: cherrypy.lib.sessions.FileSession
+    user_root = self.apiopts.get("root", {})
+    if isinstance(user_root, dict):
+        conf["/"].update(user_root)
 
-        # Convenience: accept top-level rest_cherrypy keys starting with "tools."
-        # and map them onto the root path ("/") section.
-        for k, v in self.apiopts.items():
-            if isinstance(k, str) and k.startswith("tools."):
-                conf["/"][k] = v
-        # --- END: user-configurable CherryPy merges ---
-'''.rstrip("\n")
+    # Convenience: map any top-level rest_cherrypy keys starting with "tools."
+    # onto the root ("/") section.
+    for k, v in self.apiopts.items():
+        if isinstance(k, str) and k.startswith("tools."):
+            conf["/"][k] = v
+    # --- END: user-configurable CherryPy merges ---
 
-    new_src = src[:idx] + block + src[idx:]
+    if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
+        conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
+
+    if cpstats and self.apiopts.get("collect_stats", False):
+        conf["/"]["tools.cpstats.on"] = True
+
+    if "favicon" in self.apiopts:
+        conf["/favicon.ico"] = {
+            "tools.staticfile.on": True,
+            "tools.staticfile.filename": self.apiopts["favicon"],
+        }
+
+    if self.apiopts.get("debug", False) is False:
+        conf["global"]["environment"] = "production"
+
+    if "static" in self.apiopts:
+        conf[self.apiopts.get("static_path", "/static")] = {
+            "tools.staticdir.on": True,
+            "tools.staticdir.dir": self.apiopts["static"],
+        }
+
+    cherrypy.config.update(conf["global"])
+    return conf
+'''.lstrip("\n")
+
+    # replace the existing get_conf(...) block (from def ... to the matching 'return conf')
+    pattern = re.compile(r'\ndef\\s+get_conf\\s*\\(\\s*self\\s*\\)\\s*:\\s*.*?\\n\\s*return\\s+conf\\s*\\n', re.DOTALL)
+    new_src, n = pattern.subn("\\n"+new_fn+"\\n", src)
+    if n != 1:
+        raise SystemExit(f"get_conf() replacement failed; matched {n} blocks in {app_path}")
     io.open(app_path, "w", encoding="utf-8").write(new_src)
     print("Patched:", app_path)
 PY
