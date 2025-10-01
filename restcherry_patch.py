@@ -91,6 +91,12 @@ def get_conf(self):
             if hasattr(cherrypy, "log") and hasattr(cherrypy.log, "error"):
                 cherrypy.log.error(f"Unable to import FileSession: {exc}")
 
+    # Ensure sessions tool is enabled and runs before auth tool hooks
+    if storage_opt:
+        conf["/"].setdefault("tools.sessions.on", True)
+        conf["/"].setdefault("tools.sessions.priority", 40)   # run early
+        conf["/"].setdefault("tools.sessions.locking", "implicit")
+
     if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
         conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
 
