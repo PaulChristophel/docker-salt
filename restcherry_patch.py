@@ -32,8 +32,8 @@ if not target or not hasattr(target, "lineno") or not hasattr(target, "end_linen
     sys.exit(f"ERROR: could not locate get_conf() in {app_path}")
 
 lines = src.splitlines(keepends=True)
-start = target.lineno - 1           # 0-based start line index
-end = target.end_lineno             # exclusive end index
+start = target.lineno - 1  # 0-based start line index
+end = target.end_lineno  # exclusive end index
 
 # Determine the existing indentation for this method (spaces/tabs preserved)
 orig_line = lines[start]
@@ -80,25 +80,16 @@ def get_conf(self):
             conf["/"][k] = v
     # --- END: user-configurable CherryPy merges ---
 
-    # Resolve any dotted-class values under tools.*.*_class into real callables
-    # so CherryPy doesn't try to call a string (e.g., "cherrypy.lib.sessions.FileSession").
-    # We do this late, after user merges, but before we hand config to CherryPy.
-    for k, v in list(conf["/"].items()):
-        if not isinstance(k, str):
-            continue
-        # match keys like tools.sessions.storage_class or tools.XYZ.class
-        if k.endswith(".storage_class") or k.endswith(".class"):
-            if isinstance(v, str) and "." in v:
-                mod_name, _, attr = v.rpartition(".")
-                if mod_name and attr:
-                    try:
-                        mod = __import__(mod_name, fromlist=[attr])
-                        conf["/"][k] = getattr(mod, attr)
-                    except Exception as exc:
-                        # Leave as-is so failures are visible; log for diagnostics
-                        log = getattr(cherrypy, "log", None)
-                        if log and hasattr(log, "error"):
-                            log.error(f"Failed to import {v} for {k}: {exc}")
+
+    # Support a simplified "storage" option: if set, map it to storage_class
+    storage_opt = self.apiopts.get("storage")
+    if storage_opt == "file":
+        try:
+            from cherrypy.lib.sessions import FileSession
+            conf["/"]["tools.sessions.storage_class"] = FileSession
+        except ImportError as exc:
+            if hasattr(cherrypy, "log") and hasattr(cherrypy.log, "error"):
+                cherrypy.log.error(f"Unable to import FileSession: {exc}")
 
     if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
         conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
@@ -123,16 +114,19 @@ def get_conf(self):
 
     cherrypy.config.update(conf["global"])
     return conf
-'''.lstrip("\n")
+'''.lstrip(
+    "\n"
+)
 
 # Re-indent the whole replacement to match original method indentation
 indented_new_fn = "".join(
-    (leading_ws + ln if ln.strip() else ln)
-    for ln in new_fn.splitlines(keepends=True)
+    (leading_ws + ln if ln.strip() else ln) for ln in new_fn.splitlines(keepends=True)
 )
 
 # Splice and write back
 new_src = "".join(lines[:start]) + indented_new_fn + "".join(lines[end:])
 app_path.write_text(new_src, encoding="utf-8")
 
-print(f"Patched {app_path} (lines {start+1}-{end}) with indent of length {len(leading_ws)}")
+print(
+    f"Patched {app_path} (lines {start+1}-{end}) with indent of length {len(leading_ws)}"
+)
