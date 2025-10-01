@@ -17,23 +17,33 @@ src = app_path.read_text(encoding="utf-8")
 # Always (re)patch get_conf so we can fix prior bad inserts
 # (We do not early-exit if the marker is present.)
 
-# Parse and find def get_conf(self):
+# Parse and find class API.get_conf(self) or ApiApplication.get_conf(self)
 tree = ast.parse(src)
-target = None
+cls_node = None
 for node in ast.walk(tree):
+    if isinstance(node, ast.ClassDef) and node.name in ("API", "ApiApplication"):
+        cls_node = node
+        break
+
+if cls_node is None:
+    sys.exit(f"ERROR: could not locate class API/ApiApplication in {app_path}")
+
+method_node = None
+for node in cls_node.body:
     if isinstance(node, ast.FunctionDef) and node.name == "get_conf":
         if node.args.args and node.args.args[0].arg == "self":
-            target = node
+            method_node = node
             break
 
-if not target or not hasattr(target, "lineno") or not hasattr(target, "end_lineno"):
-    sys.exit(f"ERROR: could not locate get_conf() in {app_path}")
+if method_node is None:
+    sys.exit(f"ERROR: could not locate get_conf() method on class {cls_node.name} in {app_path}")
 
 lines = src.splitlines(keepends=True)
-start = target.lineno - 1  # 0-based start line index
-end = target.end_lineno  # exclusive end index
+start = method_node.lineno - 1  # 0-based start line index
+end = method_node.end_lineno    # exclusive end index
 
-# Determine the existing indentation for this method (spaces/tabs preserved)
+# Determine the indentation of the method within the class
+# Take the whitespace of the original 'def get_conf' line
 orig_line = lines[start]
 leading_ws = orig_line[: len(orig_line) - len(orig_line.lstrip())]
 
