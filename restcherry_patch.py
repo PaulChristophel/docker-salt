@@ -41,106 +41,94 @@ leading_ws = orig_line[: len(orig_line) - len(orig_line.lstrip())]
 
 # New function body (no leading indentation here; we'll add it)
 new_fn = '''
-def get_conf(self):
-    """
-    Combine the CherryPy configuration with the rest_cherrypy config values
-    pulled from the master config and return the CherryPy configuration
-    """
-    conf = {
-        "global": {
-            "server.socket_host": self.apiopts.get("host", "0.0.0.0"),
-            "server.socket_port": self.apiopts.get("port", 8000),
-            "server.thread_pool": self.apiopts.get("thread_pool", 100),
-            "server.socket_queue_size": self.apiopts.get("queue_size", 30),
-            "max_request_body_size": self.apiopts.get("max_request_body_size", 1048576),
-            "debug": self.apiopts.get("debug", False),
-            "log.access_file": self.apiopts.get("log_access_file", ""),
-            "log.error_file": self.apiopts.get("log_error_file", ""),
-        },
-        "/": {
-            "request.dispatch": cherrypy.dispatch.MethodDispatcher(),
-            "tools.trailing_slash.on": True,
-            "tools.gzip.on": True,
-            "tools.html_override.on": True,
-            "tools.cors_tool.on": True,
-        },
-    }
+    def get_conf(self):
+        """
+        Combine the CherryPy configuration with the rest_cherrypy config values
+        pulled from the master config and return the CherryPy configuration
+        """
+        conf = {
+            "global": {
+                "server.socket_host": self.apiopts.get("host", "0.0.0.0"),
+                "server.socket_port": self.apiopts.get("port", 8000),
+                "server.thread_pool": self.apiopts.get("thread_pool", 100),
+                "server.socket_queue_size": self.apiopts.get("queue_size", 30),
+                "max_request_body_size": self.apiopts.get(
+                    "max_request_body_size", 1048576
+                ),
+                "debug": self.apiopts.get("debug", False),
+                "log.access_file": self.apiopts.get("log_access_file", ""),
+                "log.error_file": self.apiopts.get("log_error_file", ""),
+            },
+            "/": {
+                "request.dispatch": cherrypy.dispatch.MethodDispatcher(),
+                "tools.trailing_slash.on": True,
+                "tools.gzip.on": True,
+                "tools.html_override.on": True,
+                "tools.cors_tool.on": True,
+            },
+        }
 
-    # --- BEGIN: user-configurable CherryPy merges ---
-    user_global = self.apiopts.get("global", {})
-    if isinstance(user_global, dict):
-        conf["global"].update(user_global)
+        if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
+            # CherryPy >= 12.0 no longer supports "timeout_monitor", only set
+            # this config option when using an older version of CherryPy.
+            # See Issue #44601 for more information.
+            conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get(
+                "expire_responses", True
+            )
 
-    user_root = self.apiopts.get("root", {})
-    if isinstance(user_root, dict):
-        conf["/"].update(user_root)
+        if cpstats and self.apiopts.get("collect_stats", False):
+            conf["/"]["tools.cpstats.on"] = True
 
-    for k, v in self.apiopts.items():
-        if isinstance(k, str) and k.startswith("tools."):
-            conf["/"][k] = v
-    # --- END: user-configurable CherryPy merges ---
+        if "favicon" in self.apiopts:
+            conf["/favicon.ico"] = {
+                "tools.staticfile.on": True,
+                "tools.staticfile.filename": self.apiopts["favicon"],
+            }
 
-    # Register an early session lock tool so we can lock before any access
-    def _sess_early_lock():
-        s = getattr(cherrypy, "session", None)
-        if s is not None and not getattr(s, "locked", False):
+        if self.apiopts.get("debug", False) is False:
+            conf["global"]["environment"] = "production"
+
+        # Serve static media if the directory has been set in the configuration
+        if "static" in self.apiopts:
+            conf[self.apiopts.get("static_path", "/static")] = {
+                "tools.staticdir.on": True,
+                "tools.staticdir.dir": self.apiopts["static"],
+            }
+
+        # --- BEGIN: user-configurable CherryPy merges ---
+        # Merge user-provided sections into conf
+        apiopts = getattr(self, "apiopts", {}) or {}
+        # Merge 'global' (engine/server) options
+        user_global = apiopts.get("global") or {}
+        if isinstance(user_global, dict):
+            conf["global"].update(user_global)
+        # Merge root (app '/') options; support either 'root' or '/' keys
+        user_root = apiopts.get("root") or apiopts.get("/") or {}
+        if isinstance(user_root, dict):
+            conf["/"].update(user_root)
+
+        # Support simplified storage option (e.g., storage: file)
+        storage_opt = apiopts.get("storage", None)
+        if storage_opt == "file":
             try:
-                s.acquire_lock()
-            except Exception:
-                pass
+                from cherrypy.lib.sessions import FileSession
+                conf["/"]["tools.sessions.storage_class"] = FileSession
+            except Exception as exc:
+                if hasattr(cherrypy, "log") and hasattr(cherrypy.log, "error"):
+                    cherrypy.log.error(f"Unable to load FileSession: {exc}")
 
-    if not hasattr(cherrypy.tools, "sess_early_lock"):
-        cherrypy.tools.sess_early_lock = cherrypy.Tool(
-            "before_request_body", _sess_early_lock, priority=5
-        )
+        # If storage is configured, ensure sessions are enabled and have sane defaults
+        if storage_opt is not None:
+            conf["/"].setdefault("tools.sessions.on", True)
+            conf["/"].setdefault("tools.sessions.locking", "implicit")
+            # Choose an early priority so sessions init before auth hooks; user's explicit value wins.
+            conf["/"].setdefault("tools.sessions.priority", 40)
+        # --- END: user-configurable CherryPy merges ---
 
-    # Ensure sessions tool is enabled and runs before auth tool hooks
-    if storage_opt:
-        conf["/"].setdefault("tools.sessions.on", True)
-        # Make sure sessions tool runs before any auth tools
-        try:
-            user_pri = int(conf["/"].get("tools.sessions.priority", 10))
-        except Exception:
-            user_pri = 10
-        conf["/"]["tools.sessions.priority"] = min(user_pri, 10)
-        # Use explicit locking and grab the lock before salt_auth_tool touches the session
-        conf["/"]["tools.sessions.locking"] = "explicit"
-        conf["/"]["tools.sess_early_lock.on"] = True
-        conf["/"]["tools.sess_early_lock.priority"] = 5
+        # Add to global config
+        cherrypy.config.update(conf["global"])
 
-    # Support a simplified "storage" option: if set, map it to storage_class
-    storage_opt = self.apiopts.get("storage")
-    if storage_opt == "file":
-        try:
-            from cherrypy.lib.sessions import FileSession
-            conf["/"]["tools.sessions.storage_class"] = FileSession
-        except ImportError as exc:
-            if hasattr(cherrypy, "log") and hasattr(cherrypy.log, "error"):
-                cherrypy.log.error(f"Unable to import FileSession: {exc}")
-
-    if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
-        conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
-
-    if cpstats and self.apiopts.get("collect_stats", False):
-        conf["/"]["tools.cpstats.on"] = True
-
-    if "favicon" in self.apiopts:
-        conf["/favicon.ico"] = {
-            "tools.staticfile.on": True,
-            "tools.staticfile.filename": self.apiopts["favicon"],
-        }
-
-    if self.apiopts.get("debug", False) is False:
-        conf["global"]["environment"] = "production"
-
-    if "static" in self.apiopts:
-        conf[self.apiopts.get("static_path", "/static")] = {
-            "tools.staticdir.on": True,
-            "tools.staticdir.dir": self.apiopts["static"],
-        }
-
-    cherrypy.config.update(conf["global"])
-    return conf
+        return conf
 '''.lstrip(
     "\n"
 )
