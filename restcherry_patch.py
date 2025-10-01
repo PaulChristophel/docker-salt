@@ -80,6 +80,26 @@ def get_conf(self):
             conf["/"][k] = v
     # --- END: user-configurable CherryPy merges ---
 
+    # Resolve any dotted-class values under tools.*.*_class into real callables
+    # so CherryPy doesn't try to call a string (e.g., "cherrypy.lib.sessions.FileSession").
+    # We do this late, after user merges, but before we hand config to CherryPy.
+    for k, v in list(conf["/"].items()):
+        if not isinstance(k, str):
+            continue
+        # match keys like tools.sessions.storage_class or tools.XYZ.class
+        if k.endswith(".storage_class") or k.endswith(".class"):
+            if isinstance(v, str) and "." in v:
+                mod_name, _, attr = v.rpartition(".")
+                if mod_name and attr:
+                    try:
+                        mod = __import__(mod_name, fromlist=[attr])
+                        conf["/"][k] = getattr(mod, attr)
+                    except Exception as exc:
+                        # Leave as-is so failures are visible; log for diagnostics
+                        log = getattr(cherrypy, "log", None)
+                        if log and hasattr(log, "error"):
+                            log.error(f"Failed to import {v} for {k}: {exc}")
+
     if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
         conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
 
