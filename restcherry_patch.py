@@ -80,16 +80,19 @@ def get_conf(self):
             conf["/"][k] = v
     # --- END: user-configurable CherryPy merges ---
 
+    # Register an early session lock tool so we can lock before any access
+    def _sess_early_lock():
+        s = getattr(cherrypy, "session", None)
+        if s is not None and not getattr(s, "locked", False):
+            try:
+                s.acquire_lock()
+            except Exception:
+                pass
 
-    # Support a simplified "storage" option: if set, map it to storage_class
-    storage_opt = self.apiopts.get("storage")
-    if storage_opt == "file":
-        try:
-            from cherrypy.lib.sessions import FileSession
-            conf["/"]["tools.sessions.storage_class"] = FileSession
-        except ImportError as exc:
-            if hasattr(cherrypy, "log") and hasattr(cherrypy.log, "error"):
-                cherrypy.log.error(f"Unable to import FileSession: {exc}")
+    if not hasattr(cherrypy.tools, "sess_early_lock"):
+        cherrypy.tools.sess_early_lock = cherrypy.Tool(
+            "before_request_body", _sess_early_lock, priority=5
+        )
 
     # Ensure sessions tool is enabled and runs before auth tool hooks
     if storage_opt:
@@ -100,9 +103,20 @@ def get_conf(self):
         except Exception:
             user_pri = 10
         conf["/"]["tools.sessions.priority"] = min(user_pri, 10)
-        # Ensure the session is locked before first access
-        if conf["/"].get("tools.sessions.locking") != "explicit":
-            conf["/"]["tools.sessions.locking"] = "early"
+        # Use explicit locking and grab the lock before salt_auth_tool touches the session
+        conf["/"]["tools.sessions.locking"] = "explicit"
+        conf["/"]["tools.sess_early_lock.on"] = True
+        conf["/"]["tools.sess_early_lock.priority"] = 5
+
+    # Support a simplified "storage" option: if set, map it to storage_class
+    storage_opt = self.apiopts.get("storage")
+    if storage_opt == "file":
+        try:
+            from cherrypy.lib.sessions import FileSession
+            conf["/"]["tools.sessions.storage_class"] = FileSession
+        except ImportError as exc:
+            if hasattr(cherrypy, "log") and hasattr(cherrypy.log, "error"):
+                cherrypy.log.error(f"Unable to import FileSession: {exc}")
 
     if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
         conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
