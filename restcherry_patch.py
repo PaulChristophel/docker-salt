@@ -39,94 +39,82 @@ leading_ws = orig_line[: len(orig_line) - len(orig_line.lstrip())]
 
 # New function body (no leading indentation here; we'll add it)
 new_fn = '''
-def get_conf(self):
-    """
-    Combine the CherryPy configuration with the rest_cherrypy config values
-    pulled from the master config and return the CherryPy configuration
-    """
-    conf = {
-        "global": {
-            "server.socket_host": self.apiopts.get("host", "0.0.0.0"),
-            "server.socket_port": self.apiopts.get("port", 8000),
-            "server.thread_pool": self.apiopts.get("thread_pool", 100),
-            "server.socket_queue_size": self.apiopts.get("queue_size", 30),
-            "max_request_body_size": self.apiopts.get(
-                "max_request_body_size", 1048576
-            ),
-            "debug": self.apiopts.get("debug", False),
-            "log.access_file": self.apiopts.get("log_access_file", ""),
-            "log.error_file": self.apiopts.get("log_error_file", ""),
-        },
-        "/": {
-            "request.dispatch": cherrypy.dispatch.MethodDispatcher(),
-            "tools.trailing_slash.on": True,
-            "tools.gzip.on": True,
-            "tools.html_override.on": True,
-            "tools.cors_tool.on": True,
-        },
-    }
-
-    if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
-        # CherryPy >= 12.0 no longer supports "timeout_monitor", only set
-        # this config option when using an older version of CherryPy.
-        # See Issue #44601 for more information.
-        conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get(
-            "expire_responses", True
-        )
-
-    if cpstats and self.apiopts.get("collect_stats", False):
-        conf["/"]["tools.cpstats.on"] = True
-
-    if "favicon" in self.apiopts:
-        conf["/favicon.ico"] = {
-            "tools.staticfile.on": True,
-            "tools.staticfile.filename": self.apiopts["favicon"],
+    def get_conf(self):
+        """
+        Combine the CherryPy configuration with the rest_cherrypy config values
+        pulled from the master config and return the CherryPy configuration
+        """
+        conf = {
+            "global": {
+                "server.socket_host": self.apiopts.get("host", "0.0.0.0"),
+                "server.socket_port": self.apiopts.get("port", 8000),
+                "server.thread_pool": self.apiopts.get("thread_pool", 100),
+                "server.socket_queue_size": self.apiopts.get("queue_size", 30),
+                "max_request_body_size": self.apiopts.get(
+                    "max_request_body_size", 1048576
+                ),
+                "debug": self.apiopts.get("debug", False),
+                "log.access_file": self.apiopts.get("log_access_file", ""),
+                "log.error_file": self.apiopts.get("log_error_file", ""),
+            },
+            "/": {
+                "request.dispatch": cherrypy.dispatch.MethodDispatcher(),
+                "tools.trailing_slash.on": True,
+                "tools.gzip.on": True,
+                "tools.html_override.on": True,
+                "tools.cors_tool.on": True,
+            },
         }
 
-    if self.apiopts.get("debug", False) is False:
-        conf["global"]["environment"] = "production"
+        # --- BEGIN: user-configurable CherryPy merges ---
+        # Allow extra CherryPy *global* keys via: rest_cherrypy: global: {...}
+        user_global = self.apiopts.get("global", {})
+        if isinstance(user_global, dict):
+            conf["global"].update(user_global)
 
-    # Serve static media if the directory has been set in the configuration
-    if "static" in self.apiopts:
-        conf[self.apiopts.get("static_path", "/static")] = {
-            "tools.staticdir.on": True,
-            "tools.staticdir.dir": self.apiopts["static"],
-        }
+        # Allow extra root ("/") tool/path keys via: rest_cherrypy: root: {...}
+        user_root = self.apiopts.get("root", {})
+        if isinstance(user_root, dict):
+            conf["/"].update(user_root)
 
-    # --- BEGIN: user-configurable CherryPy merges ---
-    # Merge user-provided sections into conf
-    apiopts = getattr(self, "apiopts", {}) or {}
-    # Merge 'global' (engine/server) options
-    user_global = apiopts.get("global") or {}
-    if isinstance(user_global, dict):
-        conf["global"].update(user_global)
-    # Merge root (app '/') options; support either 'root' or '/' keys
-    user_root = apiopts.get("root") or apiopts.get("/") or {}
-    if isinstance(user_root, dict):
-        conf["/"].update(user_root)
+        # Convenience: map any top-level rest_cherrypy keys starting with "tools."
+        # onto the root ("/") section.
+        for k, v in self.apiopts.items():
+            if isinstance(k, str) and k.startswith("tools."):
+                conf["/"][k] = v
+        # --- END: user-configurable CherryPy merges ---
 
-    # Support simplified storage option (e.g., storage: file)
-    storage_opt = apiopts.get("storage", None)
-    if storage_opt == "file":
-        try:
-            from cherrypy.lib.sessions import FileSession
-            conf["/"]["tools.sessions.storage_class"] = FileSession
-        except Exception as exc:
-            if hasattr(cherrypy, "log") and hasattr(cherrypy.log, "error"):
-                cherrypy.log.error(f"Unable to load FileSession: {exc}")
+        if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
+            # CherryPy >= 12.0 no longer supports "timeout_monitor", only set
+            # this config option when using an older version of CherryPy.
+            # See Issue #44601 for more information.
+            conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get(
+                "expire_responses", True
+            )
 
-    # If storage is configured, ensure sessions are enabled and have sane defaults
-    if storage_opt is not None:
-        conf["/"].setdefault("tools.sessions.on", True)
-        conf["/"].setdefault("tools.sessions.locking", "implicit")
-        # Choose an early priority so sessions init before auth hooks; user's explicit value wins.
-        conf["/"].setdefault("tools.sessions.priority", 40)
-    # --- END: user-configurable CherryPy merges ---
+        if cpstats and self.apiopts.get("collect_stats", False):
+            conf["/"]["tools.cpstats.on"] = True
 
-    # Add to global config
-    cherrypy.config.update(conf["global"])
+        if "favicon" in self.apiopts:
+            conf["/favicon.ico"] = {
+                "tools.staticfile.on": True,
+                "tools.staticfile.filename": self.apiopts["favicon"],
+            }
 
-    return conf
+        if self.apiopts.get("debug", False) is False:
+            conf["global"]["environment"] = "production"
+
+        # Serve static media if the directory has been set in the configuration
+        if "static" in self.apiopts:
+            conf[self.apiopts.get("static_path", "/static")] = {
+                "tools.staticdir.on": True,
+                "tools.staticdir.dir": self.apiopts["static"],
+            }
+
+        # Add to global config
+        cherrypy.config.update(conf["global"])
+
+        return conf
 
 '''.lstrip(
     "\n"
