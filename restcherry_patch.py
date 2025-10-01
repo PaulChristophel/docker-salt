@@ -94,8 +94,15 @@ def get_conf(self):
     # Ensure sessions tool is enabled and runs before auth tool hooks
     if storage_opt:
         conf["/"].setdefault("tools.sessions.on", True)
-        conf["/"].setdefault("tools.sessions.priority", 40)   # run early
-        conf["/"].setdefault("tools.sessions.locking", "implicit")
+        # Make sure sessions tool runs before any auth tools
+        try:
+            user_pri = int(conf["/"].get("tools.sessions.priority", 10))
+        except Exception:
+            user_pri = 10
+        conf["/"]["tools.sessions.priority"] = min(user_pri, 10)
+        # Ensure the session is locked before first access
+        if conf["/"].get("tools.sessions.locking") != "explicit":
+            conf["/"]["tools.sessions.locking"] = "early"
 
     if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
         conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
