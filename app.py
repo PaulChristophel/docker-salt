@@ -660,9 +660,9 @@ def _get_token_from_request():
     - Cookie: session_id=<token>  (treat cookie value as Salt token)
     """
     req = cherrypy.request
-    token = req.headers.get("X-Auth-Token")
+    token = req.headers.get("X-Auth-Token") or req.headers.get("x-auth-token") or ""
     if not token:
-        auth = req.headers.get("Authorization", "")
+        auth = req.headers.get("Authorization") or req.headers.get("authorization") or ""
         if auth.lower().startswith("bearer "):
             token = auth.split(" ", 1)[1].strip()
     if not token:
