@@ -31,74 +31,84 @@ start = target.lineno - 1  # 0-based index for slicing
 end = target.end_lineno    # slice end is exclusive
 
 new_fn = '''
-    def get_conf(self):
-        """
-        Combine the CherryPy configuration with the rest_cherrypy config values
-        pulled from the master config and return the CherryPy configuration
-        """
-        conf = {
-            "global": {
-                "server.socket_host": self.apiopts.get("host", "0.0.0.0"),
-                "server.socket_port": self.apiopts.get("port", 8000),
-                "server.thread_pool": self.apiopts.get("thread_pool", 100),
-                "server.socket_queue_size": self.apiopts.get("queue_size", 30),
-                "max_request_body_size": self.apiopts.get("max_request_body_size", 1048576),
-                "debug": self.apiopts.get("debug", False),
-                "log.access_file": self.apiopts.get("log_access_file", ""),
-                "log.error_file": self.apiopts.get("log_error_file", ""),
-            },
-            "/": {
-                "request.dispatch": cherrypy.dispatch.MethodDispatcher(),
-                "tools.trailing_slash.on": True,
-                "tools.gzip.on": True,
-                "tools.html_override.on": True,
-                "tools.cors_tool.on": True,
-            },
+def get_conf(self):
+    """
+    Combine the CherryPy configuration with the rest_cherrypy config values
+    pulled from the master config and return the CherryPy configuration
+    """
+    conf = {
+        "global": {
+            "server.socket_host": self.apiopts.get("host", "0.0.0.0"),
+            "server.socket_port": self.apiopts.get("port", 8000),
+            "server.thread_pool": self.apiopts.get("thread_pool", 100),
+            "server.socket_queue_size": self.apiopts.get("queue_size", 30),
+            "max_request_body_size": self.apiopts.get("max_request_body_size", 1048576),
+            "debug": self.apiopts.get("debug", False),
+            "log.access_file": self.apiopts.get("log_access_file", ""),
+            "log.error_file": self.apiopts.get("log_error_file", ""),
+        },
+        "/": {
+            "request.dispatch": cherrypy.dispatch.MethodDispatcher(),
+            "tools.trailing_slash.on": True,
+            "tools.gzip.on": True,
+            "tools.html_override.on": True,
+            "tools.cors_tool.on": True,
+        },
+    }
+
+    # --- BEGIN: user-configurable CherryPy merges ---
+    # Allow extra CherryPy *global* keys via: rest_cherrypy: global: {...}
+    user_global = self.apiopts.get("global", {})
+    if isinstance(user_global, dict):
+        conf["global"].update(user_global)
+
+    # Allow extra root ("/") tool/path keys via: rest_cherrypy: root: {...}
+    user_root = self.apiopts.get("root", {})
+    if isinstance(user_root, dict):
+        conf["/"].update(user_root)
+
+    # Convenience: map any top-level rest_cherrypy keys starting with "tools."
+    # onto the root ("/") section.
+    for k, v in self.apiopts.items():
+        if isinstance(k, str) and k.startswith("tools."):
+            conf["/"][k] = v
+    # --- END: user-configurable CherryPy merges ---
+
+    if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
+        conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
+
+    if cpstats and self.apiopts.get("collect_stats", False):
+        conf["/"]["tools.cpstats.on"] = True
+
+    if "favicon" in self.apiopts:
+        conf["/favicon.ico"] = {
+            "tools.staticfile.on": True,
+            "tools.staticfile.filename": self.apiopts["favicon"],
         }
 
-        # --- BEGIN: user-configurable CherryPy merges ---
-        # Allow extra CherryPy *global* keys via: rest_cherrypy: global: {...}
-        user_global = self.apiopts.get("global", {})
-        if isinstance(user_global, dict):
-            conf["global"].update(user_global)
+    if self.apiopts.get("debug", False) is False:
+        conf["global"]["environment"] = "production"
 
-        # Allow extra root ("/") tool/path keys via: rest_cherrypy: root: {...}
-        user_root = self.apiopts.get("root", {})
-        if isinstance(user_root, dict):
-            conf["/"].update(user_root)
+    if "static" in self.apiopts:
+        conf[self.apiopts.get("static_path", "/static")] = {
+            "tools.staticdir.on": True,
+            "tools.staticdir.dir": self.apiopts["static"],
+        }
 
-        # Convenience: map any top-level rest_cherrypy keys starting with "tools."
-        # onto the root ("/") section.
-        for k, v in self.apiopts.items():
-            if isinstance(k, str) and k.startswith("tools."):
-                conf["/"][k] = v
-        # --- END: user-configurable CherryPy merges ---
-
-        if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
-            conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
-
-        if cpstats and self.apiopts.get("collect_stats", False):
-            conf["/"]["tools.cpstats.on"] = True
-
-        if "favicon" in self.apiopts:
-            conf["/favicon.ico"] = {
-                "tools.staticfile.on": True,
-                "tools.staticfile.filename": self.apiopts["favicon"],
-            }
-
-        if self.apiopts.get("debug", False) is False:
-            conf["global"]["environment"] = "production"
-
-        if "static" in self.apiopts:
-            conf[self.apiopts.get("static_path", "/static")] = {
-                "tools.staticdir.on": True,
-                "tools.staticdir.dir": self.apiopts["static"],
-            }
-
-        cherrypy.config.update(conf["global"])  # apply global settings
-        return conf
+    cherrypy.config.update(conf["global"])  # apply global settings
+    return conf
 '''.lstrip("\n")
 
-new_src = src[:start] + new_fn + src[end:]
+ # Preserve original indentation of the method within the class
+orig_lines = src.splitlines(keepends=True)
+orig_def_line = orig_lines[start]
+leading_ws = orig_def_line[: len(orig_def_line) - len(orig_def_line.lstrip())]
+
+# Indent the replacement block to match the class/method indentation
+indented_new_fn = ''.join(
+    (leading_ws + ln if ln.strip() else ln) for ln in new_fn.splitlines(keepends=True)
+)
+
+new_src = src[:start] + indented_new_fn + src[end:]
 io.open(app_path, "w", encoding="utf-8").write(new_src)
 print(f"Patched {app_path} (lines {start+1}-{end})")
