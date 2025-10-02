@@ -677,13 +677,6 @@ def _is_salt_token_valid(token):
     Validate token against Salt's token backend (in the master cache).
     Returns (True/False, tokdata_or_None)
     """
-    if not token:
-        return False, None
-    try:
-        int(token, 16)
-    except (TypeError, ValueError):
-        return False, None
-
     lauth = _loadauth_from_opts()
 
     tokdata = None
@@ -881,9 +874,16 @@ def cors_tool():
     resp_head = cherrypy.response.headers
 
     # Always set response headers necessary for 'simple' CORS.
-    resp_head["Access-Control-Allow-Origin"] = req_head.get("Origin", "*")
-    resp_head["Access-Control-Expose-Headers"] = "GET, POST"
+    origin = req_head.get("Origin")
+    if origin:
+        resp_head["Access-Control-Allow-Origin"] = origin
+        resp_head["Vary"] = "Origin"
+    else:
+        resp_head["Access-Control-Allow-Origin"] = "*"
+    resp_head["Access-Control-Expose-Headers"] = "X-Auth-Token"
     resp_head["Access-Control-Allow-Credentials"] = "true"
+
+
 
     # Non-simple CORS preflight request; short-circuit the normal handler.
     if cherrypy.request.method == "OPTIONS":
@@ -894,6 +894,7 @@ def cors_tool():
             "Content-Type",
             "X-Auth-Token",
             "X-Requested-With",
+            "Authorization",
         ]
 
         if ac_method and ac_method in allowed_methods:
@@ -1983,6 +1984,9 @@ class Login(LowDataAdapter):
         c = cherrypy.response.cookie
         c["session_id"] = token["token"]
         c["session_id"]["path"] = "/"
+        if not cherrypy.config["apiopts"].get("disable_ssl", False):
+            c["session_id"]["secure"] = True
+            c["session_id"]["samesite"] = "None"
         # Optionally reflect lifetime:
         # c["session_id"]["expires"] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(token["expire"]))
 
