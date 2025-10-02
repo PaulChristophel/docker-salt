@@ -677,25 +677,52 @@ def _is_salt_token_valid(token):
     Validate token against Salt's token backend (in the master cache).
     Returns (True/False, tokdata_or_None)
     """
+    # mask token in logs for safety
+    try:
+        masked = (token[:6] + '...') if isinstance(token, str) else None
+    except Exception:
+        masked = None
+
+    logger.debug("Validating token (masked): %s", masked)
+
+    if not token:
+        logger.debug("No token provided")
+        return False, None
+
     lauth = _loadauth_from_opts()
 
     tokdata = None
     # Different Salt versions expose either get_tok() or get_token()
-    for name in ("get_tok", "get_token", "get_token_info"):
+    for name in ("get_tok", "get_token", "get_token_info", "get_token_data"):
         getter = getattr(lauth, name, None)
         if callable(getter):
             try:
                 tokdata = getter(token)
             except Exception:
+                logger.debug("Token getter %s raised when validating token", name, exc_info=True)
                 tokdata = None
             if tokdata:
                 break
 
-    if tokdata:
-        exp = tokdata.get("expire") if isinstance(tokdata, dict) else None
-        if exp is None or exp > time.time():
-            return True, tokdata
+    if not tokdata:
+        logger.debug("Token not found in Salt token backend")
+        return False, None
 
+    # tokdata may be a dict or an object depending on Salt version; try to get expire
+    exp = None
+    try:
+        if isinstance(tokdata, dict):
+            exp = tokdata.get("expire")
+        else:
+            exp = getattr(tokdata, "expire", None)
+    except Exception:
+        exp = None
+
+    if exp is None or exp > time.time():
+        logger.debug("Token is valid (masked): %s", masked)
+        return True, tokdata
+
+    logger.debug("Token expired")
     return False, None
 
 # --- END: salt-token helpers ---
