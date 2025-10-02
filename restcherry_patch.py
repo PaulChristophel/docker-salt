@@ -46,15 +46,17 @@ new_fn = '''
         Combine the CherryPy configuration with the rest_cherrypy config values
         pulled from the master config and return the CherryPy configuration
         """
+        import cherrypy
+        from salt.utils.versions import version_cmp
+
+        # Base config (matches Salt’s defaults)
         conf = {
             "global": {
                 "server.socket_host": self.apiopts.get("host", "0.0.0.0"),
                 "server.socket_port": self.apiopts.get("port", 8000),
                 "server.thread_pool": self.apiopts.get("thread_pool", 100),
                 "server.socket_queue_size": self.apiopts.get("queue_size", 30),
-                "max_request_body_size": self.apiopts.get(
-                    "max_request_body_size", 1048576
-                ),
+                "max_request_body_size": self.apiopts.get("max_request_body_size", 1048576),
                 "debug": self.apiopts.get("debug", False),
                 "log.access_file": self.apiopts.get("log_access_file", ""),
                 "log.error_file": self.apiopts.get("log_error_file", ""),
@@ -68,27 +70,29 @@ new_fn = '''
             },
         }
 
-        if salt.utils.versions.version_cmp(cherrypy.__version__, "12.0.0") < 0:
-            # CherryPy >= 12.0 no longer supports "timeout_monitor", only set
-            # this config option when using an older version of CherryPy.
-            # See Issue #44601 for more information.
-            conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get(
-                "expire_responses", True
-            )
+        # (Keep Salt’s legacy timeout_monitor for old CherryPy)
+        if version_cmp(cherrypy.__version__, "12.0.0") < 0:
+            conf["global"]["engine.timeout_monitor.on"] = self.apiopts.get("expire_responses", True)
 
-        if cpstats and self.apiopts.get("collect_stats", False):
-            conf["/"]["tools.cpstats.on"] = True
+        # cpstats/tooling if enabled
+        try:
+            if self.apiopts.get("collect_stats", False):
+                conf["/"]["tools.cpstats.on"] = True
+        except Exception:
+            pass
 
+        # Favicon
         if "favicon" in self.apiopts:
             conf["/favicon.ico"] = {
                 "tools.staticfile.on": True,
                 "tools.staticfile.filename": self.apiopts["favicon"],
             }
 
-        if self.apiopts.get("debug", False) is False:
+        # Prod env?
+        if not self.apiopts.get("debug", False):
             conf["global"]["environment"] = "production"
 
-        # Serve static media if the directory has been set in the configuration
+        # Static dir
         if "static" in self.apiopts:
             conf[self.apiopts.get("static_path", "/static")] = {
                 "tools.staticdir.on": True,
@@ -96,40 +100,34 @@ new_fn = '''
             }
 
         # --- BEGIN: user-configurable CherryPy merges ---
-        # Merge user-provided sections into conf
         apiopts = getattr(self, "apiopts", {}) or {}
-        # Merge 'global' (engine/server) options
+
+        # Merge global overrides
         user_global = apiopts.get("global") or {}
         if isinstance(user_global, dict):
             conf["global"].update(user_global)
-        # Merge root (app '/') options; support either 'root' or '/' keys
+
+        # Merge root ("/") overrides; accept either "root" or "/" keys
         user_root = apiopts.get("root") or apiopts.get("/") or {}
         if isinstance(user_root, dict):
             conf["/"].update(user_root)
 
-        # Support simplified storage option (e.g., storage: file)
-        storage_opt = apiopts.get("storage", None)
+        # Simple knob: storage: file  -> FileSession
+        storage_opt = apiopts.get("storage", None)  # <-- define it up-front to avoid UnboundLocalError
         if storage_opt == "file":
-            try:
-                from cherrypy.lib.sessions import FileSession
-                conf["/"]["tools.sessions.storage_class"] = FileSession
-            except Exception as exc:
-                if hasattr(cherrypy, "log") and hasattr(cherrypy.log, "error"):
-                    cherrypy.log.error(f"Unable to load FileSession: {exc}")
+            from cherrypy.lib.sessions import FileSession
+            conf["/"]["tools.sessions.storage_class"] = FileSession
 
-        # If storage is configured, ensure sessions are enabled and have sane defaults
+        # If storage is present at all, ensure sensible defaults without overwriting user values
         if storage_opt is not None:
             conf["/"].setdefault("tools.sessions.on", True)
-            conf["/"].setdefault("tools.sessions.locking", "implicit")
-            # Choose an early priority so sessions init before auth hooks; user's explicit value wins.
-            conf["/"].setdefault("tools.sessions.priority", 40)
+            conf["/"].setdefault("tools.sessions.locking", "implicit")   # works with Salt’s hooks
+            conf["/"].setdefault("tools.sessions.priority", 40)          # runs early; user override wins
         # --- END: user-configurable CherryPy merges ---
 
-        # Add to global config
+        # Apply global config and return
         cherrypy.config.update(conf["global"])
-
         return conf
-
 '''.lstrip(
     "\n"
 )
