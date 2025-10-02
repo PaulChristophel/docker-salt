@@ -1,35 +1,45 @@
-# restcherry_patch.py — patch get_conf in app.py without importing salt
-import io, ast, sys
+# restcherry_patch.py — robust, indent-aware replacement of ApiApplication.get_conf()
+import sys
+import ast
 from pathlib import Path
+import importlib.util
 
-import salt  # just to locate site-packages
+# Locate installed 'salt' package dir without importing its submodules
+spec = importlib.util.find_spec("salt")
+if spec is None or not spec.submodule_search_locations:
+    sys.exit("ERROR: could not locate 'salt' package (is it installed in this image?)")
 
-site = Path(salt.__file__).resolve().parent  # .../site-packages/salt
-app_path = site / "netapi" / "rest_cherrypy" / "app.py"
+salt_dir = Path(list(spec.submodule_search_locations)[0])
+app_path = salt_dir / "netapi" / "rest_cherrypy" / "app.py"
+
 src = app_path.read_text(encoding="utf-8")
 
-# Idempotency: if our marker is present, skip
+# Idempotent: skip if our marker already present
 if "BEGIN: user-configurable CherryPy merges" in src:
     print("Already patched:", app_path)
     sys.exit(0)
 
-# Parse and locate def get_conf(self): reliably using AST (no fragile regex)
+# Parse and find def get_conf(self):
 tree = ast.parse(src)
-
 target = None
 for node in ast.walk(tree):
     if isinstance(node, ast.FunctionDef) and node.name == "get_conf":
-        # Ensure it's a method with first arg named 'self'
-        if getattr(node, 'args', None) and node.args.args and node.args.args[0].arg == 'self':
+        if node.args.args and node.args.args[0].arg == "self":
             target = node
             break
 
 if not target or not hasattr(target, "lineno") or not hasattr(target, "end_lineno"):
-    raise SystemExit(f"Could not locate get_conf() with end positions in {app_path}")
+    sys.exit(f"ERROR: could not locate get_conf() in {app_path}")
 
-start = target.lineno - 1  # 0-based index for slicing
-end = target.end_lineno    # slice end is exclusive
+lines = src.splitlines(keepends=True)
+start = target.lineno - 1           # 0-based start line index
+end = target.end_lineno             # exclusive end index
 
+# Determine the existing indentation for this method (spaces/tabs preserved)
+orig_line = lines[start]
+leading_ws = orig_line[: len(orig_line) - len(orig_line.lstrip())]
+
+# New function body (no leading indentation here; we'll add it)
 new_fn = '''
 def get_conf(self):
     """
@@ -95,20 +105,17 @@ def get_conf(self):
             "tools.staticdir.dir": self.apiopts["static"],
         }
 
-    cherrypy.config.update(conf["global"])  # apply global settings
+    cherrypy.config.update(conf["global"])
     return conf
 '''.lstrip("\n")
 
- # Preserve original indentation of the method within the class
-orig_lines = src.splitlines(keepends=True)
-orig_def_line = orig_lines[start]
-leading_ws = orig_def_line[: len(orig_def_line) - len(orig_def_line.lstrip())]
-
-# Indent the replacement block to match the class/method indentation
-indented_new_fn = ''.join(
-    (leading_ws + ln if ln.strip() else ln) for ln in new_fn.splitlines(keepends=True)
+# Re-indent the whole replacement to match original method indentation
+indented_new_fn = "".join(
+    (leading_ws + ln if ln.strip() else ln)  # keep blank lines blank
+    for ln in new_fn.splitlines(keepends=True)
 )
 
-new_src = src[:start] + indented_new_fn + src[end:]
-io.open(app_path, "w", encoding="utf-8").write(new_src)
-print(f"Patched {app_path} (lines {start+1}-{end})")
+# Splice and write back
+new_src = "".join(lines[:start]) + indented_new_fn + "".join(lines[end:])
+app_path.write_text(new_src, encoding="utf-8")
+print(f"Patched {app_path} (lines {start+1}-{end}), indent='{leading_ws.replace(chr(9),'\\t')}'")
