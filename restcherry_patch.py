@@ -118,4 +118,4 @@ indented_new_fn = "".join(
 # Splice and write back
 new_src = "".join(lines[:start]) + indented_new_fn + "".join(lines[end:])
 app_path.write_text(new_src, encoding="utf-8")
-print(f"Patched {app_path} (lines {start+1}-{end}), indent='{leading_ws.replace(chr(9),'\\t')}'")
+print(f"Patched {app_path} (lines {start+1}-{end}) with indent of length {len(leading_ws)}")
