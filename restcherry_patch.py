@@ -1,7 +1,6 @@
 # restcherry_patch.py — patch get_conf in app.py without importing salt
-import io, os
+import io, ast, sys
 from pathlib import Path
-import pkgutil
 
 import salt  # just to locate site-packages
 
