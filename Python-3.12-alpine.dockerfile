@@ -1,7 +1,7 @@
 FROM python:3.12-alpine AS base
 MAINTAINER Paul Martin
 RUN apk upgrade --update --no-cache && \
-    apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto3 libssl3 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs openssh-client-default openssh-client-common rsync
+    apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto3 libssl3 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs openssh-client-default openssh-client-common rsync tini
 
 FROM base as builder
 MAINTAINER Paul Martin
