@@ -1,8 +1,8 @@
-aiohttp==3.12.15
+aiohttp==3.13.0
 asttokens==3.0.0
 autocommand==2.2.2
 backcall==0.2.0
-certifi==2025.8.3
+certifi==2025.10.5
 charset-normalizer==3.4.3
 cheroot==11.0.0
 CherryPy==18.10.0
@@ -51,7 +51,7 @@ pure-eval==0.2.3
 pyasn1==0.6.1
 pyasn1-modules==0.4.2
 pycryptodomex==3.23.0
-pydantic==2.11.9
+pydantic==2.11.10
 Pygments==2.19.2
 python-dateutil==2.9.0.post0
 python-gnupg==0.5.5
@@ -75,7 +75,7 @@ zc.lockfile==4.0
 
 # Ansible deps
 ansible==12.0.0
-ansible-core==2.19.2
+ansible-core==2.19.3
 argcomplete==3.6.2
 cffi==2.0.0
 cryptography==46.0.2
@@ -89,18 +89,18 @@ resolvelib==1.2.0
 #setuptools==68.0.0
 
 aiosignal==1.4.0
-attrs==25.3.0
-frozenlist==1.7.0
-multidict==6.6.4
-yarl==1.20.1
+attrs==25.4.0
+frozenlist==1.8.0
+multidict==6.7.0
+yarl==1.22.0
 zipp==3.23.0
 backports.tarfile==1.2.0; python_version <= '3.11'
 passlib==1.7.4
 aiohappyeyeballs==2.6.1
 annotated-types==0.7.0
 ipython-pygments-lexers==1.1.1
-propcache==0.3.2
-pydantic_core==2.40.1
+propcache==0.4.0
+pydantic_core==2.41.1
 pygments==2.19.2
 typeguard==4.4.4
 typing-extensions==4.15.0

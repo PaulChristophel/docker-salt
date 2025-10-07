@@ -1,10 +1,14 @@
 FROM python:3.12-alpine AS base
-MAINTAINER Paul Martin
+LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
+      org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
+      org.opencontainers.image.description="Lightweight container image providing a Salt master service."
 RUN apk upgrade --update --no-cache && \
     apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto3 libssl3 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs openssh-client-default openssh-client-common rsync tini
 
 FROM base as builder
-MAINTAINER Paul Martin
+LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
+      org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
+      org.opencontainers.image.description="Lightweight container image providing a Salt master service."
 ARG REQUIREMENTS=requirements-3006-isalt.txt
 ARG FLAGS
 ARG USER_ID=1000
@@ -30,7 +34,9 @@ COPY ./yescrypt-cli ./
 RUN go mod download && CGO_ENABLED=0 go build -trimpath -ldflags="-w -s" -o yescrypt-cli .
 
 FROM base as salt
-MAINTAINER Paul Martin
+LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
+      org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
+      org.opencontainers.image.description="Lightweight container image providing a Salt master service."
 ARG USER_ID=1000
 COPY --from=builder /usr/local/salt /usr/local/salt
 COPY --from=yescrypt-builder /build/yescrypt-cli /usr/local/bin/yescrypt-cli
