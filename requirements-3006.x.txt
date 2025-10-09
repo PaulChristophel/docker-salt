@@ -82,7 +82,7 @@ passlib==1.7.4
 aiohappyeyeballs==2.6.1
 annotated-types==0.7.0
 ipython-pygments-lexers==1.1.1
-propcache==0.4.0
+propcache==0.4.1
 pydantic_core==2.41.1
 pygments==2.19.2
 typeguard==4.4.4
