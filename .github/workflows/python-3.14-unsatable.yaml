@@ -28,7 +28,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.14 Dev
-      continue-on-error: true
       run: |
         podman pull python:3.14-alpine
         podman build -f Python-3.14-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt . \
@@ -67,7 +66,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.14 Dev isalt
-      continue-on-error: true
       run: |
         podman pull python:3.14-alpine
         podman build -f Python-3.14-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
@@ -107,7 +105,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.14 Dev
-      continue-on-error: true
       run: |
         podman pull python:3.14-alpine
         podman build -f Python-3.14-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt . \
@@ -146,7 +143,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.14 Dev isalt
-      continue-on-error: true
       run: |
         podman pull python:3.14-alpine
         podman build -f Python-3.14-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt . \

@@ -29,7 +29,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
-      continue-on-error: true
       run: |
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt . \
@@ -68,7 +67,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
-      continue-on-error: true
       run: |
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
@@ -107,7 +105,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
-      continue-on-error: true
       run: |
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt . \
@@ -146,7 +143,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
-      continue-on-error: true
       run: |
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt . \
@@ -185,7 +181,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
-      continue-on-error: true
       run: |
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt . \
@@ -224,7 +219,6 @@ jobs:
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
-      continue-on-error: true
       run: |
         podman pull python:3.11-alpine
         podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt . \

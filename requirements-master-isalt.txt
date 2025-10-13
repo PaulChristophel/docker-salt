@@ -94,6 +94,8 @@ multidict==6.7.0
 yarl==1.22.0
 zipp==3.23.0
 backports.tarfile==1.2.0; python_version <= '3.11'
+backports.ssl_match_hostname==3.7.0.1 ; python_version >= '3.12'
+backports_abc==0.5 ; python_version >= '3.12'
 passlib==1.7.4
 aiohappyeyeballs==2.6.1
 annotated-types==0.7.0
