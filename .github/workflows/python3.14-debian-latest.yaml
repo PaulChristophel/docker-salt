@@ -1,0 +1,88 @@
+name: Latest Python 3.14 Release
+run-name: "Latest Python 3.14 Release (branch: ${{ github.ref_name }})"
+
+on:
+  push:
+    # Pattern matched against refs/tags
+    tags:
+      - '[0-9]+.[0-9]+-[0-9]+'
+
+jobs:
+
+  build-python3-14-3007:
+    runs-on: ubuntu-24.04
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Build Version
+      run: |
+        echo "BUILD=${GITHUB_REF:10}" | tee -a $GITHUB_ENV
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+    - name: Python 3.14
+      continue-on-error: true
+      run: |
+        podman pull python:3.14-debian
+        podman build -f Python-3.14-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt . \
+                     -t docker.io/pcm0/salt:3.14-latest-debian \
+                     -t docker.io/pcm0/salt:3.14-${{ env.BUILD }}-debian \
+                     -t docker.io/pcm0/salt:3.14-latest \
+                     -t docker.io/pcm0/salt:3.14-${{ env.BUILD }} \
+                     -t docker.io/pcm0/salt:3.14-${{ env.SHORT_SHA }}-debian \
+                     -t $ACR_URL/pmartin47/salt:3.14-latest-debian \
+                     -t $ACR_URL/pmartin47/salt:3.14-${{ env.BUILD }}-debian \
+                     -t $ACR_URL/pmartin47/salt:3.14-latest \
+                     -t $ACR_URL/pmartin47/salt:3.14-${{ env.BUILD }} \
+                     -t $ACR_URL/pmartin47/salt:3.14-${{ env.SHORT_SHA }}-debian
+    - name: Push to Docker Hub
+      run: |
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman logout
+        podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+
+    - name: Docker System Prune
+      run: |
+        podman system prune --force --all
+  
+  build-python3-14-3007-isalt:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USERNAME: pcm0
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      ACR_URL: ${{ secrets.ACR_URL }}
+      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
+      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Get Build Version
+      run: |
+        echo "BUILD=${GITHUB_REF:10}" | tee -a $GITHUB_ENV
+        echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
+    - name: Python 3.14
+      continue-on-error: true
+      run: |
+        podman pull python:3.14-debian
+        podman build -f Python-3.14-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt . \
+                     -t docker.io/pcm0/salt:3.14-latest-isalt-debian \
+                     -t docker.io/pcm0/salt:3.14-${{ env.BUILD }}-isalt-debian \
+                     -t docker.io/pcm0/salt:3.14-latest-isalt \
+                     -t docker.io/pcm0/salt:3.14-${{ env.BUILD }}-isalt \
+                     -t docker.io/pcm0/salt:3.14-${{ env.SHORT_SHA }}-isalt-debian \
+                     -t $ACR_URL/pmartin47/salt:3.14-latest-isalt-debian \
+                     -t $ACR_URL/pmartin47/salt:3.14-${{ env.BUILD }}-isalt-debian \
+                     -t $ACR_URL/pmartin47/salt:3.14-latest-isalt \
+                     -t $ACR_URL/pmartin47/salt:3.14-${{ env.BUILD }}-isalt \
+                     -t $ACR_URL/pmartin47/salt:3.14-${{ env.SHORT_SHA }}-isalt-debian
+    - name: Push to Docker Hub
+      run: |
+        podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+        podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
+        podman logout
+        podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
+        podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
