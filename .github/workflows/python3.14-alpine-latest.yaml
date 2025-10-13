@@ -1,5 +1,5 @@
-name: Latest Python 3.14 Release
-run-name: "Latest Python 3.14 Release (branch: ${{ github.ref_name }})"
+name: Latest Python 3.14 Alpine Release
+run-name: "Latest Python 3.14 Alpine Release (branch: ${{ github.ref_name }})"
 
 on:
   push:

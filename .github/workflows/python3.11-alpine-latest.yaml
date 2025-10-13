@@ -1,5 +1,5 @@
-name: Latest Python 3.11 Release
-run-name: "Latest Python 3.11 Release (branch: ${{ github.ref_name }})"
+name: Latest Python 3.11 Alpine Release
+run-name: "Latest Python 3.11 Alpine Release (branch: ${{ github.ref_name }})"
 
 on:
   push:
@@ -47,7 +47,7 @@ jobs:
         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
         podman images | awk "/$ACR_URL\/pmartin47\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
         podman save docker.io/pcm0/salt:latest -o latest.tar.gz
-    - name: Create a Release
+    - name: Create a Alpine Release
       uses: ncipollo/release-action@v1
       with:
         artifacts: "latest.tar.gz"
@@ -58,7 +58,7 @@ jobs:
           CHANGELOG:
           ${{ github.event.head_commit.message }}
 
-          To download this release:
+          To download this Alpine Release:
           podman pull docker.io/pcm0/salt
 
           Or to specify a build:

@@ -1,5 +1,5 @@
-name: Unstable Python 3.13 Release
-run-name: "Unstable Python 3.13 Release (branch: ${{ github.ref_name }})"
+name: Unstable Python 3.13 Alpine Release
+run-name: "Unstable Python 3.13 Alpine Release (branch: ${{ github.ref_name }})"
 
 on:
   # Pattern matched against refs/tags
