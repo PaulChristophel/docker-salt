@@ -10,7 +10,7 @@ decorator==5.2.1
 distro==1.9.0
 dnspython==2.8.0
 gssapi==1.10.0
-idna==3.10
+idna==3.11
 immutables==0.21
 importlib_metadata==8.7.0
 inflect==7.5.0
@@ -40,7 +40,7 @@ pycryptodomex==3.23.0
 pydantic==2.12.0
 python-dateutil==2.9.0.post0
 python-gnupg==0.5.5
-python-ldap==3.4.4
+python-ldap==3.4.5
 python-logstash==0.4.8
 pytz==2025.2
 PyYAML==6.0.3
@@ -68,7 +68,7 @@ cryptography==46.0.2
 #pip==23.3
 pycparser==2.23
 #PyYAML==6.0.3
-resolvelib==1.2.0
+resolvelib==1.2.1
 #setuptools==68.0.0
 
 aiosignal==1.4.0
