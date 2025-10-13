@@ -16,7 +16,7 @@ on:
 jobs:
 
   build-python3-11-master-dev:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -244,7 +244,7 @@ jobs:
         podman system prune --force --all
 
   build-python3-11-3007:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -308,7 +308,7 @@ jobs:
         podman system prune --force --all     
 
   build-python3-11-3006:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

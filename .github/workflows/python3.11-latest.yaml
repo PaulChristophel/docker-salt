@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-python3-11-3007:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
@@ -111,7 +111,7 @@ jobs:
         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 
   build-python3-11-3006:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
