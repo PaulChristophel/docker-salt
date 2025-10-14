@@ -30,7 +30,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt . \
                      -t docker.io/pcm0/salt:3.11-master-${{ env.SHORT_SHA }}-debian-dev \
                      -t docker.io/pcm0/salt:3.11-master-debian-dev \
@@ -64,7 +64,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-master-${{ env.SHORT_SHA }}-isalt-debian-dev \
                      -t docker.io/pcm0/salt:3.11-master-isalt-debian-dev \
@@ -98,7 +98,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt . \
                      -t docker.io/pcm0/salt:3.11-3006.x-${{ env.SHORT_SHA }}-debian-dev \
                      -t docker.io/pcm0/salt:3.11-3006.x-debian-dev \
@@ -132,7 +132,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-3006.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
                      -t docker.io/pcm0/salt:3.11-3006.x-isalt-debian-dev \
@@ -166,7 +166,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt . \
                      -t docker.io/pcm0/salt:3.11-3007.x-${{ env.SHORT_SHA }}-debian-dev \
                      -t docker.io/pcm0/salt:3.11-3007.x-debian-dev \
@@ -200,7 +200,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-3007.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
                      -t docker.io/pcm0/salt:3.11-3007.x-isalt-debian-dev \
@@ -234,7 +234,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt . \
                      -t docker.io/pcm0/salt:3.11-3007-${{ env.SHORT_SHA }}-debian \
                      -t $ACR_URL/pmartin47/salt:3.11-3007-${{ env.SHORT_SHA }}-debian
@@ -264,7 +264,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-3007-${{ env.SHORT_SHA }}-isalt-debian \
                      -t $ACR_URL/pmartin47/salt:3.11-3007-${{ env.SHORT_SHA }}-isalt-debian
@@ -294,7 +294,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt . \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-debian \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-debian
@@ -324,7 +324,7 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       run: |
-        podman pull python:3.11-debian
+        podman pull python:3.11-slim
         podman build -f Python-3.11-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt . \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-debian \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-debian
