@@ -1,4 +1,4 @@
-FROM python:3.11-slim AS base
+FROM python:3.13-slim AS base
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
       org.opencontainers.image.description="Lightweight container image providing a Salt master service."
@@ -72,11 +72,11 @@ COPY prerequisites.txt /prerequisites.txt
 RUN /usr/local/salt/bin/pip install --no-cache-dir -r /prerequisites.txt
 COPY ${REQUIREMENTS} /requirements.txt
 RUN /usr/local/salt/bin/pip install --no-cache-dir ${FLAGS} -r /requirements.txt
-COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
-COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
-COPY app.py /usr/local/salt/lib/python3.11/site-packages/salt/netapi/rest_cherrypy/
+COPY nacl.py /usr/local/salt/lib/python3.13/site-packages/salt/utils/
+COPY logstash_engine.py /usr/local/salt/lib/python3.13/site-packages/salt/engines/
+COPY app.py /usr/local/salt/lib/python3.13/site-packages/salt/netapi/rest_cherrypy/
 RUN find /usr/local/salt -name '*.pyc' -delete && \
-    rm -f /usr/local/salt/lib/python3.11/site-packages/salt/returners/django_return.py
+    rm -f /usr/local/salt/lib/python3.13/site-packages/salt/returners/django_return.py
 RUN find "$VIRTUAL_ENV" -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
 
