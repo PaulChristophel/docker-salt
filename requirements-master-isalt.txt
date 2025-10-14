@@ -3,7 +3,7 @@ asttokens==3.0.0
 autocommand==2.2.2
 backcall==0.2.0
 certifi==2025.10.5
-charset-normalizer==3.4.3
+charset-normalizer==3.4.4
 cheroot==11.0.0
 CherryPy==18.10.0
 Cython==3.1.4
@@ -50,7 +50,7 @@ pure-eval==0.2.3
 pyasn1==0.6.1
 pyasn1-modules==0.4.2
 pycryptodomex==3.23.0
-pydantic==2.12.1
+pydantic==2.12.2
 Pygments==2.19.2
 python-dateutil==2.9.0.post0
 python-gnupg==0.5.5
@@ -101,7 +101,7 @@ aiohappyeyeballs==2.6.1
 annotated-types==0.7.0
 ipython-pygments-lexers==1.1.1
 propcache==0.4.1
-pydantic_core==2.41.3
+pydantic_core==2.41.4
 pygments==2.19.2
 typeguard==4.4.4
 typing-extensions==4.15.0
