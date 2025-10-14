@@ -10,7 +10,7 @@ RUN apt-get update && apt-get upgrade -y && \
       ca-certificates \
       libzmq5 \
       libpq5 \
-      libldap-2.5-0 \
+      libldap-2* \
       libssl3 \
       openssl \
       libgcrypt20 \
@@ -19,7 +19,7 @@ RUN apt-get update && apt-get upgrade -y && \
       binutils \
       libffi8 \
       gnupg \
-      libgit2-1.5 \
+      libgit2-1.* \
       libssh2-1 \
       krb5-user \
       libkrb5-3 \
