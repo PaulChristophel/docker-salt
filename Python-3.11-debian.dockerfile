@@ -51,6 +51,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       libpq-dev \
       libldap2-dev \
       libssl-dev \
+      libsasl2-dev \
       libffi-dev \
       libgit2-dev \
       libssh2-1-dev \
