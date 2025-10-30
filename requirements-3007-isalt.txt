@@ -1,4 +1,4 @@
-aiohttp==3.13.1
+aiohttp==3.13.2
 asttokens==3.0.0
 autocommand==2.2.2
 backcall==0.2.0
