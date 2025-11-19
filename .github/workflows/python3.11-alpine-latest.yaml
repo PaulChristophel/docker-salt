@@ -142,7 +142,7 @@ jobs:
                      -t $ACR_URL/pmartin47/salt:3.11-3006-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.16 \
                      -t $ACR_URL/pmartin47/salt:3.11-3006 \
-                     -t $ACR_URL/pmartin47/salt:3.3006 \
+                     -t $ACR_URL/pmartin47/salt:3006 \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.16-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-alpine \
                      -t $ACR_URL/pmartin47/salt:3.11-3006.16-${{ env.SHORT_SHA }} \
