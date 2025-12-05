@@ -5,7 +5,7 @@ charset-normalizer==3.4.4
 cheroot==11.1.2
 CherryPy==18.10.0
 contextvars==2.4
-Cython==3.2.1
+Cython==3.2.2
 decorator==5.2.1
 distro==1.9.0
 dnspython==2.8.0
@@ -53,7 +53,7 @@ tempora==5.8.1
 timelib==0.3.0
 tornado==6.5.2
 typing_extensions==4.15.0
-urllib3==2.5.0
+urllib3==2.6.0
 zc.lockfile==4.0
 
 # Ansible deps

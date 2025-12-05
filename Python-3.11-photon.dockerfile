@@ -3,8 +3,10 @@ LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
       org.opencontainers.image.description="Lightweight container image providing a Salt master service."
 
-RUN tdnf -y update && \
-     tdnf -y install \
+ARG USER_ID=1000
+
+RUN tdnf -y update \
+    && tdnf -y install \
        ca-certificates \
        zeromq \
        postgresql17-libs \
@@ -25,6 +27,9 @@ RUN tdnf -y update && \
        python3-pip \
        python3-devel \
        shadow \
+     && groupadd -g ${USER_ID} salt \
+     && useradd -u ${USER_ID} -g salt -d /opt/salt -s /sbin/nologin -m salt \
+     && tdnf remove shadow \
      && tdnf clean all
 
 FROM base AS builder
@@ -89,11 +94,9 @@ LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
 ARG USER_ID=1000
 COPY --from=builder /usr/local/salt /usr/local/salt
 COPY --from=yescrypt-builder /build/yescrypt-cli /usr/local/bin/yescrypt-cli
-RUN groupadd -g ${USER_ID} salt && \
-    useradd -u ${USER_ID} -g salt -d /opt/salt -s /sbin/nologin -m salt
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && \
     chown -R ${USER_ID}:${USER_ID} /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt && \
-    ln -sf /usr/lib64/libpq.so.5 /usr/lib64/libpq.so || true && \
+    ln -sf /usr/pgsql/17/lib/postgresql/libpq.so.5 /usr/lib64/libpq.so || true && \
     ln -sv /usr/bin/tini /sbin/tini
 
 WORKDIR /opt/salt
