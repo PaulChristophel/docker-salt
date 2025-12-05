@@ -29,7 +29,7 @@ RUN tdnf -y update \
        shadow \
      && groupadd -g ${USER_ID} salt \
      && useradd -u ${USER_ID} -g salt -d /opt/salt -s /sbin/nologin -m salt \
-     && tdnf remove shadow \
+     && tdnf remove -y shadow \
      && tdnf clean all
 
 FROM base AS builder
