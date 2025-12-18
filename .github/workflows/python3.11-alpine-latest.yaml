@@ -26,7 +26,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt . \
+        podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-latest-alpine \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-alpine \
                      -t docker.io/pcm0/salt:3.11-latest \
@@ -89,7 +89,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt . \
+        podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-latest-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-latest-isalt \
@@ -128,7 +128,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt . \
+        podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3006.16-alpine \
                      -t docker.io/pcm0/salt:3.11-3006-alpine \
                      -t docker.io/pcm0/salt:3.11-3006.16 \
@@ -177,7 +177,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.11-alpine
-        podman build -f Python-3.11-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt . \
+        podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3006.16-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-3006-isalt-alpine \
                      -t docker.io/pcm0/salt:3.11-3006.16-isalt \
