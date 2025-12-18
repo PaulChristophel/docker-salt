@@ -12,6 +12,7 @@ LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
 ARG REQUIREMENTS=requirements-3006-isalt.txt
 ARG FLAGS
 ARG USER_ID=1000
+ARG PYTHONPATH="/usr/local/salt/lib/python3.11"
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 
 RUN apk add --update --no-cache alpine-sdk musl-dev zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5-dev postgresql-dev python3-dev patch
@@ -20,10 +21,10 @@ COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
 COPY $REQUIREMENTS /requirements.txt
 RUN pip install $FLAGS -r /requirements.txt
-COPY nacl.py /usr/local/salt/lib/python3.11/site-packages/salt/utils/
-COPY logstash_engine.py /usr/local/salt/lib/python3.11/site-packages/salt/engines/
-COPY app.py /usr/local/salt/lib/python3.11/site-packages/salt/netapi/rest_cherrypy/
-RUN find /usr/local/salt -name \*.pyc -delete && rm -f /usr/local/salt/lib/python3.11/site-packages/salt/returners/django_return.py
+COPY nacl.py "${PYTHONPATH}/site-packages/salt/utils/"
+COPY logstash_engine.py "${PYTHONPATH}/site-packages/salt/engines/"
+COPY app.py "${PYTHONPATH}/site-packages/salt/netapi/rest_cherrypy/"
+RUN find /usr/local/salt -name \*.pyc -delete && rm -f "${PYTHONPATH}/site-packages/salt/returners/django_return.py"
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
 FROM golang:alpine AS yescrypt-builder
