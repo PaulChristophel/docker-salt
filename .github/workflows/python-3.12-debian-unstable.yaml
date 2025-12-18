@@ -31,7 +31,7 @@ jobs:
     - name: Python 3.12 Dev
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-master-${{ env.SHORT_SHA }}-debian-dev \
                      -t docker.io/pcm0/salt:3.12-master-debian-dev \
                      -t $ACR_URL/pmartin47/salt:3.12-master-${{ env.SHORT_SHA }}-debian-dev \
@@ -65,7 +65,7 @@ jobs:
     - name: Python 3.12 Dev isalt
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-master-${{ env.SHORT_SHA }}-isalt-debian-dev \
                      -t docker.io/pcm0/salt:3.12-master-isalt-debian-dev \
                      -t $ACR_URL/pmartin47/salt:3.12-master-${{ env.SHORT_SHA }}-isalt-debian-dev \
@@ -99,7 +99,7 @@ jobs:
     - name: Python 3.12 Dev
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-3006.x-${{ env.SHORT_SHA }}-debian-dev \
                      -t docker.io/pcm0/salt:3.12-3006.x-debian-dev \
                      -t $ACR_URL/pmartin47/salt:3.12-3006.x-${{ env.SHORT_SHA }}-debian-dev \
@@ -133,7 +133,7 @@ jobs:
     - name: Python 3.12 Dev isalt
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-3006.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
                      -t docker.io/pcm0/salt:3.12-3006.x-isalt-debian-dev \
                      -t $ACR_URL/pmartin47/salt:3.12-3006.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
@@ -167,7 +167,7 @@ jobs:
     - name: Python 3.12 Dev
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-3007.x-${{ env.SHORT_SHA }}-debian-dev \
                      -t docker.io/pcm0/salt:3.12-3007.x-debian-dev \
                      -t $ACR_URL/pmartin47/salt:3.12-3007.x-${{ env.SHORT_SHA }}-debian-dev \
@@ -201,7 +201,7 @@ jobs:
     - name: Python 3.12 Dev isalt
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-3007.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
                      -t docker.io/pcm0/salt:3.12-3007.x-isalt-debian-dev \
                      -t $ACR_URL/pmartin47/salt:3.12-3007.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
@@ -235,7 +235,7 @@ jobs:
     - name: Python 3.12
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-3007-${{ env.SHORT_SHA }}-debian \
                      -t $ACR_URL/pmartin47/salt:3.12-3007-${{ env.SHORT_SHA }}-debian
     - name: Push to Docker Hub
@@ -265,7 +265,7 @@ jobs:
     - name: Python 3.12
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-3007-${{ env.SHORT_SHA }}-isalt-debian \
                      -t $ACR_URL/pmartin47/salt:3.12-3007-${{ env.SHORT_SHA }}-isalt-debian
     - name: Push to Docker Hub
@@ -295,7 +295,7 @@ jobs:
     - name: Python 3.12
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-3006-${{ env.SHORT_SHA }}-debian \
                      -t $ACR_URL/pmartin47/salt:3.12-3006-${{ env.SHORT_SHA }}-debian
     - name: Push to Docker Hub
@@ -325,7 +325,7 @@ jobs:
     - name: Python 3.12
       run: |
         podman pull python:3.12-slim
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt PYTHONPATH=/usr/local/salt/lib/python3.12 . \
+        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.12 . \
                      -t docker.io/pcm0/salt:3.12-3006-${{ env.SHORT_SHA }}-isalt-debian \
                      -t $ACR_URL/pmartin47/salt:3.12-3006-${{ env.SHORT_SHA }}-isalt-debian
     - name: Push to Docker Hub

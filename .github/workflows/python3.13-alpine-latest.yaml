@@ -27,7 +27,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.13-alpine
-        podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt PYTHONPATH=/usr/local/salt/lib/python3.13 . \
+        podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
                      -t docker.io/pcm0/salt:3.13-latest-alpine \
                      -t docker.io/pcm0/salt:3.13-${{ env.BUILD }}-alpine \
                      -t docker.io/pcm0/salt:3.13-latest \
@@ -68,7 +68,7 @@ jobs:
       continue-on-error: true
       run: |
         podman pull python:3.13-alpine
-        podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt PYTHONPATH=/usr/local/salt/lib/python3.13 . \
+        podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
                      -t docker.io/pcm0/salt:3.13-latest-isalt-alpine \
                      -t docker.io/pcm0/salt:3.13-${{ env.BUILD }}-isalt-alpine \
                      -t docker.io/pcm0/salt:3.13-latest-isalt \
