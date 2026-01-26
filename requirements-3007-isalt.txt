@@ -70,7 +70,7 @@ tornado==6.5.4
 traitlets==5.14.3
 typing_extensions==4.15.0
 urllib3==2.6.3
-wcwidth==0.3.1
+wcwidth==0.4.0
 zc.lockfile==4.0
 
 # Ansible deps
@@ -91,7 +91,7 @@ resolvelib==1.2.1
 aiosignal==1.4.0
 attrs==25.4.0
 frozenlist==1.8.0
-multidict==6.7.0
+multidict==6.7.1
 yarl==1.22.0
 zipp==3.23.0
 backports.tarfile==1.2.0; python_version <= '3.11'
