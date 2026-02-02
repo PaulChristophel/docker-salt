@@ -18,7 +18,7 @@ idna==3.11
 immutables==0.21
 importlib_metadata==8.7.1
 inflect==7.5.0
-ipython==9.9.0
+ipython==9.10.0
 isalt==2021.2.2
 jaraco.collections==5.2.1
 jaraco.context==6.1.0
@@ -70,7 +70,7 @@ tornado==6.5.4
 traitlets==5.14.3
 typing_extensions==4.15.0
 urllib3==2.6.3
-wcwidth==0.5.2
+wcwidth==0.5.3
 zc.lockfile==4.0
 
 # Ansible deps
