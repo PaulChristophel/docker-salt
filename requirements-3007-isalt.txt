@@ -115,3 +115,4 @@ greenlet==3.3.1
 zope.event==6.1
 zope.interface==8.2
 ws4py==0.6.0
+gevent-websocket==0.10.1
