@@ -31,7 +31,7 @@ orjson==3.11.7
 packaging==26.0
 portend==3.2.1
 psutil==7.2.2
-psycopg[c,pool]==3.3.2
+psycopg[c,pool]==3.3.3
 
 psycopg2==2.9.11
 pyasn1==0.6.2
@@ -87,7 +87,7 @@ ipython-pygments-lexers==1.1.1
 propcache==0.4.1
 pydantic_core==2.41.5
 pygments==2.19.2
-typeguard==4.5.0
+typeguard==4.5.1
 typing-extensions==4.15.0
 typing-inspection==0.4.2
 
