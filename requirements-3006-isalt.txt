@@ -92,7 +92,7 @@ aiosignal==1.4.0
 attrs==25.4.0
 frozenlist==1.8.0
 multidict==6.7.1
-yarl==1.22.0
+yarl==1.23.0
 zipp==3.23.0
 backports.tarfile==1.2.0; python_version <= '3.11'
 backports.ssl_match_hostname==3.7.0.1 ; python_version >= '3.12'
