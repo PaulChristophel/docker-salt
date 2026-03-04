@@ -79,13 +79,6 @@ RUN find /usr/local/salt -name '*.pyc' -delete && \
     rm -f /usr/local/salt/lib/python3.11/site-packages/salt/returners/django_return.py
 RUN find "$VIRTUAL_ENV" -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
-
-FROM golang:trixie AS yescrypt-builder
-WORKDIR /build
-RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates && rm -rf /var/lib/apt/lists/*
-COPY ./yescrypt-cli ./
-RUN go mod download && CGO_ENABLED=0 go build -trimpath -ldflags="-w -s" -o yescrypt-cli .
-
 FROM base AS salt
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
@@ -93,7 +86,6 @@ LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
 
 ARG USER_ID=1000
 COPY --from=builder /usr/local/salt /usr/local/salt
-COPY --from=yescrypt-builder /build/yescrypt-cli /usr/local/bin/yescrypt-cli
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && \
     chown -R ${USER_ID}:${USER_ID} /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt && \
     ln -sf /usr/pgsql/17/lib/postgresql/libpq.so.5 /usr/lib64/libpq.so || true && \

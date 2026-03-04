@@ -27,19 +27,12 @@ COPY app.py /usr/local/salt/lib/python3.14/site-packages/salt/netapi/rest_cherry
 RUN find /usr/local/salt -name \*.pyc -delete && rm -f /usr/local/salt/lib/python3.14/site-packages/salt/returners/django_return.py
 RUN find $VIRTUAL_ENV -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
-FROM golang:alpine AS yescrypt-builder
-RUN apk add --no-cache git
-WORKDIR /build
-COPY ./yescrypt-cli ./
-RUN go mod download && CGO_ENABLED=0 go build -trimpath -ldflags="-w -s" -o yescrypt-cli .
-
 FROM base as salt
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
       org.opencontainers.image.description="Lightweight container image providing a Salt master service."
 ARG USER_ID=1000
 COPY --from=builder /usr/local/salt /usr/local/salt
-COPY --from=yescrypt-builder /build/yescrypt-cli /usr/local/bin/yescrypt-cli
 RUN addgroup -g ${USER_ID} salt && \
     adduser -u ${USER_ID} -s /sbin/nologin -h /opt/salt -SD -G salt salt
 RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && \
