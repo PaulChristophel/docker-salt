@@ -3,7 +3,7 @@ asttokens==3.0.1
 autocommand==2.2.2
 backcall==0.2.0
 certifi==2026.2.25
-charset-normalizer==3.4.4
+charset-normalizer==3.4.5
 cheroot==11.1.2
 CherryPy==18.10.0
 Cython==3.2.4
