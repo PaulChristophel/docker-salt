@@ -20,7 +20,7 @@ inflect==7.5.0
 ipython==9.10.0
 isalt==2021.2.2
 jaraco.collections==5.2.1
-jaraco.context==6.1.0
+jaraco.context==6.1.1
 jaraco.functools==4.4.0
 jaraco.text==4.2.0
 jedi==0.19.2
