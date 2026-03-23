@@ -20,7 +20,7 @@ inflect==7.5.0
 ipython==9.10.0
 isalt==2021.2.2
 jaraco.collections==5.2.1
-jaraco.context==6.1.1
+jaraco.context==6.1.2
 jaraco.functools==4.4.0
 jaraco.text==4.2.0
 jedi==0.19.2
@@ -88,7 +88,7 @@ resolvelib==1.2.1
 #setuptools==68.0.0
 
 aiosignal==1.4.0
-attrs==25.4.0
+attrs==26.1.0
 frozenlist==1.8.0
 multidict==6.7.1
 yarl==1.23.0
