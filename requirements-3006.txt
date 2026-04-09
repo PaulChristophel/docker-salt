@@ -86,7 +86,7 @@ annotated-types==0.7.0
 ipython-pygments-lexers==1.1.1
 propcache==0.4.1
 pydantic_core==2.45.0
-pygments==2.19.2
+
 typeguard==4.5.1
 typing-extensions==4.15.0
 typing-inspection==0.4.2
