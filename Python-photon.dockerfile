@@ -5,8 +5,7 @@ LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
 
 ARG USER_ID=1000
 
-RUN tdnf -y update \
-    && tdnf -y install \
+RUN tdnf -y install \
        ca-certificates \
        zeromq \
        postgresql17-libs \
@@ -27,6 +26,8 @@ RUN tdnf -y update \
        python3-pip \
        python3-devel \
        shadow \
+     && tdnf upgrade -y --exclude=python3,python3-libs \
+     && tdnf upgrade -y --exclude=python3,python3-libs \
      && groupadd -g ${USER_ID} salt \
      && useradd -u ${USER_ID} -g salt -d /opt/salt -s /sbin/nologin -m salt \
      && tdnf remove -y shadow \

@@ -30,7 +30,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-master-${{ env.SHORT_SHA }}-photon-dev \
                      -t docker.io/pcm0/salt:3.11-master-photon-dev \
@@ -64,7 +63,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-master-${{ env.SHORT_SHA }}-isalt-photon-dev \
                      -t docker.io/pcm0/salt:3.11-master-isalt-photon-dev \
@@ -98,7 +96,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3006.x-${{ env.SHORT_SHA }}-photon-dev \
                      -t docker.io/pcm0/salt:3.11-3006.x-photon-dev \
@@ -132,7 +129,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3006.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
                      -t docker.io/pcm0/salt:3.11-3006.x-isalt-photon-dev \
@@ -166,7 +162,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3007.x-${{ env.SHORT_SHA }}-photon-dev \
                      -t docker.io/pcm0/salt:3.11-3007.x-photon-dev \
@@ -200,7 +195,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11 Dev isalt
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3007.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
                      -t docker.io/pcm0/salt:3.11-3007.x-isalt-photon-dev \
@@ -234,7 +228,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3007-${{ env.SHORT_SHA }}-photon \
                      -t $ACR_URL/pmartin47/salt:3.11-3007-${{ env.SHORT_SHA }}-photon
@@ -264,7 +257,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3007-${{ env.SHORT_SHA }}-isalt-photon \
                      -t $ACR_URL/pmartin47/salt:3.11-3007-${{ env.SHORT_SHA }}-isalt-photon
@@ -294,7 +286,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-photon \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-photon
@@ -324,7 +315,6 @@ jobs:
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
     - name: Python 3.11
       run: |
-        podman pull python:3.11-slim
         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-photon \
                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-photon
