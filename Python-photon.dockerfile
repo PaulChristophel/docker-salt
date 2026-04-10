@@ -1,4 +1,4 @@
-FROM photon:5.0-20251113 AS base
+FROM photon:5.0-20251113@sha256:4ee8584d91f4d0078e5cb33a5fd35346d4ba801c9b3ffb0fa18cb75cda1b6edf AS base
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
       org.opencontainers.image.description="Lightweight container image providing a Salt master service."
@@ -25,7 +25,7 @@ RUN tdnf -y update \
        tini \
        python3 \
        python3-pip \
-	   python3-devel \
+       python3-devel \
        shadow \
      && groupadd -g ${USER_ID} salt \
      && useradd -u ${USER_ID} -g salt -d /opt/salt -s /sbin/nologin -m salt \
