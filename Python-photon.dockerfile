@@ -48,7 +48,12 @@ ENV PYTHONUNBUFFERED=1 \
     GENERATE_SALT_SYSPATHS=1 \
     VIRTUAL_ENV=/usr/local/salt
 
-RUN tdnf -y install \
+RUN sed -i 's/^enabled=0/enabled=1/' /etc/yum.repos.d/photon.repo \
+ && sed -i 's/^enabled=0/enabled=1/' /etc/yum.repos.d/photon-release.repo || true \
+ && tdnf clean all \
+ && rm -rf /var/cache/tdnf \
+ && tdnf makecache \
+ && tdnf -y install \
       build-essential \
       gcc \
       glibc-devel \
@@ -66,7 +71,7 @@ RUN tdnf -y install \
       rust \
       go \
       patch \
-    && tdnf clean all
+ && tdnf clean all
 
 RUN python3 -m venv /usr/local/salt
 RUN /usr/local/salt/bin/pip install --no-cache-dir --upgrade wheel
