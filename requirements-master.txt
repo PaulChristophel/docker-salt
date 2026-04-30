@@ -57,8 +57,8 @@ urllib3==2.6.3
 zc.lockfile==4.0
 
 # Ansible deps
-ansible==12.3.0
-ansible-core==2.19.9
+ansible==13.6.0
+ansible-core==2.20.5
 argcomplete==3.6.3
 cffi==2.0.0
 cryptography==47.0.0
