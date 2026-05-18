@@ -6,7 +6,7 @@ cheroot==11.1.2
 CherryPy==18.10.0
 Cython==3.2.4
 contextvars==2.4
-decorator==5.2.1
+decorator==5.3.1
 distro==1.9.0
 dnspython==2.8.0
 git+https://github.com/saltstack/salt.git@3006.x
@@ -17,7 +17,7 @@ importlib_metadata==9.0.0
 inflect==7.5.0
 jaraco.collections==5.2.1
 jaraco.context==6.1.2
-jaraco.functools==4.4.0
+jaraco.functools==4.5.0
 jaraco.text==4.2.0
 Jinja2==3.1.6
 jmespath==1.1.0
@@ -41,7 +41,7 @@ pycryptodomex==3.23.0
 pydantic==2.13.4
 python-dateutil==2.9.0.post0
 python-gnupg==0.5.6
-python-ldap==3.4.5
+python-ldap==3.4.6
 python-logstash==0.4.8
 pytz==2026.2
 PyYAML==6.0.3
@@ -87,7 +87,7 @@ ipython-pygments-lexers==1.1.1
 propcache==0.5.2
 pydantic_core==2.46.4
 
-typeguard==4.5.1
+typeguard==4.5.2
 typing-extensions==4.15.0
 typing-inspection==0.4.2
 
