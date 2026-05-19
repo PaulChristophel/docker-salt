@@ -58,7 +58,7 @@ zc.lockfile==4.0
 
 # Ansible deps
 ansible==12.3.0
-ansible-core==2.19.9
+ansible-core==2.19.10
 argcomplete==3.6.3
 cffi==2.0.0
 cryptography==48.0.0
@@ -76,7 +76,7 @@ attrs==26.1.0
 frozenlist==1.8.0
 multidict==6.7.1
 yarl==1.23.0
-zipp==3.23.1
+zipp==4.1.0
 backports.tarfile==1.2.0; python_version <= '3.11'
 backports.ssl_match_hostname==3.7.0.1 ; python_version >= '3.12'
 backports_abc==0.5 ; python_version >= '3.12'
