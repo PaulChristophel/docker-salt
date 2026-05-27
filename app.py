@@ -609,6 +609,13 @@ import salt.utils.stringutils
 import salt.utils.versions
 import salt.utils.yaml
 
+try:
+    import salt.utils.tracing
+
+    HAS_TRACING = True
+except ImportError:
+    HAS_TRACING = False
+
 logger = logging.getLogger(__name__)
 
 
@@ -657,7 +664,8 @@ def _get_token_from_request():
     Pull a token from request in a tolerant order:
     - X-Auth-Token header
     - Authorization: Bearer <token>
-    - Cookie: session_id=<token>  (treat cookie value as Salt token)
+    - Cookie: salt_token=<token>
+    - Cookie: session_id=<token>  (legacy fallback; treat cookie value as Salt token)
     """
     req = cherrypy.request
     token = req.headers.get("X-Auth-Token") or req.headers.get("x-auth-token") or ""
@@ -667,7 +675,9 @@ def _get_token_from_request():
             token = auth.split(" ", 1)[1].strip()
     if not token:
         cookies = req.cookie
-        if "session_id" in cookies:
+        if "salt_token" in cookies:
+            token = cookies["salt_token"].value
+        elif "session_id" in cookies:
             token = cookies["session_id"].value
     return token
 
@@ -765,14 +775,13 @@ def html_override_tool():
 
 def salt_token_tool():
     """
-    If the custom authentication header is supplied, put it in the cookie dict
-    so the rest of the session-based auth works as intended
+    If the custom authentication header is supplied, make it available as a
+    raw Salt token without clobbering CherryPy's own session_id cookie.
     """
     x_auth = cherrypy.request.headers.get("X-Auth-Token", None)
 
-    # X-Auth-Token header trumps session cookie
     if x_auth:
-        cherrypy.request.cookie["session_id"] = x_auth
+        cherrypy.request.cookie["salt_token"] = x_auth
 
 
 def salt_api_acl_tool(username, request):
@@ -868,14 +877,18 @@ def salt_auth_tool():
     against the master token cache. If sessions are enabled, mirror the token
     into cherrypy.session['token'] for compatibility; otherwise just proceed.
     """
-    # If a session already has a token, allow it (when CP sessions tool is on)
+    # If a session already has a token, revalidate it before allowing it.
     try:
-        if "token" in cherrypy.session:
-            cherrypy.response.headers["Cache-Control"] = "private"
-            return
+        session_token = cherrypy.session.get("token")
     except Exception:
         # sessions tool might be disabled; ignore
-        pass
+        session_token = None
+
+    if session_token:
+        ok, _tokdata = _is_salt_token_valid(session_token)
+        if ok:
+            cherrypy.response.headers["Cache-Control"] = "private"
+            return
 
     token = _get_token_from_request()
     ok, _tokdata = _is_salt_token_valid(token)
@@ -1309,6 +1322,24 @@ class LowDataAdapter:
         if not isinstance(lowstate, list):
             raise cherrypy.HTTPError(400, "Lowstates must be a list")
 
+        if not HAS_TRACING:
+            yield from self._exec_lowstate_chunks(lowstate, client, token)
+            return
+
+        salt.utils.tracing.configure({**self.opts, "__role": "api"})
+        header_carrier = {
+            k.lower(): v for k, v in (cherrypy.request.headers or {}).items()
+        }
+        trace_ctx = salt.utils.tracing.extract(header_carrier)
+        with salt.utils.tracing.start_span(
+            "salt.api.exec_lowstate",
+            kind=salt.utils.tracing.SpanKind.SERVER,
+            attributes={"salt.api.client": client or ""},
+            context=trace_ctx,
+        ):
+            yield from self._exec_lowstate_chunks(lowstate, client, token)
+
+    def _exec_lowstate_chunks(self, lowstate, client, token):
         # Make any requested additions or modifications to each lowstate, then
         # execute each one and yield the result.
         for chunk in lowstate:
@@ -2007,15 +2038,16 @@ class Login(LowDataAdapter):
         # Return and set the *Salt* token, not a CherryPy session id
         cherrypy.response.headers["X-Auth-Token"] = token["token"]
 
-        # Also set a convenience cookie containing the Salt token
+        # Also set a convenience cookie containing the Salt token. Keep this
+        # separate from CherryPy's session_id cookie.
         c = cherrypy.response.cookie
-        c["session_id"] = token["token"]
-        c["session_id"]["path"] = "/"
+        c["salt_token"] = token["token"]
+        c["salt_token"]["path"] = "/"
         if not cherrypy.config["apiopts"].get("disable_ssl", False):
-            c["session_id"]["secure"] = True
-            c["session_id"]["samesite"] = "None"
+            c["salt_token"]["secure"] = True
+            c["salt_token"]["samesite"] = "None"
         # Optionally reflect lifetime:
-        # c["session_id"]["expires"] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(token["expire"]))
+        # c["salt_token"]["expires"] = time.strftime("%a, %d-%b-%Y %T GMT", time.gmtime(token["expire"]))
 
         # If sessions are enabled, mirror into session for compatibility
         if cherrypy.request.config.get("tools.sessions.on", False):
@@ -2075,12 +2107,15 @@ class Logout(LowDataAdapter):
         """
         cherrypy.lib.sessions.expire()  # set client-side to expire
         cherrypy.session.regenerate()  # replace server-side with new
+        cherrypy.response.cookie["salt_token"] = ""
+        cherrypy.response.cookie["salt_token"]["path"] = "/"
+        cherrypy.response.cookie["salt_token"]["expires"] = 0
 
         # Also try to invalidate the underlying Salt token from the cache
         try:
-            token = cherrypy.request.headers.get("X-Auth-Token") or cherrypy.session.get("token")
+            token = _get_token_from_request() or cherrypy.session.get("token")
         except Exception:
-            token = cherrypy.request.headers.get("X-Auth-Token")
+            token = _get_token_from_request()
 
         if token:
             lauth = _loadauth_from_opts()
@@ -2488,6 +2523,7 @@ class Events:
         auth_token = (
             token
             or salt_token
+            or (cookies["salt_token"].value if "salt_token" in cookies else None)
             or (cookies["session_id"].value if "session_id" in cookies else None)
         )
 
@@ -2663,12 +2699,16 @@ class WebsocketEndpoint:
         # browsers not supporting CORS in the EventSource API.
         if token:
             orig_session, _ = cherrypy.session.cache.get(token, ({}, None))
-            salt_token = orig_session.get("token")
+            salt_token = orig_session.get("token", token)
         else:
-            salt_token = cherrypy.session.get("token")
+            cookies = cherrypy.request.cookie
+            salt_token = (
+                cherrypy.session.get("token")
+                or (cookies["salt_token"].value if "salt_token" in cookies else None)
+            )
 
         # Manually verify the token
-        if not salt_token or not self.auth.get_tok(salt_token):
+        if not _is_salt_token_valid(salt_token)[0]:
             raise cherrypy.HTTPError(401)
 
         # Release the session lock before starting the long-running response
@@ -2885,9 +2925,24 @@ class Webhook:
         raw_body = getattr(cherrypy.serving.request, "raw_body", "")
         headers = dict(cherrypy.request.headers)
 
-        ret = self.event.fire_event(
-            {"body": raw_body, "post": data, "headers": headers}, tag
-        )
+        if not HAS_TRACING:
+            ret = self.event.fire_event(
+                {"body": raw_body, "post": data, "headers": headers}, tag
+            )
+            return {"success": ret}
+
+        salt.utils.tracing.configure({**cherrypy.config["saltopts"], "__role": "api"})
+        header_carrier = {k.lower(): v for k, v in headers.items()}
+        trace_ctx = salt.utils.tracing.extract(header_carrier)
+        with salt.utils.tracing.start_span(
+            f"salt.webhook.{tag}",
+            kind=salt.utils.tracing.SpanKind.SERVER,
+            attributes={"salt.webhook.tag": tag},
+            context=trace_ctx,
+        ):
+            ret = self.event.fire_event(
+                {"body": raw_body, "post": data, "headers": headers}, tag
+            )
         return {"success": ret}
 
 
