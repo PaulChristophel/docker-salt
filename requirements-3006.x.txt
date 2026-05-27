@@ -132,3 +132,11 @@ prometheus_client==0.25.0
 protobuf==6.33.6
 truststore==0.10.4
 xxhash==3.7.0
+shellingham==1.5.4
+Pygments==2.20.0
+mdurl==0.1.2
+annotated-doc==0.0.4
+markdown-it-py==4.2.0
+rich==15.0.0
+typer==0.26.2
+typer-slim==0.24.0
