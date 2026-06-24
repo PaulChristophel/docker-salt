@@ -147,7 +147,7 @@ opentelemetry-semantic-conventions==0.63b1
 prometheus_client==0.25.0
 protobuf==7.35.1
 truststore==0.10.4
-xxhash==3.7.0
+xxhash==3.7.1
 shellingham==1.5.4
 Pygments==2.20.0
 mdurl==0.1.2
