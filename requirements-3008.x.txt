@@ -4,7 +4,7 @@ certifi==2026.6.17
 charset-normalizer==3.4.7
 cheroot==11.1.2
 CherryPy==18.10.0
-Cython==3.2.5
+Cython==3.2.8
 contextvars==2.4
 decorator==5.3.1
 distro==1.9.0
@@ -94,7 +94,7 @@ typing-inspection==0.4.2
 gunicorn==26.0.0
 
 gevent==26.5.0
-greenlet==3.5.2
+greenlet==3.5.3
 zope.event==6.2
 zope.interface==8.5
 ws4py==0.6.0
@@ -121,22 +121,22 @@ vultr==1.0.1
 ## Monitoring
 
 googleapis-common-protos==1.75.0
-opentelemetry-api==1.42.1
-opentelemetry-exporter-otlp-proto-common==1.42.1
-opentelemetry-exporter-otlp-proto-http==1.42.1
+opentelemetry-api==1.43.0
+opentelemetry-exporter-otlp-proto-common==1.43.0
+opentelemetry-exporter-otlp-proto-http==1.43.0
 opentelemetry-exporter-prometheus==0.63b1
-opentelemetry-proto==1.42.1
-opentelemetry-sdk==1.42.1
+opentelemetry-proto==1.43.0
+opentelemetry-sdk==1.43.0
 opentelemetry-semantic-conventions==0.63b1
 prometheus_client==0.25.0
 protobuf==7.35.1
 truststore==0.10.4
-xxhash==3.7.1
+xxhash==3.8.0
 shellingham==1.5.4
 Pygments==2.20.0
 mdurl==0.1.2
 annotated-doc==0.0.4
 markdown-it-py==4.2.0
 rich==15.0.0
-typer==0.26.7
+typer==0.26.8
 typer-slim==0.24.0
