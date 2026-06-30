@@ -25,8 +25,8 @@ jobs:
     - name: Python 3.11
       continue-on-error: true
       run: |
-        podman pull python:3.11-debian
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
+        podman pull python:3.11-slim
+        podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.11-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-latest-debian \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-debian \
                      -t docker.io/pcm0/salt:3.11-${{ env.SHORT_SHA }}-debian \
@@ -82,8 +82,8 @@ jobs:
     - name: Python 3.11
       continue-on-error: true
       run: |
-        podman pull python:3.11-debian
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
+        podman pull python:3.11-slim
+        podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.11-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-latest-isalt-debian \
                      -t docker.io/pcm0/salt:3.11-${{ env.BUILD }}-isalt-debian \
                      -t docker.io/pcm0/salt:3.11-${{ env.SHORT_SHA }}-isalt-debian \
@@ -115,8 +115,8 @@ jobs:
     - name: Python 3.11
       continue-on-error: true
       run: |
-        podman pull python:3.11-debian
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
+        podman pull python:3.11-slim
+        podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.11-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3006.16-debian \
                      -t docker.io/pcm0/salt:3.11-3006-debian \
                      -t docker.io/pcm0/salt:3.11-3006.16-${{ env.SHORT_SHA }}-debian \
@@ -153,8 +153,8 @@ jobs:
     - name: Python 3.11
       continue-on-error: true
       run: |
-        podman pull python:3.11-debian
-        podman build -f Python-debian.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
+        podman pull python:3.11-slim
+        podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.11-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
                      -t docker.io/pcm0/salt:3.11-3006.16-isalt-debian \
                      -t docker.io/pcm0/salt:3.11-3006-isalt-debian \
                      -t docker.io/pcm0/salt:3.11-3006.16-${{ env.SHORT_SHA }}-isalt-debian \

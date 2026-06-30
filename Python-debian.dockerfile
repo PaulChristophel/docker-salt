@@ -1,4 +1,5 @@
-FROM python:3.11-slim AS base
+ARG PYTHON_RELEASE=3.11-slim
+FROM python:${PYTHON_RELEASE} AS base
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
       org.opencontainers.image.description="Lightweight container image providing a Salt master service."
