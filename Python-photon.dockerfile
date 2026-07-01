@@ -1,4 +1,5 @@
-FROM photon:5.0-20251113@sha256:4ee8584d91f4d0078e5cb33a5fd35346d4ba801c9b3ffb0fa18cb75cda1b6edf AS base
+ARG PHOTON_RELEASE=5.0-20251113@sha256:4ee8584d91f4d0078e5cb33a5fd35346d4ba801c9b3ffb0fa18cb75cda1b6edf
+FROM photon:${PHOTON_RELEASE} AS base
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
       org.opencontainers.image.description="Lightweight container image providing a Salt master service."
@@ -53,7 +54,7 @@ RUN sed -i 's/^enabled=0/enabled=1/' /etc/yum.repos.d/photon.repo \
  && tdnf clean all \
  && rm -rf /var/cache/tdnf \
  && tdnf makecache \
- && tdnf -y install \
+ && tdnf -y --exclude=python3,python3-libs install \
       build-essential \
       gcc \
       glibc-devel \

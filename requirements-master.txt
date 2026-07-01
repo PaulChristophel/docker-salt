@@ -32,7 +32,8 @@ orjson==3.11.9
 packaging==26.2
 portend==3.2.1
 psutil==7.2.2
-psycopg[c,pool]==3.3.4
+psycopg[c]==3.3.4
+psycopg-pool==3.3.4
 
 psycopg2==2.9.12
 pyasn1==0.6.3
@@ -57,9 +58,18 @@ urllib3==2.7.0
 zc.lockfile==4.0
 
 # Ansible deps
-ansible==12.3.0
-ansible-core==2.19.11
-argcomplete==3.6.3
+ansible==12.3.0; python_version == "3.11"
+ansible-core==2.19.11; python_version == "3.11"
+
+ansible==14.1.0; python_version == "3.12"
+ansible-core==2.21.1; python_version == "3.12"
+
+ansible==14.1.0; python_version == "3.13"
+ansible-core==2.21.1; python_version == "3.13"
+
+ansible==14.1.0; python_version == "3.14"
+ansible-core==2.21.1; python_version == "3.14"
+argcomplete==3.7.0
 cffi==2.0.0
 cryptography==49.0.0
 #Jinja2==3.1.6
