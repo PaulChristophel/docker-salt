@@ -3,7 +3,7 @@ asttokens==3.0.1
 autocommand==2.2.2
 backcall==0.2.0
 certifi==2026.6.17
-charset-normalizer==3.4.7
+charset-normalizer==3.4.9
 cheroot==11.1.2
 CherryPy==18.10.0
 Cython==3.2.8
@@ -48,7 +48,7 @@ psycopg-pool==3.3.1
 psycopg2==2.9.12
 ptyprocess==0.7.0
 pure-eval==0.2.3
-pyasn1==0.6.3
+pyasn1==0.6.4
 pyasn1-modules==0.4.2
 pycryptodomex==3.23.0
 pydantic==2.13.4
@@ -87,7 +87,7 @@ ansible-core==2.21.1; python_version == "3.13"
 ansible==14.1.0; python_version == "3.14"
 ansible-core==2.21.1; python_version == "3.14"
 argcomplete==3.7.0
-cffi==2.0.0
+cffi==2.1.0
 cryptography==49.0.0
 #Jinja2==3.1.6
 #MarkupSafe==3.0.3
@@ -130,18 +130,18 @@ pyyescrypt==0.1.14
 ## Additional
 
 apache-libcloud==3.9.1
-croniter==6.2.2
+croniter==6.2.3
 distlib==0.4.3
-filelock==3.29.4
+filelock==3.29.7
 gitdb==4.0.12
 GitPython==3.1.50
 importlib-metadata==9.0.0
 platformdirs==4.10.0
 pyOpenSSL==26.3.0
-python-discovery==1.4.2
+python-discovery==1.4.4
 rpm-vercmp==0.1.2
 smmap==5.0.3
-virtualenv==21.5.1
+virtualenv==21.6.0
 vultr==1.0.1
 
 ## Monitoring
@@ -157,7 +157,7 @@ opentelemetry-semantic-conventions==0.63b1
 prometheus_client==0.25.0
 protobuf==7.35.1
 truststore==0.10.4
-xxhash==3.8.0
+xxhash==3.8.1
 shellingham==1.5.4
 Pygments==2.20.0
 mdurl==0.1.2
