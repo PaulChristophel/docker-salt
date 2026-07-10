@@ -98,7 +98,6 @@ propcache==0.5.2
 pydantic_core==2.47.0
 
 typeguard==4.5.2
-typing-extensions==4.15.0
 typing-inspection==0.4.2
 
 gunicorn==26.0.0
