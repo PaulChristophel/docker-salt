@@ -15,7 +15,7 @@ on:
 
 jobs:
 
-  build-python3-11-master-dev:
+  build-python3-14-master-dev:
     runs-on: ubuntu-24.04
     env:
       DOCKER_USERNAME: pcm0
@@ -28,13 +28,13 @@ jobs:
     - name: Get Build Version
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-    - name: Python 3.11 Dev
+    - name: Python 3.14 Dev
       run: |
-        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-                     -t docker.io/pcm0/salt:3.11-master-${{ env.SHORT_SHA }}-photon-dev \
-                     -t docker.io/pcm0/salt:3.11-master-photon-dev \
-                     -t $ACR_URL/pmartin47/salt:3.11-master-${{ env.SHORT_SHA }}-photon-dev \
-                     -t $ACR_URL/pmartin47/salt:3.11-master-photon-dev
+        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.14 . \
+                     -t docker.io/pcm0/salt:3.14-master-${{ env.SHORT_SHA }}-photon-dev \
+                     -t docker.io/pcm0/salt:3.14-master-photon-dev \
+                     -t $ACR_URL/pmartin47/salt:3.14-master-${{ env.SHORT_SHA }}-photon-dev \
+                     -t $ACR_URL/pmartin47/salt:3.14-master-photon-dev
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
@@ -48,7 +48,7 @@ jobs:
       run: |
         podman system prune --force --all
 
-  build-python3-11-master-isalt-dev:
+  build-python3-14-master-isalt-dev:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -61,13 +61,13 @@ jobs:
     - name: Get Build Version
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-    - name: Python 3.11 Dev isalt
+    - name: Python 3.14 Dev isalt
       run: |
-        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-                     -t docker.io/pcm0/salt:3.11-master-${{ env.SHORT_SHA }}-isalt-photon-dev \
-                     -t docker.io/pcm0/salt:3.11-master-isalt-photon-dev \
-                     -t $ACR_URL/pmartin47/salt:3.11-master-${{ env.SHORT_SHA }}-isalt-photon-dev \
-                     -t $ACR_URL/pmartin47/salt:3.11-master-isalt-photon-dev
+        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.14 . \
+                     -t docker.io/pcm0/salt:3.14-master-${{ env.SHORT_SHA }}-isalt-photon-dev \
+                     -t docker.io/pcm0/salt:3.14-master-isalt-photon-dev \
+                     -t $ACR_URL/pmartin47/salt:3.14-master-${{ env.SHORT_SHA }}-isalt-photon-dev \
+                     -t $ACR_URL/pmartin47/salt:3.14-master-isalt-photon-dev
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
@@ -81,7 +81,7 @@ jobs:
       run: |
         podman system prune --force --all
 
-  build-python3-11-3008x-dev:
+  build-python3-14-3008x-dev:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -94,13 +94,13 @@ jobs:
     - name: Get Build Version
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-    - name: Python 3.11 Dev
+    - name: Python 3.14 Dev
       run: |
-        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-                     -t docker.io/pcm0/salt:3.11-3008.x-${{ env.SHORT_SHA }}-photon-dev \
-                     -t docker.io/pcm0/salt:3.11-3008.x-photon-dev \
-                     -t $ACR_URL/pmartin47/salt:3.11-3008.x-${{ env.SHORT_SHA }}-photon-dev \
-                     -t $ACR_URL/pmartin47/salt:3.11-3008.x-photon-dev
+        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.14 . \
+                     -t docker.io/pcm0/salt:3.14-3008.x-${{ env.SHORT_SHA }}-photon-dev \
+                     -t docker.io/pcm0/salt:3.14-3008.x-photon-dev \
+                     -t $ACR_URL/pmartin47/salt:3.14-3008.x-${{ env.SHORT_SHA }}-photon-dev \
+                     -t $ACR_URL/pmartin47/salt:3.14-3008.x-photon-dev
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
@@ -114,7 +114,7 @@ jobs:
       run: |
         podman system prune --force --all
 
-  build-python3-11-3008x-isalt-dev:
+  build-python3-14-3008x-isalt-dev:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -127,13 +127,13 @@ jobs:
     - name: Get Build Version
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-    - name: Python 3.11 Dev isalt
+    - name: Python 3.14 Dev isalt
       run: |
-        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-                     -t docker.io/pcm0/salt:3.11-3008.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
-                     -t docker.io/pcm0/salt:3.11-3008.x-isalt-photon-dev \
-                     -t $ACR_URL/pmartin47/salt:3.11-3008.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
-                     -t $ACR_URL/pmartin47/salt:3.11-3008.x-isalt-photon-dev
+        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.14 . \
+                     -t docker.io/pcm0/salt:3.14-3008.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
+                     -t docker.io/pcm0/salt:3.14-3008.x-isalt-photon-dev \
+                     -t $ACR_URL/pmartin47/salt:3.14-3008.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
+                     -t $ACR_URL/pmartin47/salt:3.14-3008.x-isalt-photon-dev
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
@@ -147,7 +147,7 @@ jobs:
       run: |
         podman system prune --force --all
 
-  build-python3-11-3008:
+  build-python3-14-3008:
     runs-on: ubuntu-24.04
     env:
       DOCKER_USERNAME: pcm0
@@ -160,11 +160,11 @@ jobs:
     - name: Get Build Version
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-    - name: Python 3.11
+    - name: Python 3.14
       run: |
-        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-                     -t docker.io/pcm0/salt:3.11-3008-${{ env.SHORT_SHA }}-photon \
-                     -t $ACR_URL/pmartin47/salt:3.11-3008-${{ env.SHORT_SHA }}-photon
+        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.14 . \
+                     -t docker.io/pcm0/salt:3.14-3008-${{ env.SHORT_SHA }}-photon \
+                     -t $ACR_URL/pmartin47/salt:3.14-3008-${{ env.SHORT_SHA }}-photon
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
@@ -176,7 +176,7 @@ jobs:
       run: |
         podman system prune --force --all
 
-  build-python3-11-3008-isalt:
+  build-python3-14-3008-isalt:
     runs-on: ubuntu-latest
     env:
       DOCKER_USERNAME: pcm0
@@ -189,11 +189,11 @@ jobs:
     - name: Get Build Version
       run: |
         echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
-    - name: Python 3.11
+    - name: Python 3.14
       run: |
-        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-                     -t docker.io/pcm0/salt:3.11-3008-${{ env.SHORT_SHA }}-isalt-photon \
-                     -t $ACR_URL/pmartin47/salt:3.11-3008-${{ env.SHORT_SHA }}-isalt-photon
+        podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.14 . \
+                     -t docker.io/pcm0/salt:3.14-3008-${{ env.SHORT_SHA }}-isalt-photon \
+                     -t $ACR_URL/pmartin47/salt:3.14-3008-${{ env.SHORT_SHA }}-isalt-photon
     - name: Push to Docker Hub
       run: |
         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
