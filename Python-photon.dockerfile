@@ -1,4 +1,4 @@
-ARG PHOTON_RELEASE=5.0-20251113@sha256:4ee8584d91f4d0078e5cb33a5fd35346d4ba801c9b3ffb0fa18cb75cda1b6edf
+ARG PHOTON_RELEASE=5.0
 FROM photon:${PHOTON_RELEASE} AS base
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
@@ -27,8 +27,7 @@ RUN tdnf -y install \
        python3-pip \
        python3-devel \
        shadow \
-     && tdnf upgrade -y --exclude=python3,python3-libs \
-     && tdnf upgrade -y --exclude=python3,python3-libs \
+     && tdnf upgrade -y \
      && groupadd -g ${USER_ID} salt \
      && useradd -u ${USER_ID} -g salt -d /opt/salt -s /sbin/nologin -m salt \
      && tdnf remove -y shadow \

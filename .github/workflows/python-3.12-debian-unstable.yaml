@@ -21,7 +21,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -54,7 +54,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -87,7 +87,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -116,7 +116,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -145,7 +145,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -178,7 +178,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -211,7 +211,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -244,7 +244,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -277,7 +277,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
@@ -306,7 +306,7 @@ jobs:
       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Get Build Version
         run: |
           echo "SHORT_SHA=${GITHUB_SHA:0:7}" | tee -a $GITHUB_ENV
