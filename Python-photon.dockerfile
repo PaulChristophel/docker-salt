@@ -27,7 +27,6 @@ RUN tdnf -y install \
        python3-pip \
        python3-devel \
        shadow \
-     && tdnf upgrade -y \
      && groupadd -g ${USER_ID} salt \
      && useradd -u ${USER_ID} -g salt -d /opt/salt -s /sbin/nologin -m salt \
      && tdnf remove -y shadow \

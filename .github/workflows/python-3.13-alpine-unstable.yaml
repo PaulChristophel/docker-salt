@@ -19,9 +19,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -34,20 +31,13 @@
 #                      -t docker.io/pcm0/salt:3.13-master-${{ env.SHORT_SHA }}-alpine-dev \
 #                      -t docker.io/pcm0/salt:3.13-master-${{ env.SHORT_SHA }}-dev \
 #                      -t docker.io/pcm0/salt:3.13-master-alpine-dev \
-#                      -t docker.io/pcm0/salt:3.13-master-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-master-${{ env.SHORT_SHA }}-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-master-${{ env.SHORT_SHA }}-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-master-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-master-dev
+#                      -t docker.io/pcm0/salt:3.13-master-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -57,9 +47,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -72,20 +59,13 @@
 #                      -t docker.io/pcm0/salt:3.13-master-${{ env.SHORT_SHA }}-isalt-alpine-dev \
 #                      -t docker.io/pcm0/salt:3.13-master-${{ env.SHORT_SHA }}-isalt-dev \
 #                      -t docker.io/pcm0/salt:3.13-master-isalt-alpine-dev \
-#                      -t docker.io/pcm0/salt:3.13-master-isalt-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-master-${{ env.SHORT_SHA }}-isalt-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-master-${{ env.SHORT_SHA }}-isalt-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-master-isalt-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-master-isalt-dev
+#                      -t docker.io/pcm0/salt:3.13-master-isalt-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -95,9 +75,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -110,20 +87,13 @@
 #                      -t docker.io/pcm0/salt:3.13-3006.x-${{ env.SHORT_SHA }}-alpine-dev \
 #                      -t docker.io/pcm0/salt:3.13-3006.x-${{ env.SHORT_SHA }}-dev \
 #                      -t docker.io/pcm0/salt:3.13-3006.x-alpine-dev \
-#                      -t docker.io/pcm0/salt:3.13-3006.x-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006.x-${{ env.SHORT_SHA }}-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006.x-${{ env.SHORT_SHA }}-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006.x-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006.x-dev
+#                      -t docker.io/pcm0/salt:3.13-3006.x-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -133,9 +103,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -148,20 +115,13 @@
 #                      -t docker.io/pcm0/salt:3.13-3006.x-${{ env.SHORT_SHA }}-isalt-alpine-dev \
 #                      -t docker.io/pcm0/salt:3.13-3006.x-${{ env.SHORT_SHA }}-isalt-dev \
 #                      -t docker.io/pcm0/salt:3.13-3006.x-isalt-alpine-dev \
-#                      -t docker.io/pcm0/salt:3.13-3006.x-isalt-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006.x-${{ env.SHORT_SHA }}-isalt-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006.x-${{ env.SHORT_SHA }}-isalt-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006.x-isalt-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006.x-isalt-dev
+#                      -t docker.io/pcm0/salt:3.13-3006.x-isalt-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -171,9 +131,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -186,20 +143,13 @@
 #                      -t docker.io/pcm0/salt:3.13-3007.x-${{ env.SHORT_SHA }}-alpine-dev \
 #                      -t docker.io/pcm0/salt:3.13-3007.x-${{ env.SHORT_SHA }}-dev \
 #                      -t docker.io/pcm0/salt:3.13-3007.x-alpine-dev \
-#                      -t docker.io/pcm0/salt:3.13-3007.x-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007.x-${{ env.SHORT_SHA }}-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007.x-${{ env.SHORT_SHA }}-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007.x-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007.x-dev
+#                      -t docker.io/pcm0/salt:3.13-3007.x-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -209,9 +159,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -224,20 +171,13 @@
 #                      -t docker.io/pcm0/salt:3.13-3007.x-${{ env.SHORT_SHA }}-isalt-alpine-dev \
 #                      -t docker.io/pcm0/salt:3.13-3007.x-${{ env.SHORT_SHA }}-isalt-dev \
 #                      -t docker.io/pcm0/salt:3.13-3007.x-isalt-alpine-dev \
-#                      -t docker.io/pcm0/salt:3.13-3007.x-isalt-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007.x-${{ env.SHORT_SHA }}-isalt-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007.x-${{ env.SHORT_SHA }}-isalt-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007.x-isalt-alpine-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007.x-isalt-dev
+#                      -t docker.io/pcm0/salt:3.13-3007.x-isalt-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -247,9 +187,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -260,16 +197,12 @@
 #         podman pull python:3.13-alpine
 #         podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
 #                      -t docker.io/pcm0/salt:3.13-3007-${{ env.SHORT_SHA }}-alpine \
-#                      -t docker.io/pcm0/salt:3.13-3007-${{ env.SHORT_SHA }} \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007-${{ env.SHORT_SHA }}-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007-${{ env.SHORT_SHA }}
+#                      -t docker.io/pcm0/salt:3.13-3007-${{ env.SHORT_SHA }}
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -279,9 +212,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -292,16 +222,12 @@
 #         podman pull python:3.13-alpine
 #         podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
 #                      -t docker.io/pcm0/salt:3.13-3007-${{ env.SHORT_SHA }}-isalt-alpine \
-#                      -t docker.io/pcm0/salt:3.13-3007-${{ env.SHORT_SHA }}-isalt \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007-${{ env.SHORT_SHA }}-isalt-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3007-${{ env.SHORT_SHA }}-isalt
+#                      -t docker.io/pcm0/salt:3.13-3007-${{ env.SHORT_SHA }}-isalt
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -311,9 +237,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -324,16 +247,12 @@
 #         podman pull python:3.13-alpine
 #         podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
 #                      -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}-alpine \
-#                      -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }} \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006-${{ env.SHORT_SHA }}-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006-${{ env.SHORT_SHA }}
+#                      -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -343,9 +262,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -356,16 +272,12 @@
 #         podman pull python:3.13-alpine
 #         podman build -f Python-alpine.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
 #                      -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}-isalt-alpine \
-#                      -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}-isalt \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006-${{ env.SHORT_SHA }}-isalt-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.13-3006-${{ env.SHORT_SHA }}-isalt
+#                      -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}-isalt
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all

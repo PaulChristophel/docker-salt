@@ -20,9 +20,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -32,18 +29,13 @@
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
 #                      -t docker.io/pcm0/salt:3.11-master-${{ env.SHORT_SHA }}-photon-dev \
-#                      -t docker.io/pcm0/salt:3.11-master-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-master-${{ env.SHORT_SHA }}-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-master-photon-dev
+#                      -t docker.io/pcm0/salt:3.11-master-photon-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -53,9 +45,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -65,18 +54,13 @@
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
 #                      -t docker.io/pcm0/salt:3.11-master-${{ env.SHORT_SHA }}-isalt-photon-dev \
-#                      -t docker.io/pcm0/salt:3.11-master-isalt-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-master-${{ env.SHORT_SHA }}-isalt-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-master-isalt-photon-dev
+#                      -t docker.io/pcm0/salt:3.11-master-isalt-photon-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -86,9 +70,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -98,18 +79,13 @@
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
 #                      -t docker.io/pcm0/salt:3.11-3008.x-${{ env.SHORT_SHA }}-photon-dev \
-#                      -t docker.io/pcm0/salt:3.11-3008.x-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3008.x-${{ env.SHORT_SHA }}-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3008.x-photon-dev
+#                      -t docker.io/pcm0/salt:3.11-3008.x-photon-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -119,9 +95,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -131,18 +104,13 @@
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
 #                      -t docker.io/pcm0/salt:3.11-3008.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
-#                      -t docker.io/pcm0/salt:3.11-3008.x-isalt-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3008.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3008.x-isalt-photon-dev
+#                      -t docker.io/pcm0/salt:3.11-3008.x-isalt-photon-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -152,9 +120,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -163,15 +128,12 @@
 #     - name: Python 3.11
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-#                      -t docker.io/pcm0/salt:3.11-3008-${{ env.SHORT_SHA }}-photon \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3008-${{ env.SHORT_SHA }}-photon
+#                      -t docker.io/pcm0/salt:3.11-3008-${{ env.SHORT_SHA }}-photon
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -181,9 +143,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -192,15 +151,12 @@
 #     - name: Python 3.11
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-#                      -t docker.io/pcm0/salt:3.11-3008-${{ env.SHORT_SHA }}-isalt-photon \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3008-${{ env.SHORT_SHA }}-isalt-photon
+#                      -t docker.io/pcm0/salt:3.11-3008-${{ env.SHORT_SHA }}-isalt-photon
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all     
@@ -210,9 +166,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -222,18 +175,13 @@
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
 #                      -t docker.io/pcm0/salt:3.11-3007.x-${{ env.SHORT_SHA }}-photon-dev \
-#                      -t docker.io/pcm0/salt:3.11-3007.x-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3007.x-${{ env.SHORT_SHA }}-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3007.x-photon-dev
+#                      -t docker.io/pcm0/salt:3.11-3007.x-photon-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -243,9 +191,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -255,18 +200,13 @@
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
 #                      -t docker.io/pcm0/salt:3.11-3007.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
-#                      -t docker.io/pcm0/salt:3.11-3007.x-isalt-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3007.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3007.x-isalt-photon-dev
+#                      -t docker.io/pcm0/salt:3.11-3007.x-isalt-photon-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -276,9 +216,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -287,15 +224,12 @@
 #     - name: Python 3.11
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-#                      -t docker.io/pcm0/salt:3.11-3007-${{ env.SHORT_SHA }}-photon \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3007-${{ env.SHORT_SHA }}-photon
+#                      -t docker.io/pcm0/salt:3.11-3007-${{ env.SHORT_SHA }}-photon
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -305,9 +239,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -316,15 +247,12 @@
 #     - name: Python 3.11
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3007-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-#                      -t docker.io/pcm0/salt:3.11-3007-${{ env.SHORT_SHA }}-isalt-photon \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3007-${{ env.SHORT_SHA }}-isalt-photon
+#                      -t docker.io/pcm0/salt:3.11-3007-${{ env.SHORT_SHA }}-isalt-photon
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all     
@@ -334,9 +262,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -346,18 +271,13 @@
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
 #                      -t docker.io/pcm0/salt:3.11-3006.x-${{ env.SHORT_SHA }}-photon-dev \
-#                      -t docker.io/pcm0/salt:3.11-3006.x-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3006.x-${{ env.SHORT_SHA }}-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3006.x-photon-dev
+#                      -t docker.io/pcm0/salt:3.11-3006.x-photon-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -367,9 +287,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -379,18 +296,13 @@
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
 #                      -t docker.io/pcm0/salt:3.11-3006.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
-#                      -t docker.io/pcm0/salt:3.11-3006.x-isalt-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3006.x-${{ env.SHORT_SHA }}-isalt-photon-dev \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3006.x-isalt-photon-dev
+#                      -t docker.io/pcm0/salt:3.11-3006.x-isalt-photon-dev
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -400,9 +312,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -411,15 +320,12 @@
 #     - name: Python 3.11
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-#                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-photon \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-photon
+#                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-photon
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all
@@ -429,9 +335,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -440,15 +343,12 @@
 #     - name: Python 3.11
 #       run: |
 #         podman build -f Python-photon.dockerfile --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.11 . \
-#                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-photon \
-#                      -t $ACR_URL/pmartin47/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-photon
+#                      -t docker.io/pcm0/salt:3.11-3006-${{ env.SHORT_SHA }}-isalt-photon
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #     - name: Docker System Prune
 #       run: |
 #         podman system prune --force --all

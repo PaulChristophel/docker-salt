@@ -17,9 +17,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -30,18 +27,13 @@ jobs:
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
                        -t docker.io/pcm0/salt:3.13-master-${{ env.SHORT_SHA }}-debian-dev \
-                       -t docker.io/pcm0/salt:3.13-master-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-master-${{ env.SHORT_SHA }}-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-master-debian-dev
+                       -t docker.io/pcm0/salt:3.13-master-debian-dev
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -50,9 +42,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -63,18 +52,13 @@ jobs:
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-master-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
                        -t docker.io/pcm0/salt:3.13-master-${{ env.SHORT_SHA }}-isalt-debian-dev \
-                       -t docker.io/pcm0/salt:3.13-master-isalt-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-master-${{ env.SHORT_SHA }}-isalt-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-master-isalt-debian-dev
+                       -t docker.io/pcm0/salt:3.13-master-isalt-debian-dev
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -83,9 +67,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -95,15 +76,12 @@ jobs:
         run: |
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
-                       -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}-debian \
-                       -t $ACR_URL/pmartin47/salt:3.13-3006-${{ env.SHORT_SHA }}-debian
+                       -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}-debian
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -112,9 +90,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -124,15 +99,12 @@ jobs:
         run: |
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
-                       -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}-isalt-debian \
-                       -t $ACR_URL/pmartin47/salt:3.13-3006-${{ env.SHORT_SHA }}-isalt-debian
+                       -t docker.io/pcm0/salt:3.13-3006-${{ env.SHORT_SHA }}-isalt-debian
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -141,9 +113,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -154,18 +123,13 @@ jobs:
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
                        -t docker.io/pcm0/salt:3.13-3006.x-${{ env.SHORT_SHA }}-debian-dev \
-                       -t docker.io/pcm0/salt:3.13-3006.x-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-3006.x-${{ env.SHORT_SHA }}-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-3006.x-debian-dev
+                       -t docker.io/pcm0/salt:3.13-3006.x-debian-dev
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -174,9 +138,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -187,18 +148,13 @@ jobs:
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3006.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
                        -t docker.io/pcm0/salt:3.13-3006.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
-                       -t docker.io/pcm0/salt:3.13-3006.x-isalt-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-3006.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-3006.x-isalt-debian-dev
+                       -t docker.io/pcm0/salt:3.13-3006.x-isalt-debian-dev
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -207,9 +163,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -220,18 +173,13 @@ jobs:
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.x.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
                        -t docker.io/pcm0/salt:3.13-3008.x-${{ env.SHORT_SHA }}-debian-dev \
-                       -t docker.io/pcm0/salt:3.13-3008.x-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-3008.x-${{ env.SHORT_SHA }}-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-3008.x-debian-dev
+                       -t docker.io/pcm0/salt:3.13-3008.x-debian-dev
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -240,9 +188,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -253,18 +198,13 @@ jobs:
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.x-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
                        -t docker.io/pcm0/salt:3.13-3008.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
-                       -t docker.io/pcm0/salt:3.13-3008.x-isalt-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-3008.x-${{ env.SHORT_SHA }}-isalt-debian-dev \
-                       -t $ACR_URL/pmartin47/salt:3.13-3008.x-isalt-debian-dev
+                       -t docker.io/pcm0/salt:3.13-3008.x-isalt-debian-dev
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman images | awk "/docker.io\/pcm0\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/dev/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -273,9 +213,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -285,15 +222,12 @@ jobs:
         run: |
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
-                       -t docker.io/pcm0/salt:3.13-3008-${{ env.SHORT_SHA }}-debian \
-                       -t $ACR_URL/pmartin47/salt:3.13-3008-${{ env.SHORT_SHA }}-debian
+                       -t docker.io/pcm0/salt:3.13-3008-${{ env.SHORT_SHA }}-debian
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: |
           podman system prune --force --all
@@ -302,9 +236,6 @@ jobs:
     env:
       DOCKER_USERNAME: pcm0
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      ACR_URL: ${{ secrets.ACR_URL }}
-      ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-      ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
     steps:
       - uses: actions/checkout@v7
       - name: Get Build Version
@@ -314,14 +245,11 @@ jobs:
         run: |
           podman pull python:3.13-slim
           podman build -f Python-debian.dockerfile --build-arg PYTHON_RELEASE=3.13-slim --build-arg FLAGS='--no-deps' --build-arg REQUIREMENTS=requirements-3008-isalt.txt --build-arg PYTHONPATH=/usr/local/salt/lib/python3.13 . \
-                       -t docker.io/pcm0/salt:3.13-3008-${{ env.SHORT_SHA }}-isalt-debian \
-                       -t $ACR_URL/pmartin47/salt:3.13-3008-${{ env.SHORT_SHA }}-isalt-debian
+                       -t docker.io/pcm0/salt:3.13-3008-${{ env.SHORT_SHA }}-isalt-debian
       - name: Push to Docker Hub
         run: |
           podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
           podman images | awk "/docker.io\/pcm0\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
           podman logout
-          podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-          podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_SHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
       - name: Docker System Prune
         run: "podman system prune --force --all     \n"

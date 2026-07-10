@@ -14,9 +14,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -32,19 +29,12 @@
 #                      -t docker.io/pcm0/salt:3.14-${{ env.BUILD }}-alpine \
 #                      -t docker.io/pcm0/salt:3.14-latest \
 #                      -t docker.io/pcm0/salt:3.14-${{ env.BUILD }} \
-#                      -t docker.io/pcm0/salt:3.14-${{ env.SHORT_SHA }}-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.14-latest-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.14-${{ env.BUILD }}-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.14-latest \
-#                      -t $ACR_URL/pmartin47/salt:3.14-${{ env.BUILD }} \
-#                      -t $ACR_URL/pmartin47/salt:3.14-${{ env.SHORT_SHA }}-alpine
+#                      -t docker.io/pcm0/salt:3.14-${{ env.SHORT_SHA }}-alpine
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 
 #     - name: Docker System Prune
 #       run: |
@@ -55,9 +45,6 @@
 #     env:
 #       DOCKER_USERNAME: pcm0
 #       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-#       ACR_URL: ${{ secrets.ACR_URL }}
-#       ACR_USERNAME: ${{ secrets.ACR_USERNAME }}
-#       ACR_PASSWORD: ${{ secrets.ACR_PASSWORD }}
 #     steps:
 #     - uses: actions/checkout@v7
 #     - name: Get Build Version
@@ -73,16 +60,9 @@
 #                      -t docker.io/pcm0/salt:3.14-${{ env.BUILD }}-isalt-alpine \
 #                      -t docker.io/pcm0/salt:3.14-latest-isalt \
 #                      -t docker.io/pcm0/salt:3.14-${{ env.BUILD }}-isalt \
-#                      -t docker.io/pcm0/salt:3.14-${{ env.SHORT_SHA }}-isalt-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.14-latest-isalt-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.14-${{ env.BUILD }}-isalt-alpine \
-#                      -t $ACR_URL/pmartin47/salt:3.14-latest-isalt \
-#                      -t $ACR_URL/pmartin47/salt:3.14-${{ env.BUILD }}-isalt \
-#                      -t $ACR_URL/pmartin47/salt:3.14-${{ env.SHORT_SHA }}-isalt-alpine
+#                      -t docker.io/pcm0/salt:3.14-${{ env.SHORT_SHA }}-isalt-alpine
 #     - name: Push to Docker Hub
 #       run: |
 #         podman login docker.io --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
 #         podman images | awk "/docker.io\/pcm0\/salt/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
 #         podman logout
-#         podman login $ACR_URL --username $ACR_USERNAME --password $ACR_PASSWORD
-#         podman images | awk "/$ACR_URL\/pmartin47\/salt/&&/${{ env.SHORT_BUILDSHA }}/ { print \$1\":\"\$2 }" | xargs -I {} podman push {}
