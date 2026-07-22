@@ -1,0 +1,4 @@
+# Ansible versions compatible with Python 3.11
+ansible==12.3.0
+ansible-core==2.19.11
+backports.tarfile==1.2.0

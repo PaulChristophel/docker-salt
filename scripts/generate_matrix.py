@@ -44,6 +44,14 @@ def require_objects(config: dict[str, Any], key: str) -> list[dict[str, Any]]:
     return value
 
 
+def require_object(config: dict[str, Any], key: str) -> dict[str, Any]:
+    """Return a required JSON object."""
+    value = config.get(key)
+    if not isinstance(value, dict):
+        raise ConfigurationError(f"{key} must be an object")
+    return value
+
+
 def unique_index(
     entries: list[dict[str, Any]], key: str, context: str
 ) -> dict[str, dict[str, Any]]:
@@ -69,12 +77,15 @@ def require_string_list(mapping: dict[str, Any], key: str, context: str) -> list
     return value
 
 
-def validate_stable_pin(root: Path, requirements: str, expected_version: str) -> None:
-    """Ensure a stable requirements file installs the version used in its tags."""
-    contents = (root / requirements).read_text(encoding="utf-8").splitlines()
-    expected = f"salt=={expected_version}"
-    if expected not in contents:
-        raise ConfigurationError(f"{requirements} does not contain {expected}")
+def validate_requirements_file(root: Path, directory: str, relative_path: str) -> None:
+    """Ensure a requirements layer is relative to its directory and exists."""
+    path = Path(relative_path)
+    if path.is_absolute() or ".." in path.parts:
+        raise ConfigurationError(
+            f"requirements path must stay within {directory}: {relative_path}"
+        )
+    if not (root / directory / path).is_file():
+        raise ConfigurationError(f"requirements file does not exist: {relative_path}")
 
 
 def generate_matrix(config_path: Path) -> list[dict[str, str]]:
@@ -85,6 +96,11 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
 
     require_string(config, "image", "configuration")
     require_string(config, "platform", "configuration")
+    requirements_config = require_object(config, "requirements")
+    requirements_directory = require_string(
+        requirements_config, "directory", "requirements"
+    )
+    common_requirements = require_string(requirements_config, "common", "requirements")
     python_entries = require_objects(config, "python")
     salt_entries = require_objects(config, "salt")
     profile_entries = require_objects(config, "profiles")
@@ -95,6 +111,7 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
     unique_index(profile_entries, "name", "profiles")
     unique_index(variant_entries, "name", "variants")
     root = config_path.resolve().parent
+    validate_requirements_file(root, requirements_directory, common_requirements)
     matrix: list[dict[str, str]] = []
 
     for variant_position, variant in enumerate(variant_entries):
@@ -129,10 +146,16 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
             python_release = require_string(
                 python_entry, "debian_release", f"python[{python_version}]"
             )
+            python_requirements = require_string(
+                python_entry, "requirements", f"python[{python_version}]"
+            )
+            validate_requirements_file(
+                root, requirements_directory, python_requirements
+            )
             for salt_name in salt_names:
                 salt_entry = salt_index[salt_name]
-                salt_requirements = require_string(
-                    salt_entry, "requirements", f"salt[{salt_name}]"
+                salt_requirement = require_string(
+                    salt_entry, "requirement", f"salt[{salt_name}]"
                 )
                 channel = require_string(salt_entry, "channel", f"salt[{salt_name}]")
                 if channel not in {"stable", "development"}:
@@ -153,27 +176,25 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
                     raise ConfigurationError(
                         f"salt[{salt_name}].version is not valid for a development channel"
                     )
+                if channel == "stable" and salt_requirement != f"salt=={salt_version}":
+                    raise ConfigurationError(
+                        f"salt[{salt_name}].requirement must be salt=={salt_version}"
+                    )
 
                 for profile_position, profile in enumerate(profile_entries):
                     profile_context = f"profiles[{profile_position}]"
                     profile_name = require_string(profile, "name", profile_context)
-                    requirements_suffix = profile.get("requirements_suffix", "")
-                    tag_suffix = profile.get("tag_suffix", "")
-                    if not isinstance(requirements_suffix, str) or not isinstance(
-                        tag_suffix, str
-                    ):
-                        raise ConfigurationError(
-                            f"{profile_context} suffixes must be strings"
-                        )
-                    requirements = (
-                        f"requirements-{salt_requirements}{requirements_suffix}.txt"
+                    profile_requirements = require_string(
+                        profile, "requirements", profile_context
                     )
-                    if not (root / requirements).is_file():
+                    validate_requirements_file(
+                        root, requirements_directory, profile_requirements
+                    )
+                    tag_suffix = profile.get("tag_suffix", "")
+                    if not isinstance(tag_suffix, str):
                         raise ConfigurationError(
-                            f"requirements file does not exist: {requirements}"
+                            f"{profile_context}.tag_suffix must be a string"
                         )
-                    if channel == "stable":
-                        validate_stable_pin(root, requirements, salt_version)
 
                     development_suffix = "-dev" if development else ""
                     matrix.append(
@@ -186,7 +207,11 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
                             "profile": profile_name,
                             "variant": variant_name,
                             "dockerfile": dockerfile,
-                            "requirements": requirements,
+                            "requirements_directory": requirements_directory,
+                            "common_requirements": common_requirements,
+                            "python_requirements": python_requirements,
+                            "profile_requirements": profile_requirements,
+                            "salt_requirement": salt_requirement,
                             "tag": (
                                 f"{python_version}-{salt_name}{tag_suffix}-"
                                 f"{variant_tag}{development_suffix}"

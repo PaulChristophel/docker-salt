@@ -9,7 +9,11 @@ FROM base as builder
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
       org.opencontainers.image.description="Lightweight container image providing a Salt master service."
-ARG REQUIREMENTS=requirements-3006-isalt.txt
+ARG REQUIREMENTS_DIRECTORY=requirements
+ARG COMMON_REQUIREMENTS=common.txt
+ARG PYTHON_REQUIREMENTS=python/3.11.txt
+ARG PROFILE_REQUIREMENTS=profiles/standard.txt
+ARG SALT_REQUIREMENT=salt==3008.2
 ARG FLAGS
 ARG USER_ID=1000
 ARG PYTHONPATH="/usr/local/salt/lib/python3.11"
@@ -19,8 +23,12 @@ RUN apk add --update --no-cache alpine-sdk musl-dev zeromq-dev libpq-dev openlda
 RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN pip install -r /prerequisites.txt
-COPY $REQUIREMENTS /requirements.txt
-RUN pip install $FLAGS -r /requirements.txt
+COPY ${REQUIREMENTS_DIRECTORY}/ /requirements/
+RUN pip install ${FLAGS} \
+      -r "/requirements/${COMMON_REQUIREMENTS}" \
+      -r "/requirements/${PYTHON_REQUIREMENTS}" \
+      -r "/requirements/${PROFILE_REQUIREMENTS}" \
+      "${SALT_REQUIREMENT}"
 COPY nacl.py "${PYTHONPATH}/site-packages/salt/utils/"
 COPY logstash_engine.py "${PYTHONPATH}/site-packages/salt/engines/"
 COPY app.py "${PYTHONPATH}/site-packages/salt/netapi/rest_cherrypy/"

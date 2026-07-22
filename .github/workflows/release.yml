@@ -9,7 +9,7 @@ on:
       - "*.py"
       - "images.json"
       - "prerequisites.txt"
-      - "requirements-*.txt"
+      - "requirements/**"
       - "scripts/generate_matrix.py"
       - ".github/workflows/release.yml"
   schedule:
@@ -64,7 +64,11 @@ jobs:
           DOCKERFILE: ${{ matrix.dockerfile }}
           PYTHON_RELEASE: ${{ matrix.python_release }}
           PYTHON_VERSION: ${{ matrix.python }}
-          REQUIREMENTS: ${{ matrix.requirements }}
+          REQUIREMENTS_DIRECTORY: ${{ matrix.requirements_directory }}
+          COMMON_REQUIREMENTS: ${{ matrix.common_requirements }}
+          PYTHON_REQUIREMENTS: ${{ matrix.python_requirements }}
+          PROFILE_REQUIREMENTS: ${{ matrix.profile_requirements }}
+          SALT_REQUIREMENT: ${{ matrix.salt_requirement }}
           ROLLING_TAG: ${{ matrix.tag }}
           VERSION_TAG: ${{ matrix.version_tag }}
           SHA_PREFIX: ${{ matrix.sha_prefix }}
@@ -83,7 +87,11 @@ jobs:
             --file "$DOCKERFILE" \
             --build-arg "PYTHON_RELEASE=$PYTHON_RELEASE" \
             --build-arg "PYTHONPATH=/usr/local/salt/lib/python${PYTHON_VERSION}" \
-            --build-arg "REQUIREMENTS=$REQUIREMENTS" \
+            --build-arg "REQUIREMENTS_DIRECTORY=$REQUIREMENTS_DIRECTORY" \
+            --build-arg "COMMON_REQUIREMENTS=$COMMON_REQUIREMENTS" \
+            --build-arg "PYTHON_REQUIREMENTS=$PYTHON_REQUIREMENTS" \
+            --build-arg "PROFILE_REQUIREMENTS=$PROFILE_REQUIREMENTS" \
+            --build-arg "SALT_REQUIREMENT=$SALT_REQUIREMENT" \
             --build-arg "FLAGS=--no-deps" \
             "${tags[@]}" \
             .
