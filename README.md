@@ -10,7 +10,7 @@ modules. Published images are available from
 `images.json` is the source of truth for the release workflow. It defines the
 supported Python versions, Salt release channels, dependency profiles, base
 operating systems, and image repository. `scripts/generate_matrix.py` validates
-that configuration, checks stable Salt pins against the requirements files,
+that configuration, checks stable Salt requirements against their version tags,
 and expands the supported combinations for GitHub Actions.
 
 The current matrix contains:
@@ -41,6 +41,22 @@ The dependency sets are designed for a Salt master that uses:
 The image also installs the repository's Salt compatibility modules for NaCl,
 the Logstash engine, and the REST CherryPy application. The `isalt` profile
 adds IPython and `isalt`; it does not change the Salt release being installed.
+
+## Dependency layers
+
+Python dependencies are split along the same axes as the build matrix:
+
+- `requirements/common.txt` contains dependencies shared by every image;
+- `requirements/python/<version>.txt` pins Ansible and compatibility packages
+  for a specific Python release;
+- `requirements/profiles/standard.txt` and `requirements/profiles/isalt.txt`
+  provide profile-specific additions;
+- each Salt entry in `images.json` supplies the stable package pin or upstream
+  Git branch installed by that matrix entry.
+
+The build installs all four layers with `--no-deps`. Consequently, transitive
+dependencies must remain explicitly pinned in the shared, Python, or profile
+layer rather than relying on pip to resolve them implicitly.
 
 ## Tags
 
@@ -91,15 +107,20 @@ The Dockerfiles accept the same inputs used by the release matrix. For example:
   --file Python-debian.dockerfile \
   --build-arg PYTHON_RELEASE=3.14-slim \
   --build-arg PYTHONPATH=/usr/local/salt/lib/python3.14 \
-  --build-arg REQUIREMENTS=requirements-3008.txt \
+  --build-arg REQUIREMENTS_DIRECTORY=requirements \
+  --build-arg COMMON_REQUIREMENTS=common.txt \
+  --build-arg PYTHON_REQUIREMENTS=python/3.14.txt \
+  --build-arg PROFILE_REQUIREMENTS=profiles/standard.txt \
+  --build-arg SALT_REQUIREMENT=salt==3008.2 \
   --build-arg 'FLAGS=--no-deps' \
   --tag localhost/salt:3.14-3008-debian \
   .
 ```
 
-The dependency files are deliberately explicit and pinned. Update the
-appropriate `requirements-*.txt` pair together when changing either a standard
-and `isalt` image for the same Salt channel.
+The dependency files are deliberately explicit and pinned. A shared package is
+updated once in `common.txt`; Ansible compatibility changes belong in the
+corresponding Python layer; interactive-only packages belong in `isalt.txt`;
+and Salt versions or branch references belong in `images.json`.
 
 ## Release process
 

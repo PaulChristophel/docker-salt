@@ -1,0 +1,17 @@
+# Interactive Salt shell
+asttokens==3.0.2
+backcall==0.2.0
+executing==2.2.1
+ipython==9.15.0
+isalt==2021.2.2
+jedi==0.20.0
+matplotlib-inline==0.2.2
+parso==0.8.7
+pexpect==4.9.0
+pickleshare==0.7.5
+prompt_toolkit==3.0.52
+ptyprocess==0.7.0
+pure-eval==0.2.3
+stack-data==0.6.3
+traitlets==5.15.1
+wcwidth==0.8.2
