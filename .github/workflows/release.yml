@@ -1,0 +1,119 @@
+name: Build and publish Salt images
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "*.dockerfile"
+      - "*.py"
+      - "images.json"
+      - "prerequisites.txt"
+      - "requirements-*.txt"
+      - "scripts/generate_matrix.py"
+      - ".github/workflows/release.yml"
+  schedule:
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  prepare:
+    name: Load build matrix
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.matrix.outputs.image }}
+      platform: ${{ steps.matrix.outputs.platform }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Read image configuration
+        id: matrix
+        run: |
+          echo "image=$(jq -r '.image' images.json)" >> "$GITHUB_OUTPUT"
+          echo "platform=$(jq -r '.platform' images.json)" >> "$GITHUB_OUTPUT"
+          matrix="$(python3 scripts/generate_matrix.py images.json)"
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Python ${{ matrix.python }} Salt ${{ matrix.salt }} ${{ matrix.profile }} ${{ matrix.variant }}
+    needs: prepare
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    env:
+      IMAGE_NAME: ${{ needs.prepare.outputs.image }}
+      PLATFORM: ${{ needs.prepare.outputs.platform }}
+      SHORT_SHA: ${{ github.sha }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Build image
+        env:
+          DOCKERFILE: ${{ matrix.dockerfile }}
+          PYTHON_RELEASE: ${{ matrix.python_release }}
+          PYTHON_VERSION: ${{ matrix.python }}
+          REQUIREMENTS: ${{ matrix.requirements }}
+          ROLLING_TAG: ${{ matrix.tag }}
+          VERSION_TAG: ${{ matrix.version_tag }}
+          SHA_PREFIX: ${{ matrix.sha_prefix }}
+          SHA_SUFFIX: ${{ matrix.sha_suffix }}
+        run: |
+          short_sha="${SHORT_SHA:0:7}"
+          tags=(
+            --tag "${IMAGE_NAME}:${ROLLING_TAG}"
+            --tag "${IMAGE_NAME}:${SHA_PREFIX}${short_sha}${SHA_SUFFIX}"
+          )
+          if [[ -n "$VERSION_TAG" ]]; then
+            tags+=(--tag "${IMAGE_NAME}:${VERSION_TAG}")
+          fi
+          podman build \
+            --platform "$PLATFORM" \
+            --file "$DOCKERFILE" \
+            --build-arg "PYTHON_RELEASE=$PYTHON_RELEASE" \
+            --build-arg "PYTHONPATH=/usr/local/salt/lib/python${PYTHON_VERSION}" \
+            --build-arg "REQUIREMENTS=$REQUIREMENTS" \
+            --build-arg "FLAGS=--no-deps" \
+            "${tags[@]}" \
+            .
+
+      - name: Log in to Docker Hub
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          printf '%s' "$DOCKER_PASSWORD" \
+            | podman login docker.io --username pcm0 --password-stdin
+
+      - name: Push image tags
+        env:
+          ROLLING_TAG: ${{ matrix.tag }}
+          VERSION_TAG: ${{ matrix.version_tag }}
+          SHA_PREFIX: ${{ matrix.sha_prefix }}
+          SHA_SUFFIX: ${{ matrix.sha_suffix }}
+        run: |
+          short_sha="${SHORT_SHA:0:7}"
+          tags=(
+            "$ROLLING_TAG"
+            "${SHA_PREFIX}${short_sha}${SHA_SUFFIX}"
+          )
+          if [[ -n "$VERSION_TAG" ]]; then
+            tags+=("$VERSION_TAG")
+          fi
+          for tag in "${tags[@]}"; do
+            podman push "${IMAGE_NAME}:${tag}"
+          done
+
+      - name: Log out of Docker Hub
+        if: always()
+        run: podman logout docker.io || true

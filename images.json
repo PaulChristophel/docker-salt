@@ -1,0 +1,78 @@
+{
+  "image": "docker.io/pcm0/salt",
+  "platform": "linux/amd64",
+  "python": [
+    {
+      "version": "3.11",
+      "debian_release": "3.11-slim"
+    },
+    {
+      "version": "3.12",
+      "debian_release": "3.12-slim"
+    },
+    {
+      "version": "3.13",
+      "debian_release": "3.13-slim"
+    },
+    {
+      "version": "3.14",
+      "debian_release": "3.14-slim"
+    }
+  ],
+  "salt": [
+    {
+      "name": "3006",
+      "version": "3006.25",
+      "requirements": "3006",
+      "channel": "stable"
+    },
+    {
+      "name": "3008",
+      "version": "3008.2",
+      "requirements": "3008",
+      "channel": "stable"
+    },
+    {
+      "name": "3006.x",
+      "requirements": "3006.x",
+      "channel": "development"
+    },
+    {
+      "name": "3008.x",
+      "requirements": "3008.x",
+      "channel": "development"
+    },
+    {
+      "name": "master",
+      "requirements": "master",
+      "channel": "development"
+    }
+  ],
+  "profiles": [
+    {
+      "name": "standard",
+      "requirements_suffix": "",
+      "tag_suffix": ""
+    },
+    {
+      "name": "isalt",
+      "requirements_suffix": "-isalt",
+      "tag_suffix": "-isalt"
+    }
+  ],
+  "variants": [
+    {
+      "name": "debian",
+      "dockerfile": "Python-debian.dockerfile",
+      "python": ["3.11", "3.12", "3.13", "3.14"],
+      "salt": ["3006", "3008", "3006.x", "3008.x", "master"]
+    },
+    {
+      "name": "photon5",
+      "tag": "photon",
+      "dockerfile": "Python-photon.dockerfile",
+      "python": ["3.14"],
+      "salt": ["3008", "3008.x", "master"]
+    }
+  ]
+}

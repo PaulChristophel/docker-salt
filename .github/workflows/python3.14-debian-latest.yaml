@@ -1,8 +1,0 @@
-name: Latest Python 3.14 Debian Release
-run-name: "Latest Python 3.14 Debian Release (branch: ${{ github.ref_name }})"
-on:
-  push:
-    # Pattern matched against refs/tags
-    tags:
-      - '[0-9]+.[0-9]+-[0-9]+'
-jobs: {}
