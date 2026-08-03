@@ -30,8 +30,8 @@
   "salt": [
     {
       "name": "3006",
-      "version": "3006.25",
-      "requirement": "salt==3006.25",
+      "version": "3006.27",
+      "requirement": "salt==3006.27",
       "channel": "stable"
     },
     {
