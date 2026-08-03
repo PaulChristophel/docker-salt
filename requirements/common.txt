@@ -122,5 +122,5 @@ mdurl==0.1.2
 annotated-doc==0.0.5
 markdown-it-py==4.2.0
 rich==15.0.0
-typer==0.27.0
+typer==0.27.1
 typer-slim==0.24.0
