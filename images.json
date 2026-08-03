@@ -72,7 +72,7 @@
     {
       "name": "debian",
       "dockerfile": "Python-debian.dockerfile",
-      "python": ["3.11", "3.12", "3.13", "3.14"],
+      "python": ["3.11", "3.14"],
       "salt": ["3006", "3008", "3006.x", "3008.x", "master"]
     },
     {
