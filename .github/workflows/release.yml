@@ -69,12 +69,16 @@ jobs:
           PYTHON_REQUIREMENTS: ${{ matrix.python_requirements }}
           PROFILE_REQUIREMENTS: ${{ matrix.profile_requirements }}
           SALT_REQUIREMENT: ${{ matrix.salt_requirement }}
+          SALT_NAME: ${{ matrix.salt }}
+          SALT_VERSION: ${{ matrix.salt_version }}
           ROLLING_TAG: ${{ matrix.tag }}
           VERSION_TAG: ${{ matrix.version_tag }}
           SHA_PREFIX: ${{ matrix.sha_prefix }}
           SHA_SUFFIX: ${{ matrix.sha_suffix }}
         run: |
           short_sha="${SHORT_SHA:0:7}"
+          image_created="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          salt_component_version="${SALT_VERSION:-$SALT_NAME}"
           tags=(
             --tag "${IMAGE_NAME}:${ROLLING_TAG}"
             --tag "${IMAGE_NAME}:${SHA_PREFIX}${short_sha}${SHA_SUFFIX}"
@@ -93,6 +97,13 @@ jobs:
             --build-arg "PROFILE_REQUIREMENTS=$PROFILE_REQUIREMENTS" \
             --build-arg "SALT_REQUIREMENT=$SALT_REQUIREMENT" \
             --build-arg "FLAGS=--no-deps" \
+            --label "org.opencontainers.image.created=$image_created" \
+            --label "org.opencontainers.image.version=$ROLLING_TAG" \
+            --label "org.opencontainers.image.revision=$SHORT_SHA" \
+            --label "org.opencontainers.image.ref.name=$IMAGE_NAME:$ROLLING_TAG" \
+            --label "org.opencontainers.image.component.salt.version=$salt_component_version" \
+            --label "edu.gatech.image.owner=Paul Christophel" \
+            --label "edu.gatech.image.repository=$IMAGE_NAME" \
             "${tags[@]}" \
             .
 

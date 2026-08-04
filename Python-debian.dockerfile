@@ -1,8 +1,15 @@
 ARG PYTHON_RELEASE=3.11-slim
 FROM python:${PYTHON_RELEASE} AS base
+ARG PYTHON_RELEASE
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
+      org.opencontainers.image.authors="Paul Christophel" \
+      org.opencontainers.image.title="Salt Master" \
       org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
-      org.opencontainers.image.description="Lightweight container image providing a Salt master service."
+      org.opencontainers.image.url="https://github.com/PaulChristophel/docker-salt" \
+      org.opencontainers.image.documentation="https://github.com/PaulChristophel/docker-salt#readme" \
+      org.opencontainers.image.description="Lightweight container image providing a Salt master service." \
+      org.opencontainers.image.licenses="AGPL-3.0-only" \
+      org.opencontainers.image.base.name="docker.io/library/python:${PYTHON_RELEASE}"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -30,9 +37,6 @@ RUN apt-get update && apt-get upgrade -y && \
     && rm -rf /var/lib/apt/lists/*
 
 FROM base AS builder
-LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
-      org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
-      org.opencontainers.image.description="Lightweight container image providing a Salt master service."
 
 ARG REQUIREMENTS_DIRECTORY=requirements
 ARG COMMON_REQUIREMENTS=common.txt
@@ -90,9 +94,6 @@ RUN find /usr/local/salt -name '*.pyc' -delete && \
 RUN find "$VIRTUAL_ENV" -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
 FROM base AS salt
-LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
-      org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
-      org.opencontainers.image.description="Lightweight container image providing a Salt master service."
 
 ARG USER_ID=1000
 COPY --from=builder /usr/local/salt /usr/local/salt
