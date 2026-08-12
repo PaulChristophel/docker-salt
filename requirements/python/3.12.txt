@@ -1,5 +1,5 @@
 # Ansible versions compatible with Python 3.12
-ansible==14.2.0
-ansible-core==2.21.2
+ansible==14.3.0
+ansible-core==2.21.3
 backports.ssl_match_hostname==3.7.0.1
 backports_abc==0.5
