@@ -92,7 +92,7 @@ pyyescrypt==0.1.15
 apache-libcloud==3.9.1
 croniter==6.2.4
 distlib==0.4.3
-filelock==3.32.2
+filelock==3.32.3
 gitdb==4.0.12
 GitPython==3.1.59
 platformdirs==4.11.2
