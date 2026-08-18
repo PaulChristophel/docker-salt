@@ -10,7 +10,7 @@ decorator==5.3.1
 distro==1.9.0
 dnspython==2.8.0
 gssapi==1.11.1
-idna==3.18
+idna==3.19
 immutables==0.21
 importlib-metadata==9.0.0
 inflect==7.5.0
@@ -79,14 +79,14 @@ typeguard==4.6.0
 typing-inspection==0.4.4
 
 # API server
-gunicorn==26.0.0
+gunicorn==26.1.0
 gevent==26.8.0
 greenlet==3.5.5
 zope.event==6.2
 zope.interface==8.5
 ws4py==0.6.0
 gevent-websocket==0.10.1
-pyyescrypt==0.1.15
+pyyescrypt==0.1.16
 
 # Additional Salt integrations
 apache-libcloud==3.9.1
