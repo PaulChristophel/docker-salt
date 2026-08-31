@@ -14,4 +14,4 @@ ptyprocess==0.7.0
 pure-eval==0.2.3
 stack-data==0.6.3
 traitlets==5.16.1
-wcwidth==0.8.2
+wcwidth==0.8.3
