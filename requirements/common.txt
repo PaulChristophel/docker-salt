@@ -86,7 +86,7 @@ zope.event==6.2
 zope.interface==8.6
 ws4py==0.6.0
 gevent-websocket==0.10.1
-pyyescrypt==0.1.17
+pyyescrypt==0.1.18
 
 # Additional Salt integrations
 apache-libcloud==3.9.1
