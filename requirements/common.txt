@@ -33,7 +33,7 @@ portend==3.2.1
 psutil==7.2.2
 psycopg[c]==3.3.5
 psycopg-pool==3.3.1
-psycopg2==2.9.12
+psycopg2==2.9.13
 pyasn1==0.6.4
 pyasn1-modules==0.4.2
 pycryptodomex==3.23.0
@@ -66,7 +66,7 @@ resolvelib==1.2.1
 aiosignal==1.4.0
 attrs==26.1.0
 frozenlist==1.8.0
-multidict==6.7.1
+multidict==6.8.0
 yarl==1.24.5
 zipp==4.1.0
 passlib==1.7.4
@@ -74,7 +74,7 @@ aiohappyeyeballs==2.7.1
 annotated-types==0.8.0
 ipython-pygments-lexers==1.1.1
 propcache==0.5.2
-pydantic_core==2.48.0
+pydantic_core==2.49.0
 typeguard==4.6.0
 typing-inspection==0.4.4
 
@@ -86,25 +86,25 @@ zope.event==6.2
 zope.interface==8.6
 ws4py==0.6.0
 gevent-websocket==0.10.1
-pyyescrypt==0.1.18
+pyyescrypt==0.1.19
 
 # Additional Salt integrations
 apache-libcloud==3.9.1
 croniter==6.2.4
 distlib==0.4.3
-filelock==3.32.5
+filelock==3.32.6
 gitdb==4.0.12
-GitPython==3.1.61
-platformdirs==4.11.7
+GitPython==3.1.62
+platformdirs==4.11.8
 pyOpenSSL==26.4.0
 python-discovery==1.6.0
 rpm-vercmp==0.1.2
 smmap==5.0.3
-virtualenv==21.7.8
+virtualenv==21.7.9
 vultr==1.0.1
 
 # Monitoring
-googleapis-common-protos==1.75.2
+googleapis-common-protos==1.75.3
 opentelemetry-api==1.44.0
 opentelemetry-exporter-otlp-proto-common==1.44.0
 opentelemetry-exporter-otlp-proto-http==1.44.0
