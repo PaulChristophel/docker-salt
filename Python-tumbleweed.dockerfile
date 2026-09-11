@@ -75,6 +75,7 @@ RUN zypper --non-interactive --gpg-auto-import-keys install --no-recommends shad
  && zypper --installroot /mnt/rootfs --non-interactive --gpg-auto-import-keys \
       install --no-recommends \
       openSUSE-release \
+      util-linux \
       bash \
       coreutils \
       findutils \
