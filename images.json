@@ -24,6 +24,7 @@
     {
       "version": "3.14",
       "debian_release": "3.14-slim",
+      "tumbleweed_release": "3.14-tumbleweed",
       "requirements": "python/3.14.txt"
     },
     {
@@ -89,6 +90,7 @@
     },
     {
       "name": "tumbleweed",
+      "python_release_key": "tumbleweed_release",
       "tag": "tumbleweed",
       "dockerfile": "Python-tumbleweed.dockerfile",
       "python": ["3.14"],

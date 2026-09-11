@@ -141,10 +141,16 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
                 + ", ".join(unknown_salt)
             )
 
+        python_release_key = variant.get("python_release_key", "debian_release")
+        if not isinstance(python_release_key, str) or not python_release_key:
+            raise ConfigurationError(
+                f"{variant_context}.python_release_key must be a non-empty string"
+            )
+
         for python_version in python_versions:
             python_entry = python_index[python_version]
             python_release = require_string(
-                python_entry, "debian_release", f"python[{python_version}]"
+                python_entry, python_release_key, f"python[{python_version}]"
             )
             python_requirements = require_string(
                 python_entry, "requirements", f"python[{python_version}]"
