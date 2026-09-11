@@ -11,7 +11,7 @@ pexpect==4.9.0
 pickleshare==0.7.5
 prompt_toolkit==3.0.53
 ptyprocess==0.7.0
-pure-eval==0.2.3
+pure-eval==0.2.4
 stack-data==0.6.3
 traitlets==5.16.1
 wcwidth==0.8.3
