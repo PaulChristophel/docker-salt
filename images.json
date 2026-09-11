@@ -86,7 +86,7 @@
       "tag": "photon",
       "dockerfile": "Python-photon.dockerfile",
       "python": ["3.14"],
-      "salt": ["3008", "3008.x", "master"]
+      "salt": ["3008"]
     },
     {
       "name": "tumbleweed",
@@ -94,7 +94,7 @@
       "tag": "tumbleweed",
       "dockerfile": "Python-tumbleweed.dockerfile",
       "python": ["3.14"],
-      "salt": ["3008", "3008.x", "master"]
+      "salt": ["3008", "3008.x"]
     }
   ]
 }
