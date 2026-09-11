@@ -89,7 +89,19 @@ def validate_requirements_file(root: Path, directory: str, relative_path: str) -
 
 
 def generate_matrix(config_path: Path) -> list[dict[str, str]]:
-    """Load, validate, and expand a Salt image configuration."""
+    """Load, validate, and expand a Salt image configuration.
+
+    Args:
+        config_path: Path to the image configuration JSON file.
+
+    Returns:
+        Build entries restricted to each Salt entry's Python allowlist.
+
+    Raises:
+        ConfigurationError: If the configuration or referenced files are invalid.
+        OSError: If the configuration file cannot be read.
+        json.JSONDecodeError: If the configuration is not valid JSON.
+    """
     config = json.loads(config_path.read_text(encoding="utf-8"))
     if not isinstance(config, dict):
         raise ConfigurationError("the configuration root must be an object")
@@ -108,6 +120,16 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
 
     python_index = unique_index(python_entries, "version", "python")
     salt_index = unique_index(salt_entries, "name", "salt")
+    salt_python_versions = {}
+    for salt_name, salt_entry in salt_index.items():
+        allowed_python = require_string_list(salt_entry, "python", f"salt[{salt_name}]")
+        unknown_python = sorted(set(allowed_python) - python_index.keys())
+        if unknown_python:
+            raise ConfigurationError(
+                f"salt[{salt_name}].python contains unknown versions: "
+                + ", ".join(unknown_python)
+            )
+        salt_python_versions[salt_name] = allowed_python
     unique_index(profile_entries, "name", "profiles")
     unique_index(variant_entries, "name", "variants")
     root = config_path.resolve().parent
@@ -160,6 +182,8 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
             )
             for salt_name in salt_names:
                 salt_entry = salt_index[salt_name]
+                if python_version not in salt_python_versions[salt_name]:
+                    continue
                 salt_requirement = require_string(
                     salt_entry, "requirement", f"salt[{salt_name}]"
                 )

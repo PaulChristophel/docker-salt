@@ -15,14 +15,15 @@ and expands the supported combinations for GitHub Actions.
 
 The current matrix contains:
 
-- Python 3.11 through 3.14 on Debian slim;
-- Python 3.14 on Photon OS 5;
-- stable Salt 3006 and 3008 releases;
-- development snapshots from the `3006.x`, `3008.x`, and `master` branches;
+- stable Salt 3006 on Python 3.11 and Salt 3008 on Python 3.14 on Debian slim;
+- stable Salt 3008 on Python 3.14 on Photon OS 5;
+- Tumbleweed development snapshots: `3006.x` on Python 3.11, and `3008.x`
+  and `master` on Python 3.14;
 - a standard profile and an `isalt` profile with interactive Salt tooling;
 - `linux/amd64` as the current publication platform.
 
-Photon builds are limited to Salt 3008, `3008.x`, and `master`. The Alpine
+Each Salt entry's required `python` allowlist restricts the combinations generated
+from the variants, across all distributions and profiles. The Alpine
 Dockerfile remains available for local experimentation, but Alpine images are
 not part of the published matrix.
 
