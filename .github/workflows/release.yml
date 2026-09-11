@@ -62,6 +62,8 @@ jobs:
       - name: Build image
         env:
           DOCKERFILE: ${{ matrix.dockerfile }}
+          VARIANT: ${{ matrix.variant }}
+          PROFILE: ${{ matrix.profile }}
           PYTHON_RELEASE: ${{ matrix.python_release }}
           PYTHON_VERSION: ${{ matrix.python }}
           REQUIREMENTS_DIRECTORY: ${{ matrix.requirements_directory }}
@@ -86,7 +88,46 @@ jobs:
           if [[ -n "$VERSION_TAG" ]]; then
             tags+=(--tag "${IMAGE_NAME}:${VERSION_TAG}")
           fi
+          case "$VARIANT" in
+            debian) base_name="docker.io/library/python:${PYTHON_RELEASE}" ;;
+            photon5) base_name="docker.io/library/photon:5.0" ;;
+            tumbleweed) base_name="docker.io/pcm0/python:${PYTHON_RELEASE}" ;;
+            *) echo "Unsupported image variant: $VARIANT" >&2; exit 1 ;;
+          esac
+          podman pull --platform "$PLATFORM" "$base_name"
+          base_digest="$(podman image inspect --format '{{.Digest}}' "$base_name")"
+          if [[ ! "$base_digest" =~ ^sha256:[a-f0-9]{64}$ ]]; then
+            echo "Missing or invalid base image digest for $base_name" >&2
+            exit 1
+          fi
+          image_metadata=(
+            "org.opencontainers.image.created=$image_created"
+            "org.opencontainers.image.version=$ROLLING_TAG"
+            "org.opencontainers.image.revision=$SHORT_SHA"
+            "org.opencontainers.image.ref.name=$IMAGE_NAME:$ROLLING_TAG"
+            "org.opencontainers.image.title=Salt Master"
+            "org.opencontainers.image.description=Salt ${salt_component_version}, Python ${PYTHON_VERSION}, ${VARIANT}, ${PROFILE} profile."
+            "org.opencontainers.image.authors=Paul Christophel"
+            "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}"
+            "org.opencontainers.image.url=https://github.com/${GITHUB_REPOSITORY}"
+            "org.opencontainers.image.documentation=https://github.com/${GITHUB_REPOSITORY}#readme"
+            "org.opencontainers.image.licenses=AGPL-3.0-only"
+            "org.opencontainers.image.base.name=$base_name"
+            "org.opencontainers.image.base.digest=$base_digest"
+            "org.opencontainers.image.component.salt.version=$salt_component_version"
+            "edu.gatech.image.python.version=$PYTHON_VERSION"
+            "edu.gatech.image.variant=$VARIANT"
+            "edu.gatech.image.profile=$PROFILE"
+            "edu.gatech.image.owner=Paul Christophel"
+            "edu.gatech.image.repository=$IMAGE_NAME"
+          )
+          metadata_args=()
+          for metadata in "${image_metadata[@]}"; do
+            metadata_args+=(--label "$metadata" --annotation "$metadata")
+          done
           podman build \
+            --format oci \
+            --build-arg "BASE_IMAGE=${base_name}@${base_digest}" \
             --platform "$PLATFORM" \
             --file "$DOCKERFILE" \
             --build-arg "PYTHON_RELEASE=$PYTHON_RELEASE" \
@@ -97,13 +138,7 @@ jobs:
             --build-arg "PROFILE_REQUIREMENTS=$PROFILE_REQUIREMENTS" \
             --build-arg "SALT_REQUIREMENT=$SALT_REQUIREMENT" \
             --build-arg "FLAGS=--no-deps" \
-            --label "org.opencontainers.image.created=$image_created" \
-            --label "org.opencontainers.image.version=$ROLLING_TAG" \
-            --label "org.opencontainers.image.revision=$SHORT_SHA" \
-            --label "org.opencontainers.image.ref.name=$IMAGE_NAME:$ROLLING_TAG" \
-            --label "org.opencontainers.image.component.salt.version=$salt_component_version" \
-            --label "edu.gatech.image.owner=Paul Christophel" \
-            --label "edu.gatech.image.repository=$IMAGE_NAME" \
+            "${metadata_args[@]}" \
             "${tags[@]}" \
             .
 

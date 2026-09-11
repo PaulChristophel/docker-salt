@@ -1,40 +1,8 @@
 ARG PYTHON_RELEASE=3.11-slim
-FROM python:${PYTHON_RELEASE} AS base
+ARG BASE_IMAGE=python:${PYTHON_RELEASE}
+FROM ${BASE_IMAGE} AS base
 ARG PYTHON_RELEASE
-LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
-      org.opencontainers.image.authors="Paul Christophel" \
-      org.opencontainers.image.title="Salt Master" \
-      org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
-      org.opencontainers.image.url="https://github.com/PaulChristophel/docker-salt" \
-      org.opencontainers.image.documentation="https://github.com/PaulChristophel/docker-salt#readme" \
-      org.opencontainers.image.description="Lightweight container image providing a Salt master service." \
-      org.opencontainers.image.licenses="AGPL-3.0-only" \
-      org.opencontainers.image.base.name="docker.io/library/python:${PYTHON_RELEASE}"
-
 ENV DEBIAN_FRONTEND=noninteractive
-
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends \
-      ca-certificates \
-      libzmq5 \
-      libpq5 \
-      libldap-2* \
-      libssl3 \
-      openssl \
-      libgcrypt20 \
-      cryptsetup-bin \
-      libpcre2-8-0 \
-      binutils \
-      libffi8 \
-      gnupg \
-      libgit2-1.* \
-      libssh2-1 \
-      krb5-user \
-      libkrb5-3 \
-      openssh-client \
-      rsync \
-      tini \
-    && rm -rf /var/lib/apt/lists/*
 
 FROM base AS builder
 
@@ -93,22 +61,80 @@ RUN find /usr/local/salt -name '*.pyc' -delete && \
     rm -f "${PYTHONPATH}/site-packages/salt/returners/django_return.py"
 RUN find "$VIRTUAL_ENV" -type d -name __pycache__ -exec chown -v ${USER_ID}:${USER_ID} {} \;
 
-FROM base AS salt
+# Bootstrap the same Debian release as the CPython base into an empty root.
+# Keep dpkg metadata and OS identity; no build packages enter this filesystem.
+FROM base AS runtime-root
+ARG USER_ID=1000
+RUN apt-get update && apt-get install -y --no-install-recommends debootstrap \
+ && . /etc/os-release \
+ && debootstrap --variant=minbase "$VERSION_CODENAME" /mnt/rootfs https://deb.debian.org/debian \
+ && rm -f /mnt/rootfs/etc/apt/sources.list \
+ && cp -a /etc/apt/sources.list.d/. /mnt/rootfs/etc/apt/sources.list.d/ \
+ && if [ -f /etc/apt/sources.list ]; then cp /etc/apt/sources.list /mnt/rootfs/etc/apt/sources.list; fi \
+ && cp /etc/resolv.conf /mnt/rootfs/etc/resolv.conf \
+ && chroot /mnt/rootfs apt-get update \
+ && chroot /mnt/rootfs apt-get upgrade -y \
+ && chroot /mnt/rootfs apt-get install -y --no-install-recommends \
+      ca-certificates tzdata bash coreutils findutils sed \
+      openssl libffi8 zlib1g libbz2-1.0 liblzma5 libreadline8 \
+      libsqlite3-0 libgdbm6 libgdbm-compat4 libncursesw6 libuuid1 \
+      libexpat1 libzstd1 libcrypt1 \
+      libzmq5 libpq5 libgcrypt20 cryptsetup-bin libpcre2-8-0 \
+      gnupg libssh2-1 krb5-user libkrb5-3 openssh-client rsync tini \
+ && chroot /mnt/rootfs apt-get install -y --no-install-recommends \
+      '?and(?name(^libldap[-0-9]),?not(?name(dev|dbg)))' \
+      '?and(?name(^libgit2-[0-9]),?not(?name(dev|dbg)))' \
+ && chroot /mnt/rootfs apt-get clean \
+ && rm -rf /mnt/rootfs/var/lib/apt/lists/* /mnt/rootfs/var/cache/apt/* \
+      /mnt/rootfs/usr/share/man /mnt/rootfs/usr/share/doc \
+ && groupadd --root /mnt/rootfs -g ${USER_ID} salt \
+ && useradd --root /mnt/rootfs -u ${USER_ID} -g salt -s /usr/sbin/nologin -d /opt/salt -m salt \
+ && mkdir -p /mnt/rootfs/srv /mnt/rootfs/run/salt \
+      /mnt/rootfs/etc/salt/pki/master /mnt/rootfs/etc/salt/pki/minion \
+      /mnt/rootfs/etc/salt/master.d /mnt/rootfs/var/log/salt /mnt/rootfs/var/cache/salt/master \
+ && chown -R ${USER_ID}:${USER_ID} /mnt/rootfs/srv /mnt/rootfs/etc/salt \
+      /mnt/rootfs/var/log/salt /mnt/rootfs/var/cache/salt /mnt/rootfs/run/salt \
+ && libpq="$(find /mnt/rootfs/usr/lib -name libpq.so.5 -print -quit)" \
+ && test -n "$libpq" \
+ && ln -s libpq.so.5 "${libpq%.5}" \
+ && chmod 1777 /mnt/rootfs/tmp
+
+FROM runtime-root AS runtime-builder
+# CPython is source-built in the upstream image, so copy its runtime separately.
+COPY --from=base /usr/local/ /mnt/rootfs/usr/local/
+COPY --from=builder /usr/local/salt/ /mnt/rootfs/usr/local/salt/
+RUN rm -rf /mnt/rootfs/usr/local/include /mnt/rootfs/usr/local/share/man \
+      /mnt/rootfs/usr/local/lib/pkgconfig /mnt/rootfs/usr/local/lib/python*/test \
+ && find /mnt/rootfs/usr/local -name '*.pyc' -delete \
+ && chroot /mnt/rootfs /sbin/ldconfig
+
+# Fail the build if the assembled root cannot run its interpreter or entrypoint.
+RUN chroot /mnt/rootfs /usr/bin/tini --version \
+ && PYTHONDONTWRITEBYTECODE=1 chroot /mnt/rootfs /usr/local/salt/bin/salt-master --version \
+ && test -s /mnt/rootfs/etc/os-release \
+ && test -s /mnt/rootfs/etc/ssl/certs/ca-certificates.crt
+
+FROM scratch AS salt
+ARG PYTHON_RELEASE
+LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
+      org.opencontainers.image.authors="Paul Christophel" \
+      org.opencontainers.image.title="Salt Master" \
+      org.opencontainers.image.source="https://github.com/PaulChristophel/docker-salt" \
+      org.opencontainers.image.url="https://github.com/PaulChristophel/docker-salt" \
+      org.opencontainers.image.documentation="https://github.com/PaulChristophel/docker-salt#readme" \
+      org.opencontainers.image.description="Lightweight container image providing a Salt master service." \
+      org.opencontainers.image.licenses="AGPL-3.0-only" \
+      org.opencontainers.image.base.name="docker.io/library/python:${PYTHON_RELEASE}"
 
 ARG USER_ID=1000
-COPY --from=builder /usr/local/salt /usr/local/salt
-RUN groupadd -g ${USER_ID} salt && \
-    useradd -u ${USER_ID} -g ${USER_ID} -s /usr/sbin/nologin -d /opt/salt -m salt
-RUN mkdir -p /srv /var/run/salt /etc/salt/pki/master /etc/salt/pki/minion /etc/salt/master.d /var/log/salt /var/cache/salt/master && \
-    chown -R ${USER_ID}:${USER_ID} /srv /etc/salt /var/log/salt /var/cache/salt /var/run/salt && \
-    ln -sf /usr/lib/x86_64-linux-gnu/libpq.so.5 /usr/lib/x86_64-linux-gnu/libpq.so && \
-    ln -sv /usr/bin/tini-static /sbin/tini
+COPY --from=runtime-builder /mnt/rootfs/ /
 
 WORKDIR /opt/salt
 USER ${USER_ID}:${USER_ID}
 
 ENV PYTHONUNBUFFERED=1 \
-    PATH="/usr/local/salt/bin:${PATH}" \
+    PATH="/usr/local/salt/bin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+    LANG=C.UTF-8 \
     MIMIC_SALT_INSTALL=1 \
     VIRTUAL_ENV=/usr/local/salt
 

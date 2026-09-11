@@ -1,5 +1,6 @@
 ARG PYTHON_RELEASE=3.14-tumbleweed
-FROM docker.io/pcm0/python:${PYTHON_RELEASE} AS base
+ARG BASE_IMAGE=docker.io/pcm0/python:${PYTHON_RELEASE}
+FROM ${BASE_IMAGE} AS base
 FROM base AS builder
 
 ARG REQUIREMENTS_DIRECTORY=requirements
