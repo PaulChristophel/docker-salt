@@ -68,7 +68,9 @@ RUN find "$VIRTUAL_ENV" -type d -name __pycache__ -exec chown -v ${USER_ID}:${US
 FROM base AS runtime-root
 ARG PHOTON_RELEASE
 ARG USER_ID=1000
-RUN tdnf -y install shadow \
+RUN tdnf -y install shadow rpm \
+ && python_package="$(rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}' python3)" \
+ && python_libs_package="$(rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}' python3-libs)" \
  && mkdir -p /mnt/rootfs \
  && tdnf -i /mnt/rootfs --releasever=${PHOTON_RELEASE} install -y \
       filesystem glibc libselinux coreutils findutils \
@@ -76,8 +78,8 @@ RUN tdnf -y install shadow \
       photon-release ca-certificates tzdata bash sed \
       zeromq postgresql17-libs openldap openssl libgcrypt cryptsetup \
       pcre2 libffi gnupg libssh2 krb5 openssh-clients rsync tini \
-      "$(rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}' python3)" \
-      "$(rpm -q --qf '%{NAME}-%{VERSION}-%{RELEASE}' python3-libs)" \
+      "$python_package" \
+      "$python_libs_package" \
  && tdnf -i /mnt/rootfs --releasever=${PHOTON_RELEASE} clean all \
  && rm -rf /mnt/rootfs/var/cache/tdnf /mnt/rootfs/var/lib/tdnf/cache /mnt/rootfs/usr/share/man /mnt/rootfs/usr/share/doc \
  && groupadd --root /mnt/rootfs -g ${USER_ID} salt \

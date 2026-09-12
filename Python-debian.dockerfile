@@ -63,11 +63,13 @@ RUN find "$VIRTUAL_ENV" -type d -name __pycache__ -exec chown -v ${USER_ID}:${US
 
 # Bootstrap the same Debian release as the CPython base into an empty root.
 # Keep dpkg metadata and OS identity; no build packages enter this filesystem.
+# Build containers cannot mount /dev, /proc or /sys inside the new root.
 FROM base AS runtime-root
 ARG USER_ID=1000
-RUN apt-get update && apt-get install -y --no-install-recommends debootstrap \
+RUN apt-get update && apt-get install -y --no-install-recommends mmdebstrap \
  && . /etc/os-release \
- && debootstrap --variant=minbase "$VERSION_CODENAME" /mnt/rootfs https://deb.debian.org/debian \
+ && mmdebstrap --mode=root --variant=minbase --skip=chroot/mount \
+      "$VERSION_CODENAME" /mnt/rootfs https://deb.debian.org/debian \
  && rm -f /mnt/rootfs/etc/apt/sources.list \
  && cp -a /etc/apt/sources.list.d/. /mnt/rootfs/etc/apt/sources.list.d/ \
  && if [ -f /etc/apt/sources.list ]; then cp /etc/apt/sources.list /mnt/rootfs/etc/apt/sources.list; fi \
