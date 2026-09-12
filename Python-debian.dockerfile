@@ -84,8 +84,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends mmdebstrap \
       libzmq5 libpq5 libgcrypt20 cryptsetup-bin libpcre2-8-0 \
       gnupg libssh2-1 krb5-user libkrb5-3 openssh-client rsync tini \
  && chroot /mnt/rootfs apt-get install -y --no-install-recommends \
-      '?and(?name(^libldap[-0-9]),?not(?name(dev|dbg)))' \
-      '?and(?name(^libgit2-[0-9]),?not(?name(dev|dbg)))' \
+      '?and(?name(^libldap[-0-9]),?not(?name(dev)),?not(?name(dbg)))' \
+      '?and(?name(^libgit2-[0-9]),?not(?name(dev)),?not(?name(dbg)))' \
  && chroot /mnt/rootfs apt-get clean \
  && rm -rf /mnt/rootfs/var/lib/apt/lists/* /mnt/rootfs/var/cache/apt/* \
       /mnt/rootfs/usr/share/man /mnt/rootfs/usr/share/doc \
@@ -110,9 +110,8 @@ RUN rm -rf /mnt/rootfs/usr/local/include /mnt/rootfs/usr/local/share/man \
  && find /mnt/rootfs/usr/local -name '*.pyc' -delete \
  && chroot /mnt/rootfs /sbin/ldconfig
 
-# Fail the build if the assembled root cannot run its interpreter or entrypoint.
+# Check Tini and static metadata; Salt startup needs a container-mounted /proc.
 RUN chroot /mnt/rootfs /usr/bin/tini --version \
- && PYTHONDONTWRITEBYTECODE=1 chroot /mnt/rootfs /usr/local/salt/bin/salt-master --version \
  && test -s /mnt/rootfs/etc/os-release \
  && test -s /mnt/rootfs/etc/ssl/certs/ca-certificates.crt
 
