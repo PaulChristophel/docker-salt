@@ -81,11 +81,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends mmdebstrap \
       openssl libffi8 zlib1g libbz2-1.0 liblzma5 libreadline8 \
       libsqlite3-0 libgdbm6 libgdbm-compat4 libncursesw6 libuuid1 \
       libexpat1 libzstd1 libcrypt1 \
-      libzmq5 libpq5 libgcrypt20 cryptsetup-bin libpcre2-8-0 \
+      libzmq5 libpq5 libldap2 libgit2-1.9 libgcrypt20 cryptsetup-bin libpcre2-8-0 \
       gnupg libssh2-1 krb5-user libkrb5-3 openssh-client rsync tini \
- && chroot /mnt/rootfs apt-get install -y --no-install-recommends \
-      '?and(?name(^libldap[-0-9]),?not(?name(dev)),?not(?name(dbg)))' \
-      '?and(?name(^libgit2-[0-9]),?not(?name(dev)),?not(?name(dbg)))' \
  && chroot /mnt/rootfs apt-get clean \
  && rm -rf /mnt/rootfs/var/lib/apt/lists/* /mnt/rootfs/var/cache/apt/* \
       /mnt/rootfs/usr/share/man /mnt/rootfs/usr/share/doc \
