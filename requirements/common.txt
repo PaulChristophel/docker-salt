@@ -10,7 +10,7 @@ decorator==5.3.1
 distro==1.9.0
 dnspython==2.8.0
 gssapi==1.12.0
-idna==3.19
+idna==3.20
 immutables==0.21
 importlib-metadata==9.0.1
 inflect==7.5.0
@@ -32,7 +32,7 @@ packaging==26.3
 portend==3.2.1
 psutil==7.2.2
 psycopg[c]==3.3.5
-psycopg-pool==3.3.1
+psycopg-pool==3.3.3
 psycopg2==2.9.13
 pyasn1==0.6.4
 pyasn1-modules==0.4.2
@@ -66,7 +66,7 @@ resolvelib==1.2.1
 aiosignal==1.4.0
 attrs==26.1.0
 frozenlist==1.8.0
-multidict==6.8.0
+multidict==6.9.1
 yarl==1.25.1
 zipp==4.1.0
 passlib==1.7.4
@@ -80,7 +80,7 @@ typing-inspection==0.4.4
 
 # API server
 gunicorn==26.2.0
-gevent==26.8.0
+gevent==26.9.0
 greenlet==3.5.6
 zope.event==6.2
 zope.interface==8.6
@@ -92,15 +92,15 @@ pyyescrypt==0.1.19
 apache-libcloud==3.9.1
 croniter==6.2.4
 distlib==0.4.3
-filelock==3.32.7
+filelock==4.0.1
 gitdb==4.0.12
 GitPython==3.1.62
-platformdirs==4.11.9
+platformdirs==4.11.12
 pyOpenSSL==26.4.0
-python-discovery==1.6.0
+python-discovery==1.6.1
 rpm-vercmp==0.1.2
 smmap==5.0.3
-virtualenv==21.7.10
+virtualenv==21.10.0
 vultr==1.0.1
 
 # Monitoring
@@ -113,7 +113,7 @@ opentelemetry-proto==1.44.0
 opentelemetry-sdk==1.44.0
 opentelemetry-semantic-conventions==0.63b1
 prometheus_client==0.26.0
-protobuf==7.36.1
+protobuf==7.36.2
 truststore==0.10.4
 xxhash==4.0.1
 shellingham==1.5.4
