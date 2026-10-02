@@ -100,7 +100,7 @@
       "tag": "tumbleweed",
       "dockerfile": "Python-tumbleweed.dockerfile",
       "python": ["3.11", "3.14"],
-      "salt": ["3006.x", "3008.x", "master"]
+      "salt": ["3006.x", "3008.x"]
     }
   ]
 }
