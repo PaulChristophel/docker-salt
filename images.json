@@ -45,7 +45,7 @@
     {
       "name": "3008",
       "python": ["3.14"],
-      "version": "3008.2",
+      "version": "3008.3",
       "requirement": "salt==3008.3",
       "channel": "stable"
     },

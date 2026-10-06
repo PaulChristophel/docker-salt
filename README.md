@@ -65,13 +65,13 @@ Tags describe Python, Salt, profile, operating system, and release channel:
 
 ```text
 3.14-3008-debian
-3.14-3008.2-isalt-debian
+3.14-3008.3-isalt-debian
 3.14-3008.x-photon-dev
 3.14-master-1a2b3c4-isalt-debian-dev
 ```
 
 Stable builds publish both a Salt feature-line tag such as `3008` and a full
-Salt version tag such as `3008.2`. Every build also publishes a seven-character
+Salt version tag such as `3008.3`. Every build also publishes a seven-character
 Git SHA tag. Development tags end in `-dev` and track their upstream Salt Git
 branch, so the SHA form is preferable when a repeatable deployment is needed.
 No generic `latest` tag is published because it would hide the Python, Salt,
@@ -112,7 +112,7 @@ The Dockerfiles accept the same inputs used by the release matrix. For example:
   --build-arg COMMON_REQUIREMENTS=common.txt \
   --build-arg PYTHON_REQUIREMENTS=python/3.14.txt \
   --build-arg PROFILE_REQUIREMENTS=profiles/standard.txt \
-  --build-arg SALT_REQUIREMENT=salt==3008.2 \
+  --build-arg SALT_REQUIREMENT=salt==3008.3 \
   --build-arg 'FLAGS=--no-deps' \
   --tag localhost/salt:3.14-3008-debian \
   .
