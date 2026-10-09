@@ -85,7 +85,7 @@
     {
       "name": "debian",
       "dockerfile": "Python-debian.dockerfile",
-      "python": ["3.11", "3.14", "3.15"],
+      "python": ["3.11", "3.14"],
       "salt": ["3006", "3008"]
     },
     {
