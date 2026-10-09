@@ -15,15 +15,20 @@ and expands the supported combinations for GitHub Actions.
 
 The current matrix contains:
 
-- stable Salt 3006 on Python 3.11 and Salt 3008 on Python 3.14 on Debian slim;
+- stable Salt 3006 on Python 3.11 and Salt 3008 on Python 3.14 and 3.15 on Debian slim;
 - stable Salt 3008 on Python 3.14 on Photon OS 5;
-- Tumbleweed development snapshots: `3006.x` on Python 3.11, and `3008.x`
-  and `master` on Python 3.14;
+- Tumbleweed development snapshots: `3006.x` on Python 3.11 and `3008.x`
+  on Python 3.14 and 3.15;
 - a standard profile and an `isalt` profile with interactive Salt tooling;
 - `linux/amd64` as the current publication platform.
 
-Each Salt entry's required `python` allowlist restricts the combinations generated
-from the variants, across all distributions and profiles. The Alpine
+Each Salt entry specifies exactly one Python policy: a `python` allowlist or
+a `python_min` minimum, compared numerically as major/minor versions. Salt 3006
+uses the exact `3.11` allowlist; Salt 3008, `3008.x`, and `master` allow `3.14`
+and later. Variants still select which configured Python versions to build.
+Adding a future version requires its base-image tags, requirements file, and
+variant selection, but no change to the Salt minimum. Matrix eligibility does
+not establish runtime compatibility or base-image availability. The Alpine
 Dockerfile remains available for local experimentation, but Alpine images are
 not part of the published matrix.
 

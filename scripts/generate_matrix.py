@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -88,6 +89,25 @@ def validate_requirements_file(root: Path, directory: str, relative_path: str) -
         raise ConfigurationError(f"requirements file does not exist: {relative_path}")
 
 
+def python_version_tuple(value: str, context: str) -> tuple[int, int]:
+    """Parse a Python major.minor version for numeric comparison.
+
+    Args:
+        value: Python version string.
+        context: Configuration location used in error messages.
+
+    Returns:
+        The numeric major and minor version.
+
+    Raises:
+        ConfigurationError: If the version is not in major.minor format.
+    """
+    if not re.fullmatch(r"[0-9]+\.[0-9]+", value):
+        raise ConfigurationError(f"{context} must be a major.minor version")
+    major, minor = value.split(".")
+    return int(major), int(minor)
+
+
 def generate_matrix(config_path: Path) -> list[dict[str, str]]:
     """Load, validate, and expand a Salt image configuration.
 
@@ -95,7 +115,7 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
         config_path: Path to the image configuration JSON file.
 
     Returns:
-        Build entries restricted to each Salt entry's Python allowlist.
+        Build entries restricted to each Salt entry's Python version policy.
 
     Raises:
         ConfigurationError: If the configuration or referenced files are invalid.
@@ -119,9 +139,28 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
     variant_entries = require_objects(config, "variants")
 
     python_index = unique_index(python_entries, "version", "python")
+    parsed_python_versions = {
+        version: python_version_tuple(version, f"python[{version}].version")
+        for version in python_index
+    }
     salt_index = unique_index(salt_entries, "name", "salt")
     salt_python_versions = {}
     for salt_name, salt_entry in salt_index.items():
+        if ("python" in salt_entry) == ("python_min" in salt_entry):
+            raise ConfigurationError(
+                f"salt[{salt_name}] must specify exactly one of python or python_min"
+            )
+        if "python_min" in salt_entry:
+            minimum = python_version_tuple(
+                require_string(salt_entry, "python_min", f"salt[{salt_name}]"),
+                f"salt[{salt_name}].python_min",
+            )
+            salt_python_versions[salt_name] = [
+                version
+                for version, parsed in parsed_python_versions.items()
+                if parsed >= minimum
+            ]
+            continue
         allowed_python = require_string_list(salt_entry, "python", f"salt[{salt_name}]")
         unknown_python = sorted(set(allowed_python) - python_index.keys())
         if unknown_python:
