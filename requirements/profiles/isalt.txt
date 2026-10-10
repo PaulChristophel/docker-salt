@@ -1,7 +1,7 @@
 # Interactive Salt shell
 asttokens==3.0.2
 backcall==0.2.0
-executing==2.2.1
+executing==2.3.0
 ipython==9.17.1
 isalt==2021.2.2
 jedi==0.20.0
