@@ -66,7 +66,7 @@ resolvelib==1.2.1
 aiosignal==1.4.0
 attrs==26.1.0
 frozenlist==1.8.0
-multidict==7.0.0
+multidict==7.1.0
 yarl==1.25.1
 zipp==4.1.1
 passlib==1.7.4
@@ -92,12 +92,12 @@ pyyescrypt==0.2.1
 apache-libcloud==3.9.1
 croniter==6.2.4
 distlib==0.4.3
-filelock==4.0.12
+filelock==4.1.0
 gitdb==4.0.12
 GitPython==3.2.0
 platformdirs==4.12.4
 pyOpenSSL==26.4.0
-python-discovery==1.6.1
+python-discovery==1.6.2
 rpm-vercmp==0.1.2
 smmap==5.0.3
 virtualenv==21.14.6
