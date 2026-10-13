@@ -114,7 +114,7 @@ opentelemetry-sdk==1.45.1
 opentelemetry-semantic-conventions==0.63b1
 prometheus_client==0.26.0
 protobuf==7.36.2
-truststore==0.10.4
+truststore==0.10.5
 xxhash==4.0.1
 shellingham==1.5.4
 Pygments==2.21.0
