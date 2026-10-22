@@ -13,7 +13,7 @@ gssapi==1.12.0
 idna==3.20
 immutables==0.21
 importlib-metadata==9.0.1
-inflect==7.5.0
+inflect==7.6.0
 jaraco.collections==5.2.1
 jaraco.context==6.1.2
 jaraco.functools==4.6.0
@@ -38,7 +38,7 @@ pyasn1==0.6.4
 pyasn1-modules==0.4.2
 pycryptodomex==3.24.1
 pydantic==2.14.1
-python-dateutil==2.9.0.post0
+python-dateutil==3.0.0
 python-gnupg==0.5.7
 python-ldap==3.4.8
 python-logstash==0.4.8
@@ -59,7 +59,7 @@ zc.lockfile==4.0
 argcomplete==3.7.2
 cffi==2.1.1
 cryptography==50.0.2
-pycparser==3.11
+pycparser==3.12
 resolvelib==1.2.1
 
 # Async and compatibility dependencies
@@ -68,7 +68,7 @@ attrs==26.1.0
 frozenlist==1.8.0
 multidict==7.1.0
 yarl==1.25.1
-zipp==4.1.1
+zipp==4.1.2
 passlib==1.7.4
 aiohappyeyeballs==2.7.1
 annotated-types==0.8.0
