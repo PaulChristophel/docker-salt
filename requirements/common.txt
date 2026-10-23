@@ -1,6 +1,6 @@
 aiohttp==3.14.5
 autocommand==2.2.2
-certifi==2026.10.19
+certifi==2026.10.23
 charset-normalizer==3.5.2
 cheroot==11.1.2
 CherryPy==18.10.0
@@ -86,7 +86,7 @@ zope.event==6.2
 zope.interface==8.7
 ws4py==0.6.0
 gevent-websocket==0.10.1
-pyyescrypt==0.2.1
+pyyescrypt==0.2.2
 
 # Additional Salt integrations
 apache-libcloud==3.9.1
@@ -100,11 +100,11 @@ pyOpenSSL==26.4.0
 python-discovery==1.6.4
 rpm-vercmp==0.1.2
 smmap==5.0.3
-virtualenv==21.14.12
+virtualenv==21.14.13
 vultr==1.0.1
 
 # Monitoring
-googleapis-common-protos==1.75.5
+googleapis-common-protos==1.76.0
 opentelemetry-api==1.45.1
 opentelemetry-exporter-otlp-proto-common==1.45.1
 opentelemetry-exporter-otlp-proto-http==1.45.1
