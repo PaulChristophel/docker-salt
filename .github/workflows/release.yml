@@ -61,6 +61,7 @@ jobs:
 
       - name: Build image
         env:
+          UV_VERSION: ${{ matrix.uv_version }}
           DOCKERFILE: ${{ matrix.dockerfile }}
           VARIANT: ${{ matrix.variant }}
           PROFILE: ${{ matrix.profile }}
@@ -127,6 +128,7 @@ jobs:
           done
           podman build \
             --format oci \
+            --build-arg "UV_VERSION=$UV_VERSION" \
             --build-arg "BASE_IMAGE=${base_name}@${base_digest}" \
             --platform "$PLATFORM" \
             --file "$DOCKERFILE" \

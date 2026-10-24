@@ -128,6 +128,7 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
 
     require_string(config, "image", "configuration")
     require_string(config, "platform", "configuration")
+    uv_version = require_string(config, "uv_version", "configuration")
     requirements_config = require_object(config, "requirements")
     requirements_directory = require_string(
         requirements_config, "directory", "requirements"
@@ -268,6 +269,7 @@ def generate_matrix(config_path: Path) -> list[dict[str, str]]:
                     development_suffix = "-dev" if development else ""
                     matrix.append(
                         {
+                            "uv_version": uv_version,
                             "python": python_version,
                             "python_release": python_release,
                             "salt": salt_name,

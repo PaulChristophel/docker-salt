@@ -1,5 +1,8 @@
+ARG UV_VERSION=0.13.5
 ARG PYTHON_RELEASE=3.11-slim
 ARG BASE_IMAGE=python:${PYTHON_RELEASE}
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv-installer
+
 FROM ${BASE_IMAGE} AS base
 ARG PYTHON_RELEASE
 ENV DEBIAN_FRONTEND=noninteractive
@@ -7,7 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 FROM base AS builder
 
 # Only the installer is copied; Python comes from the existing base image.
-COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /usr/local/bin/uv
+COPY --from=uv-installer /uv /usr/local/bin/uv
 ENV UV_PYTHON_DOWNLOADS=never UV_NO_MANAGED_PYTHON=1 UV_LINK_MODE=copy
 
 ARG REQUIREMENTS_DIRECTORY=requirements

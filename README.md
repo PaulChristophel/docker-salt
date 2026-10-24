@@ -142,7 +142,9 @@ and test without logging in or pushing images.
 
 ### Build installer
 
-All variants use uv 0.13.5 in the builder only, targeting the existing
+The release matrix reads `uv_version` from `images.json` and passes it as
+`UV_VERSION` to each build. Manual builds default to 0.13.5 and can override it
+with `--build-arg UV_VERSION=...`. All variants use uv in the builder only, targeting the existing
 `/usr/local/salt/bin/python` virtual environment created by the base image
 Python. Managed Python discovery and Python downloads are disabled. Installation
 keeps the explicit requirements pins and defaults `FLAGS` to `--no-deps`, matching

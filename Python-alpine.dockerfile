@@ -1,3 +1,6 @@
+ARG UV_VERSION=0.13.5
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv-installer
+
 FROM python:3.11-alpine AS base
 LABEL maintainer="Paul Christophel <https://github.com/PaulChristophel>" \
       org.opencontainers.image.authors="Paul Christophel" \
@@ -14,7 +17,7 @@ RUN apk upgrade --update --no-cache && \
 FROM base as builder
 
 # Only the installer is copied; Python comes from the existing base image.
-COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /usr/local/bin/uv
+COPY --from=uv-installer /uv /usr/local/bin/uv
 ENV UV_PYTHON_DOWNLOADS=never UV_NO_MANAGED_PYTHON=1 UV_LINK_MODE=copy
 ARG REQUIREMENTS_DIRECTORY=requirements
 ARG COMMON_REQUIREMENTS=common.txt

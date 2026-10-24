@@ -1,5 +1,8 @@
+ARG UV_VERSION=0.13.5
 ARG PHOTON_RELEASE=5.0
 ARG BASE_IMAGE=photon:${PHOTON_RELEASE}
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv-installer
+
 FROM ${BASE_IMAGE} AS base
 ARG PHOTON_RELEASE
 # Share the interpreter packages between the build and runtime roots.
@@ -9,7 +12,7 @@ RUN tdnf -y install python3 python3-pip python3-devel findutils \
 FROM base AS builder
 
 # Only the installer is copied; Python comes from the existing base image.
-COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /usr/local/bin/uv
+COPY --from=uv-installer /uv /usr/local/bin/uv
 ENV UV_PYTHON_DOWNLOADS=never UV_NO_MANAGED_PYTHON=1 UV_LINK_MODE=copy
 
 ARG REQUIREMENTS_DIRECTORY=requirements

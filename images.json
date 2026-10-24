@@ -1,5 +1,6 @@
 {
   "image": "docker.io/pcm0/salt",
+  "uv_version": "0.13.5",
   "platform": "linux/amd64",
   "requirements": {
     "directory": "requirements",
@@ -46,8 +47,8 @@
     {
       "name": "3008",
       "python_min": "3.14",
-      "version": "3008.3",
-      "requirement": "salt==3008.3",
+      "version": "3008.4",
+      "requirement": "salt==3008.4",
       "channel": "stable"
     },
     {
