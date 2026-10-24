@@ -43,6 +43,7 @@ RUN zypper --non-interactive --gpg-auto-import-keys install --no-recommends \
       pkg-config \
       curl \
       git \
+      sed \
       rust \
       cargo \
       go \
