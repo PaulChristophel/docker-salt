@@ -62,7 +62,7 @@ Python dependencies are split along the same axes as the build matrix:
 
 The build installs all four layers with `--no-deps`. Consequently, transitive
 dependencies must remain explicitly pinned in the shared, Python, or profile
-layer rather than relying on pip to resolve them implicitly.
+layer rather than relying on the installer to resolve them implicitly.
 
 ## Tags
 
@@ -132,6 +132,20 @@ and Salt versions or branch references belong in `images.json`.
 
 The GitHub Actions release workflow expands `images.json` into the supported
 Python × Salt × profile × operating-system combinations. It runs on relevant
-changes to `master`, once per day for development refreshes, and on manual
-dispatch. Each matrix job builds with Podman and publishes its moving,
-versioned where applicable, and Git-SHA tags to Docker Hub.
+changes to any branch, once per day for development refreshes, and on manual
+dispatch. Each matrix job builds with
+Podman and checks the final Python version, virtual environment, installed package
+metadata, pip package listing, Salt version command, and absence of uv.
+Only runs on `master` publish the moving, versioned where applicable, and Git-SHA
+tags to Docker Hub. Pushes and manual runs on development branches build
+and test without logging in or pushing images.
+
+### Build installer
+
+All variants use uv 0.13.5 in the builder only, targeting the existing
+`/usr/local/salt/bin/python` virtual environment created by the base image
+Python. Managed Python discovery and Python downloads are disabled. Installation
+keeps the explicit requirements pins and defaults `FLAGS` to `--no-deps`, matching
+the release workflow. Prerequisites also install with `--no-deps`. The uv binary
+and cache are not copied into the runtime image;
+installed package metadata is retained for vulnerability scanning.

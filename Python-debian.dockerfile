@@ -6,12 +6,16 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 FROM base AS builder
 
+# Only the installer is copied; Python comes from the existing base image.
+COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /usr/local/bin/uv
+ENV UV_PYTHON_DOWNLOADS=never UV_NO_MANAGED_PYTHON=1 UV_LINK_MODE=copy
+
 ARG REQUIREMENTS_DIRECTORY=requirements
 ARG COMMON_REQUIREMENTS=common.txt
 ARG PYTHON_REQUIREMENTS=python/3.11.txt
 ARG PROFILE_REQUIREMENTS=profiles/standard.txt
 ARG SALT_REQUIREMENT=salt==3008.3
-ARG FLAGS
+ARG FLAGS=--no-deps
 ARG USER_ID=1000
 ARG PYTHONPATH="/usr/local/salt/lib/python3.11"
 
@@ -45,11 +49,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m venv /usr/local/salt
-RUN /usr/local/salt/bin/pip install --no-cache-dir --upgrade pip wheel setuptools
+RUN uv pip install --python /usr/local/salt/bin/python --no-cache --no-deps --upgrade wheel
 COPY prerequisites.txt /prerequisites.txt
-RUN /usr/local/salt/bin/pip install --no-cache-dir -r /prerequisites.txt
+RUN uv pip install --python /usr/local/salt/bin/python --no-cache --no-deps -r /prerequisites.txt
 COPY ${REQUIREMENTS_DIRECTORY}/ /requirements/
-RUN /usr/local/salt/bin/pip install --no-cache-dir ${FLAGS} \
+RUN uv pip install --python /usr/local/salt/bin/python --no-cache ${FLAGS} \
       -r "/requirements/${COMMON_REQUIREMENTS}" \
       -r "/requirements/${PYTHON_REQUIREMENTS}" \
       -r "/requirements/${PROFILE_REQUIREMENTS}" \

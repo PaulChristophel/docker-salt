@@ -1,9 +1,9 @@
-name: Build and publish Salt images
+name: Build and test Salt images
 
 on:
   push:
     branches:
-      - master
+      - "**"
     paths:
       - "*.dockerfile"
       - "*.py"
@@ -142,7 +142,22 @@ jobs:
             "${tags[@]}" \
             .
 
+      - name: Check final image
+        env:
+          ROLLING_TAG: ${{ matrix.tag }}
+          PYTHON_VERSION: ${{ matrix.python }}
+        run: |
+          podman run --rm --entrypoint /usr/local/salt/bin/python \
+            "${IMAGE_NAME}:${ROLLING_TAG}" -c \
+            'import importlib.metadata as m, shutil, sys; assert f"{sys.version_info.major}.{sys.version_info.minor}" == sys.argv[1], sys.version; assert sys.prefix == "/usr/local/salt", sys.prefix; assert shutil.which("uv") is None, "uv leaked into runtime"; print({p: m.version(p) for p in ("salt", "pip", "ansible-core")})' \
+            "$PYTHON_VERSION"
+          podman run --rm --entrypoint /usr/local/salt/bin/python \
+            "${IMAGE_NAME}:${ROLLING_TAG}" -m pip list
+          podman run --rm --entrypoint /usr/local/salt/bin/salt-master \
+            "${IMAGE_NAME}:${ROLLING_TAG}" --version
+
       - name: Log in to Docker Hub
+        if: github.ref == 'refs/heads/master'
         env:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
@@ -150,6 +165,7 @@ jobs:
             | podman login docker.io --username pcm0 --password-stdin
 
       - name: Push image tags
+        if: github.ref == 'refs/heads/master'
         env:
           ROLLING_TAG: ${{ matrix.tag }}
           VERSION_TAG: ${{ matrix.version_tag }}
@@ -169,5 +185,5 @@ jobs:
           done
 
       - name: Log out of Docker Hub
-        if: always()
+        if: always() && github.ref == 'refs/heads/master'
         run: podman logout docker.io || true
