@@ -12,12 +12,16 @@ RUN apk upgrade --update --no-cache && \
     apk add --update --no-cache ca-certificates libzmq libpq libldap libcrypto3 libssl3 openssl libgcrypt cryptsetup pcre2 binutils openssl-dev libffi gnupg libgit2 libssh2 krb5 krb5-libs openssh-client-default openssh-client-common rsync tini
 
 FROM base as builder
+
+# Only the installer is copied; Python comes from the existing base image.
+COPY --from=ghcr.io/astral-sh/uv:0.13.5 /uv /usr/local/bin/uv
+ENV UV_PYTHON_DOWNLOADS=never UV_NO_MANAGED_PYTHON=1 UV_LINK_MODE=copy
 ARG REQUIREMENTS_DIRECTORY=requirements
 ARG COMMON_REQUIREMENTS=common.txt
 ARG PYTHON_REQUIREMENTS=python/3.11.txt
 ARG PROFILE_REQUIREMENTS=profiles/standard.txt
 ARG SALT_REQUIREMENT=salt==3008.3
-ARG FLAGS
+ARG FLAGS=--no-deps
 ARG USER_ID=1000
 ARG PYTHONPATH="/usr/local/salt/lib/python3.11"
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
@@ -25,9 +29,9 @@ ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS
 RUN apk add --update --no-cache alpine-sdk musl-dev zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5-dev postgresql-dev python3-dev patch
 RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
-RUN pip install -r /prerequisites.txt
+RUN uv pip install --python /usr/local/salt/bin/python --no-cache --no-deps -r /prerequisites.txt
 COPY ${REQUIREMENTS_DIRECTORY}/ /requirements/
-RUN pip install ${FLAGS} \
+RUN uv pip install --python /usr/local/salt/bin/python --no-cache ${FLAGS} \
       -r "/requirements/${COMMON_REQUIREMENTS}" \
       -r "/requirements/${PYTHON_REQUIREMENTS}" \
       -r "/requirements/${PROFILE_REQUIREMENTS}" \
