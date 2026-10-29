@@ -42,7 +42,7 @@ python-dateutil==3.0.0
 python-gnupg==0.5.7
 python-ldap==3.4.8
 python-logstash==0.4.8
-pytz==2026.5
+pytz==2026.6
 PyYAML==6.0.3
 pyzmq==27.2.0
 requests==2.34.2
@@ -95,7 +95,7 @@ distlib==0.4.4
 filelock==4.2.4
 gitdb==4.0.12
 GitPython==3.2.1
-platformdirs==4.13.7
+platformdirs==4.14.0
 pyOpenSSL==26.4.0
 python-discovery==1.6.7
 rpm-vercmp==0.1.2
