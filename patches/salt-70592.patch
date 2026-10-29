@@ -1,0 +1,10 @@
+--- a/master.py
++++ b/master.py
+@@ -1,6 +1,6 @@
+                             crypticle = salt.crypt.Crypticle(self.opts, key)
+-                            load = crypticle.decrypt(load)
++                            load = crypticle.loads(load)
+                     elif enc == "pub":
+                         # RSA encryption
+                         import salt.crypt
+ 
