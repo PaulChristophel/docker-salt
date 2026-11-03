@@ -29,7 +29,7 @@ ARG USER_ID=1000
 ARG PYTHONPATH="/usr/local/salt/lib/python3.11"
 ENV PYTHONUNBUFFERED=1 PATH="/usr/local/salt/bin:${PATH}" GENERATE_SALT_SYSPATHS=1 VIRTUAL_ENV=/usr/local/salt
 
-RUN apk add --update --no-cache alpine-sdk musl-dev zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5-dev postgresql-dev python3-dev patch
+RUN apk add --update --no-cache alpine-sdk musl-dev zeromq-dev libpq-dev openldap-dev gcc libc-dev linux-headers libffi-dev libgit2-dev libssh2-dev rust cargo wget tar git build-base krb5-dev postgresql-dev python3-dev
 RUN python3 -m venv /usr/local/salt
 COPY prerequisites.txt /
 RUN uv pip install --python /usr/local/salt/bin/python --no-cache --no-deps -r /prerequisites.txt
@@ -39,11 +39,6 @@ RUN uv pip install --python /usr/local/salt/bin/python --no-cache ${FLAGS} \
       -r "/requirements/${PYTHON_REQUIREMENTS}" \
       -r "/requirements/${PROFILE_REQUIREMENTS}" \
       "${SALT_REQUIREMENT}"
-# Patch only installed Salt 3008; fail if the upstream context has changed.
-COPY patches/salt-70592.patch /tmp/salt-70592.patch
-COPY scripts/patch-salt-3008.sh /tmp/patch-salt-3008.sh
-RUN sh /tmp/patch-salt-3008.sh \
- && rm /tmp/patch-salt-3008.sh /tmp/salt-70592.patch
 COPY nacl.py "${PYTHONPATH}/site-packages/salt/utils/"
 COPY logstash_engine.py "${PYTHONPATH}/site-packages/salt/engines/"
 COPY app.py "${PYTHONPATH}/site-packages/salt/netapi/rest_cherrypy/"

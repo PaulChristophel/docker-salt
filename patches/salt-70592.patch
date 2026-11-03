@@ -1,7 +1,0 @@
---- a/master.py
-+++ b/master.py
-@@ -1711,3 +1711,3 @@
-                             crypticle = salt.crypt.Crypticle(self.opts, key)
--                            load = crypticle.decrypt(load)
-+                            load = crypticle.loads(load)
-                     elif enc == "pub":

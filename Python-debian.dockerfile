@@ -48,7 +48,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       cargo \
       python3-dev \
       postgresql-server-dev-all \
-      patch \
     && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m venv /usr/local/salt
@@ -61,11 +60,6 @@ RUN uv pip install --python /usr/local/salt/bin/python --no-cache ${FLAGS} \
       -r "/requirements/${PYTHON_REQUIREMENTS}" \
       -r "/requirements/${PROFILE_REQUIREMENTS}" \
       "${SALT_REQUIREMENT}"
-# Patch only installed Salt 3008; fail if the upstream context has changed.
-COPY patches/salt-70592.patch /tmp/salt-70592.patch
-COPY scripts/patch-salt-3008.sh /tmp/patch-salt-3008.sh
-RUN sh /tmp/patch-salt-3008.sh \
- && rm /tmp/patch-salt-3008.sh /tmp/salt-70592.patch
 COPY nacl.py "${PYTHONPATH}/site-packages/salt/utils/"
 COPY logstash_engine.py "${PYTHONPATH}/site-packages/salt/engines/"
 COPY app.py "${PYTHONPATH}/site-packages/salt/netapi/rest_cherrypy/"
