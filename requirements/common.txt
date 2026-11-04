@@ -95,7 +95,7 @@ distlib==0.4.4
 filelock==4.2.8
 gitdb==4.0.12
 GitPython==3.2.1
-platformdirs==4.14.4
+platformdirs==4.14.5
 pyOpenSSL==26.4.0
 python-discovery==1.9.4
 rpm-vercmp==0.1.2
