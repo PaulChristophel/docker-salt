@@ -86,7 +86,7 @@ zope.event==6.2
 zope.interface==8.7
 ws4py==0.6.0
 gevent-websocket==0.10.1
-pyyescrypt==0.2.2
+pyyescrypt==0.2.3
 
 # Additional Salt integrations
 apache-libcloud==3.9.1
@@ -122,5 +122,5 @@ mdurl==0.1.2
 annotated-doc==0.0.6
 markdown-it-py==4.3.0
 rich==15.0.0
-typer==0.29.0
+typer==0.29.1
 typer-slim==0.24.0
