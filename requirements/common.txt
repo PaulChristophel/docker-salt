@@ -79,7 +79,7 @@ typeguard==4.6.0
 typing-inspection==0.4.5
 
 # API server
-gunicorn==27.0.0
+gunicorn==27.0.1
 gevent==26.9.0
 greenlet==3.5.6
 zope.event==6.2
