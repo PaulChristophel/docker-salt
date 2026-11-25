@@ -40,15 +40,15 @@
     {
       "name": "3006",
       "python": ["3.11"],
-      "version": "3006.25",
-      "requirement": "salt==3006.25",
+      "version": "3006.29",
+      "requirement": "salt==3006.29",
       "channel": "stable"
     },
     {
       "name": "3008",
       "python_min": "3.14",
-      "version": "3008.4",
-      "requirement": "salt==3008.4",
+      "version": "3008.5",
+      "requirement": "salt==3008.5",
       "channel": "stable"
     },
     {
