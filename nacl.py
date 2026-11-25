@@ -168,7 +168,7 @@ def keygen(sk_file=None, pk_file=None, **kwargs):
                 )
             else:
                 # chmod 0600 file
-                os.chmod(sk_file, 1536)
+                os.chmod(sk_file, 0o600)
             return f"saved sk_file: {sk_file}"
         else:
             raise Exception(f"sk_file:{sk_file} already exist.")
@@ -200,7 +200,7 @@ def keygen(sk_file=None, pk_file=None, **kwargs):
         )
     else:
         # chmod 0600 file
-        os.chmod(sk_file, 1536)
+        os.chmod(sk_file, 0o600)
     with salt.utils.files.fopen(pk_file, "wb") as keyf:
         keyf.write(base64.b64encode(kp.public_key.encode()))
     return f"saved sk_file:{sk_file}  pk_file: {pk_file}"
