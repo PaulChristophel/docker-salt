@@ -64,7 +64,6 @@ RUN uv pip install --python /usr/local/salt/bin/python --no-cache ${FLAGS} \
       -r "/requirements/${PROFILE_REQUIREMENTS}" \
       "${SALT_REQUIREMENT}"
 COPY nacl.py "${PYTHONPATH}/site-packages/salt/utils/"
-COPY logstash_engine.py "${PYTHONPATH}/site-packages/salt/engines/"
 COPY app.py "${PYTHONPATH}/site-packages/salt/netapi/rest_cherrypy/"
 RUN find /usr/local/salt -name '*.pyc' -delete && \
     rm -f "${PYTHONPATH}/site-packages/salt/returners/django_return.py"
