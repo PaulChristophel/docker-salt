@@ -645,6 +645,26 @@ except ImportError:
     HAS_WEBSOCKETS = False
 
 
+class _NoEmptyRamSession(cherrypy.lib.sessions.RamSession):
+    """
+    ``RamSession`` variant that refuses to persist sessions with no user data.
+
+    Ported from upstream Salt 3008.x. Touching ``cherrypy.session`` (which
+    ``salt_auth_tool`` does on every request) marks the session as loaded, so
+    CherryPy's ``save()`` would insert an empty ``{}`` entry into the
+    class-level cache for every anonymous or bad-token request. Under scanner
+    or brute-force traffic the cache grows without bound and ``clean_up()``
+    becomes an O(n) pass. Skipping ``_save`` for empty ``_data`` lets those
+    requests still use ``cherrypy.session`` for their lifetime without ever
+    being stored; sessions that hold a token persist normally.
+    """
+
+    def _save(self, expiration_time):
+        if not self._data:
+            return
+        super()._save(expiration_time)
+
+
 # --- BEGIN: salt-token helpers (direct cache validation) ---
 
 def _loadauth_from_opts():
@@ -757,6 +777,15 @@ def html_override_tool():
         return
 
     if request.path_info.startswith(url_blacklist):
+        return
+
+    # Streaming endpoints (``/events`` SSE, ``/ws`` websocket) must never be
+    # diverted to the HTML app. A browser hitting ``/events`` sends
+    # ``Accept: text/html,*/*`` which would otherwise raise
+    # ``InternalRedirect`` here, crashing cherrypy 18.10.0's
+    # ``AppResponse`` cleanup path. Ported from upstream Salt 3008.x
+    # (saltstack/salt issue #69958).
+    if request.config.get("response.stream"):
         return
 
     if request.headers.get("Accept") == "*/*":
@@ -1292,6 +1321,7 @@ class LowDataAdapter:
         "tools.salt_token.on": True,
         "tools.sessions.on": True,
         "tools.sessions.timeout": 60 * 10,  # 10 hours
+        "tools.sessions.storage_class": _NoEmptyRamSession,
         # 'tools.autovary.on': True,
         "tools.hypermedia_out.on": True,
         "tools.hypermedia_in.on": True,
@@ -1302,7 +1332,6 @@ class LowDataAdapter:
     def __init__(self):
         self.opts = cherrypy.config["saltopts"]
         self.apiopts = cherrypy.config["apiopts"]
-        self.api = salt.netapi.NetapiClient(self.opts)
 
     def exec_lowstate(self, client=None, token=None):
         """
@@ -1342,32 +1371,35 @@ class LowDataAdapter:
     def _exec_lowstate_chunks(self, lowstate, client, token):
         # Make any requested additions or modifications to each lowstate, then
         # execute each one and yield the result.
-        for chunk in lowstate:
-            if token:
-                chunk["token"] = token
+        # A NetapiClient per request (rather than one per process) so its
+        # event/transport resources are released when the request finishes.
+        with salt.netapi.NetapiClient(self.opts) as api:
+            for chunk in lowstate:
+                if token:
+                    chunk["token"] = token
 
-            if "token" in chunk:
-                # Make sure that auth token is hex
-                try:
-                    int(chunk["token"], 16)
-                except (TypeError, ValueError):
-                    raise cherrypy.HTTPError(401, "Invalid token")
+                if "token" in chunk:
+                    # Make sure that auth token is hex
+                    try:
+                        int(chunk["token"], 16)
+                    except (TypeError, ValueError):
+                        raise cherrypy.HTTPError(401, "Invalid token")
 
-            if client:
-                chunk["client"] = client
+                if client:
+                    chunk["client"] = client
 
-            # Make any 'arg' params a list if not already.
-            # This is largely to fix a deficiency in the urlencoded format.
-            if "arg" in chunk and not isinstance(chunk["arg"], list):
-                chunk["arg"] = [chunk["arg"]]
+                # Make any 'arg' params a list if not already.
+                # This is largely to fix a deficiency in the urlencoded format.
+                if "arg" in chunk and not isinstance(chunk["arg"], list):
+                    chunk["arg"] = [chunk["arg"]]
 
-            ret = self.api.run(chunk)
+                ret = api.run(chunk)
 
-            # Sometimes Salt gives us a return and sometimes an iterator
-            if isinstance(ret, Iterator):
-                yield from ret
-            else:
-                yield ret
+                # Sometimes Salt gives us a return and sometimes an iterator
+                if isinstance(ret, Iterator):
+                    yield from ret
+                else:
+                    yield ret
 
     @cherrypy.config(**{"tools.sessions.on": False})
     def GET(self):
@@ -2014,8 +2046,11 @@ class Login(LowDataAdapter):
                 ]
             }}
         """
-        if not self.api._is_master_running():
-            raise salt.exceptions.SaltDaemonNotRunning("Salt Master is not available.")
+        with salt.netapi.NetapiClient(self.opts) as api:
+            if not api._is_master_running():
+                raise salt.exceptions.SaltDaemonNotRunning(
+                    "Salt Master is not available."
+                )
 
         # the urlencoded_processor will wrap this in a list
         if isinstance(cherrypy.serving.request.lowstate, list):
@@ -2125,8 +2160,18 @@ class Logout(LowDataAdapter):
                     try:
                         fn(token)
                         break
-                    except Exception:
-                        pass
+                    except Exception:  # pylint: disable=broad-except
+                        # If the token backend is unreachable (e.g. Redis
+                        # down) finish the logout from the client's point of
+                        # view anyway -- the cookies are still expired above.
+                        logger.exception(
+                            "Logout: failed to revoke Salt eauth token via %s; "
+                            "the cookie has been expired but the token may "
+                            "still be valid in the eauth_tokens backend until "
+                            "its expiry.",
+                            name,
+                        )
+                        break
 
         return {"return": "Your token has been cleared"}
 
@@ -2393,7 +2438,7 @@ class Events:
         ok, _tok = _is_salt_token_valid(candidate)
         return bool(ok)
 
-    def GET(self, token=None, salt_token=None):
+    def GET(self, **kwargs):
         r"""
         An HTTP stream of the Salt master event bus
 
@@ -2403,28 +2448,34 @@ class Events:
         .. http:get:: /events
 
             :status 200: |200|
+            :status 400: |400| -- the endpoint takes no query parameters; in
+                particular tokens must not be passed in the URL.
             :status 401: |401|
             :status 406: |406|
-            :query token: **optional** parameter containing the token
-                ordinarily supplied via the X-Auth-Token header in order to
-                allow cross-domain requests in browsers that do not include
-                CORS support in the EventSource API. E.g.,
-                ``curl -NsS localhost:8000/events?token=308650d``
-            :query salt_token: **optional** parameter containing a raw Salt
-                *eauth token* (not to be confused with the token returned from
-                the /login URL). E.g.,
-                ``curl -NsS localhost:8000/events?salt_token=30742765``
 
-        **Example request:**
+        Authentication channels:
+
+        - ``X-Auth-Token`` or ``Authorization: Bearer`` header (for
+          non-browser clients -- ``curl``, scripts, server-side integrations).
+        - The ``salt_token`` cookie set by ``/login`` (for browser
+          ``EventSource`` clients, which cannot set custom headers).
+
+        Tokens passed via the query string (``?token=...`` or
+        ``?salt_token=...``) are no longer accepted: the URL ends up in HTTP
+        access logs, the browser ``Referer`` header and error reports, none of
+        which are appropriate channels for a bearer credential.
+
+        **Example request (non-browser client):**
 
         .. code-block:: bash
 
-            curl -NsS localhost:8000/events
+            curl -NsS -H "X-Auth-Token: <token>" localhost:8000/events
 
         .. code-block:: text
 
             GET /events HTTP/1.1
             Host: localhost:8000
+            X-Auth-Token: <token>
 
         **Example response:**
 
@@ -2481,11 +2532,13 @@ class Events:
         It can be viewed by pointing a browser at the ``/app`` endpoint in a
         running ``rest_cherrypy`` instance.
 
-        Or using CORS:
+        For cross-origin EventSource, set ``withCredentials`` and rely on the
+        ``salt_token`` cookie established by ``/login`` rather than a
+        query-string token:
 
         .. code-block:: javascript
 
-            var source = new EventSource('/events?token=ecd589e4e01912cf3c4035afad73426dbb8dba75', {withCredentials: true});
+            var source = new EventSource('/events', {withCredentials: true});
 
         It is also possible to consume the stream via the shell.
 
@@ -2500,7 +2553,7 @@ class Events:
 
         .. code-block:: bash
 
-            curl -NsS localhost:8000/events |\
+            curl -NsS -H "X-Auth-Token: <token>" localhost:8000/events |\
                     while IFS= read -r line ; do
                         echo $line
                     done
@@ -2509,7 +2562,7 @@ class Events:
 
         .. code-block:: bash
 
-            curl -NsS localhost:8000/events |\
+            curl -NsS -H "X-Auth-Token: <token>" localhost:8000/events |\
                     awk '
                         BEGIN { RS=""; FS="\\n" }
                         $1 ~ /^tag: salt\/job\/[0-9]+\/new$/ { print $0 }
@@ -2519,13 +2572,24 @@ class Events:
             tag: 20140112010149808995
             data: {"tag": "20140112010149808995", "data": {"fun_args": [], "jid": "20140112010149808995", "return": true, "retcode": 0, "success": true, "cmd": "_return", "_stamp": "2014-01-12_01:01:49.819316", "fun": "test.ping", "id": "jerry"}}
         """
-        cookies = cherrypy.request.cookie
-        auth_token = (
-            token
-            or salt_token
-            or (cookies["salt_token"].value if "salt_token" in cookies else None)
-            or (cookies["session_id"].value if "session_id" in cookies else None)
-        )
+        # The Events endpoint takes no query parameters. Reject any -- in
+        # particular tokens, which would leak into access logs and the
+        # Referer header. Rejecting *all* parameters keeps a differently-named
+        # token parameter from quietly reintroducing the leak.
+        if kwargs:
+            raise cherrypy.HTTPError(
+                400,
+                "The /events endpoint takes no query parameters; in "
+                "particular, tokens must not be passed via the query "
+                "string -- they end up in access logs and the Referer "
+                "header. Use the 'X-Auth-Token' header (for non-browser "
+                "clients) or the salt_token cookie set by /login (for "
+                "browser EventSource clients) instead.",
+            )
+
+        # Header (X-Auth-Token / Bearer), then salt_token cookie, then the
+        # legacy session_id cookie.
+        auth_token = _get_token_from_request()
 
         if not self._is_valid_token(auth_token):
             raise cherrypy.HTTPError(401)
